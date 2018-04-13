@@ -8,9 +8,16 @@ net_id = "Arthur Chen:ac2266, Henry Levine:hal59, Kelley Zhang:kz53, Gary Gao:gg
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
-	if not query:
+	tag = request.args.get('tagsearch')
+	if not query and not tag:
 		data = []
 		output_message = ''
+	elif not query and tag:
+		data = range(5)
+		output_message = 'tag'
+	elif not tag and query:
+		data = range(6,9)
+		output_message = 'tag' 
 	else:
 		output_message = "Your search: " + query
 		data = range(8)
