@@ -28,6 +28,8 @@ margin-bottom:0;
 position:absolute;
 top:2%;
 right:2%;
+word-wrap: break-word;
+max-width: 300px;
 }
 .btn{
 background-color: #4285F4;

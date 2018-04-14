@@ -1,0 +1,20 @@
+body {
+	background-color: pink;
+}
+
+.white {
+	color: white;
+}
+
+.shortbr {
+	display: block;
+	margin: 10px 0;
+}
+
+.poop {
+	color: white;
+}
+
+.shortinput {
+	width: 300px !important;
+}

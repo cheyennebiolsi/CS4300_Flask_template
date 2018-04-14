@@ -2,34 +2,48 @@
     <head>
         <link rel="stylesheet" href="/static/bootstrap.min.css">
         <link rel="stylesheet" href="/static/main.css">
+        <link rel="stylesheet" href="/static/aniai.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript">function chBackcolor(color) {
+   document.body.style.background = color;
+}</script>
     </head>
     <body>
+        <input type="button" onclick="chBackcolor('pink');">
+        <input type="button" onclick="chBackcolor('#2e51a2');">
+        <input type="button" onclick="chBackcolor('black');">
         <div class="topcorner">
-            <p>madoka</p>
-            <p>Project Name: {{ name }}</p>
-            <p>Student Name: ({{ netid }})</p>
+            <p class="white">Project {{ name }}</p>
+            <p class="white">Built at Cornell University by {{ netid }}</p>
         </div>
         <form class="form-inline global-search">
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                A
+            <h1 style="font-size: 85px; font-family:Futura; color: white"> <!--#4285F4 -->
+       <!--          A
                 <font color=#EA4335>n</font>
                 <font color=#FBBC05>i</font>
                 a
                 <font color=#34A853>i</font>
-                <font color=#EA4335>&#24859;</font>
+                <font color=#EA4335>&#24859;</font> -->
+                Aniai&#24859;
             </h1>
-            
+            <!-- <br class="shortbr"> -->
+            <hr style="height:30pt; visibility:hidden;" />
+            <h3 style="font-family:Futura; color: white"><i>アニメーション</i>
+            </h3>
             <br><br>
             
             <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Anime Title">
+                <input id="input" type="text" name="search" class="form-control shortinput" placeholder="Anime Title">
                  <button type="submit" class="btn btn-info"> Add </button>
             </div>
+            <br>
+            <br>
             <div>
-                <input id="taginput" type="text" name="tagsearch" class="form-control" placeholder="Tag">
+                <input id="taginput" type="text" name="tagsearch" class="form-control shortinput" placeholder="Tag">
                  <button type="submit" class="btn btn-info"> Add </button>
             </div>
-           
+            <br>
+            <br>
             <button type="submit" class="btn btn-info"> Submit </button>
         </form>
         <form class="form-inline global-search">
