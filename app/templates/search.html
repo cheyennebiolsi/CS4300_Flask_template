@@ -51,7 +51,14 @@
             <h1>{{output_message}}</h1>
             {% for d in data %}  
                 <br>
-                <p>{{d}}</p>
+                <!-- <p>{{d}}</p> -->
+                <img src={{d["anime_image_url"]}}></img>
+                <p>
+                    <b>{{d["anime_english_title"]}}</b> 
+                    <i>Synposis:</i> {{d["anime_synopsis"]}}
+
+                </p>
+
             {% endfor %}
         {% endif %}
         </form>
