@@ -1,5 +1,6 @@
 import json
 from Review import Review
+from Genre import Genre
 
 class AnimeDocument:
     def __init__(self,
@@ -85,13 +86,88 @@ class AnimeDocument:
             raise ValueError("object is not instance of Review")
 
     def addGenre(self, genre):
+        if isinstance(genre, Genre):
+            pass
+        elif isinstance(genre, str):
+            try:
+                genre_name = genre[:genre.index('(')].strip().lower().replace(' ', '_')
+                genre_id = int(genre[genre.index('(')+1 : genre.index(')')])
+            except:
+                print("Error: incorrectly formatted genre {}.  Ignoring.".format(genre))
+                return
+            genre = Genre(genre_name = genre_name, genre_id = genre_id)
         if genre not in self.anime_genres:
             self.anime_genres.append(genre)
 
     def getAllReviewText(self):
         return " ".join([review.review_text for review in self.anime_reviews])
 
+    def getGenreVector(self):
+        """
+        Returns a binary vector representing whether MAL tags the anime with
+        a particular genre or not
+        """
+        genreDictionary = self.getGenreDictionary()
+        sortedGenres = sorted(genreDictionary.items(), key = lambda tup : tup[0].genre_id)
+        return [tup[1] for tup in sortedGenres]
+
+    def getGenreDictionary(self):
+        """
+        Returns a binary dictionary for whether the anime is tagged with the
+        MAL genre or not
+        """
+        genreDictionary = {}
+        genres = [Genre(u'action', 1),
+                  Genre(u'adventure', 2),
+                  Genre(u'cars', 3),
+                  Genre(u'comedy', 4),
+                  Genre(u'dementia', 5),
+                  Genre(u'demons', 6),
+                  Genre(u'mystery', 7),
+                  Genre(u'drama', 8),
+                  Genre(u'ecchi', 9),
+                  Genre(u'fantasy', 10),
+                  Genre(u'game', 11),
+                  Genre(u'hentai', 12),
+                  Genre(u'historical', 13),
+                  Genre(u'horror', 14),
+                  Genre(u'kids', 15),
+                  Genre(u'magic', 16),
+                  Genre(u'martial_arts', 17),
+                  Genre(u'mecha', 18),
+                  Genre(u'music', 19),
+                  Genre(u'parody', 20),
+                  Genre(u'samurai', 21),
+                  Genre(u'romance', 22),
+                  Genre(u'school', 23),
+                  Genre(u'sci-fi', 24),
+                  Genre(u'shoujo', 25),
+                  Genre(u'shoujo_ai', 26),
+                  Genre(u'shounen', 27),
+                  Genre(u'shounen_ai', 28),
+                  Genre(u'space', 29),
+                  Genre(u'sports', 30),
+                  Genre(u'super_power', 31),
+                  Genre(u'vampire', 32),
+                  Genre(u'yaoi', 33),
+                  Genre(u'yuri', 34),
+                  Genre(u'harem', 35),
+                  Genre(u'slice_of_life', 36),
+                  Genre(u'supernatural', 37),
+                  Genre(u'military', 38),
+                  Genre(u'police', 39),
+                  Genre(u'psychological', 40),
+                  Genre(u'thriller', 41),
+                  Genre(u'seinen', 42),
+                  Genre(u'josei', 43)]
+        for genre in genres:
+            genreDictionary[genre] = 0
+        for genre in self.anime_genres:
+            genreDictionary[genre] = 1
+        return genreDictionary
+
     def toJSON(self):
         dictionaryRepresentation = self.__dict__
         dictionaryRepresentation['anime_reviews'] = [review.toJSON() for review in self.anime_reviews]
+        dictionaryRepresentation['anime_genres'] = [genre.toJSON() for genre in self.anime_genres]
         return dictionaryRepresentation
