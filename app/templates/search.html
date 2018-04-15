@@ -50,21 +50,29 @@
         </form>
         <form class="form-inline global-search">
 
-        <div class="container-fluid">
-        {% if data %}
-            <h1>{{output_message}}</h1>
-            {% for d in data %}  
-                <br>
-                <!-- <p>{{d}}</p> -->
-                <img src={{d["anime_image_url"]}}></img>
-                <p>
-                    <b>{{d["anime_english_title"]}}</b> 
-                    <i>Synposis:</i> {{d["anime_synopsis"]}}
+        <h1>{{output_message}}</h1>
 
-                </p>
+        <div class="container-fluid table custom">
+            <!-- <div> -->
+            {% if data %}
+                {% for d in data %}  
+                    <br>
+                    <div class="boxed sidebyside">
+                        <!-- <p>{{d}}</p> -->
+                        <div class="col-sm-6 col-md-6 col-xs-12 image-container">
+                            <img src={{d["anime_image_url"]}} class="curved"></img>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-xs-12 text">  
+                            <p>
+                                <b>{{d["anime_english_title"]}}</b> 
+                                <!-- <i>Synposis:</i> {{d["anime_synopsis"]}} -->
+                            </p>
+                        </div>
+                    </div>
 
-            {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
+            <!-- </div> -->
         </div>
         </form>
     </body>

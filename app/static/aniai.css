@@ -1,5 +1,5 @@
 body {
-	background-color: pink;
+	background-color: #2e51a2;
 }
 
 .white {
@@ -17,4 +17,42 @@ body {
 
 .shortinput {
 	width: 300px !important;
+}
+
+.boxed {
+	border: 1px solid white;
+	background-color: white;
+	border-radius: 25px;
+	height: 400px;
+	width: 350px;
+}
+
+.curved {
+	border-radius: 10px;
+	display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+
+}
+
+.sidebyside {
+	display: inline-block;
+	float: left; /* idk man */
+	vertical-align: middle;
+	/*margin-left: auto;
+    margin-right: auto;*/
+
+}
+
+/*img .sidebyside{
+	float: left;
+}
+*/
+.text {
+	word-wrap: break-word;
+	text-overflow: ellipsis;
+}
+
+.custom {
+	vertical-align:top;
 }
