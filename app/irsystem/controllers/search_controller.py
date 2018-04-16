@@ -96,7 +96,7 @@ def search():
 
 	else: # Tag and Anime Still Needs Work
 
-		output_message = "Your search: " + query + 'help' + tag
+		output_message = "Your search: " + query + ' ' + 'tags ' + tag
 
 		query_array = query.split('|')
 		anime_indexes = []
