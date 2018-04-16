@@ -6,6 +6,9 @@
         <link rel="stylesheet" href="/static/aniai.css">
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="templates/autocomplete.js"></script>
+        <script src="templates/theme.js"></script>
         <script type="text/javascript">function chBackcolor(color) {
             document.body.style.background = color;
         }</script>
@@ -35,7 +38,7 @@
             <br><br>
             
             <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control shortinput" placeholder="Anime Title">
+                <input id="input" type="text" name="search" class="form-control shortinput" placeholder="Anime Title" autocomplete="off">
                  <button type="submit" class="btn btn-info"> Add </button>
             </div>
             <br>
