@@ -28,18 +28,23 @@ def search():
 		output_message = ''
 
 	elif not query and tag: # Need Still Work
-		tag_index = -1
-		for element in tags_set:
-			if element == tag:
-				tag_index = tags_array.index(tag)
+		tag_array = tag.split('|')
+		tag_indexes = []
+		for tag_input in tag_array:
+			tag_index = -1
+			for element in tags_set:
+				if element == tag_input:
+					tag_index = tags_array.index(tag_input)
+			tag_indexes.append(tag_index)
 
-		if tag_index == -1:
+		if -1 in tag_indexes:
 			data = []
 			output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
 		else:
 			output_message = 'You looked for the Tag(s) ' + tag
 			mytag = []
-			mytag.append(tag_index)
+			for tag_input in tag_indexes:
+				mytag.append(tag_input)
 			mytag_set = set(mytag)
 
 			jaccsim_matrix = np.zeros(firstcolumn.size)
@@ -55,20 +60,29 @@ def search():
 
 	elif not tag and query:
 		
-		anime_index = -1
-		for element in animelite:
-			if element['anime_english_title'] == query:
-				anime_index = element['anime_id']
-		
-		if anime_index == -1:
+		query_array = query.split('|')
+		anime_indexes = []
+		for anime_input in query_array:
+			anime_index = -1
+			for element in animelite:
+				if element['anime_english_title'] == anime_input:
+					anime_index = element['anime_id']
+			anime_indexes.append(anime_index)
+
+		if -1 in anime_indexes:
 			data = []
 			output_message = 'Could not find ' + query + '. Please try again pls.'
 		else:
-			output_message = 'Your search: ' + query + 'meep'
-			column_index = np.where(firstcolumn == anime_index)[0][0] 
+			output_message = 'Your search: ' + query
+
+			query_vector = np.zeros(synposis_tfidf.shape[1])
+			for ind in anime_indexes:
+				column_index = np.where(firstcolumn == ind)[0][0]
+				query_vector += synposis_tfidf[column_index]
+			
 			cossim = {}
 			for i in range(firstcolumn.size):
-				cossim[i] = get_sim(column_index, i, synposis_tfidf)
+				cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
 
 			top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
 			top10results_list = top10results.keys()[1:] #these are column indexes, we need anime ids
@@ -83,36 +97,55 @@ def search():
 	else: # Tag and Anime Still Needs Work
 
 		output_message = "Your search: " + query + 'help' + tag
-		anime_index = -1
-		for element in animelite:
-			if element['anime_english_title'] == query:
-				anime_index = element['anime_id']
 
-		tag_index = -1
-		for element in tags_set:
-			if element == tag:
-				tag_index = tags_array.index(tag)
+		query_array = query.split('|')
+		anime_indexes = []
+		for anime_input in query_array:
+			anime_index = -1
+			for element in animelite:
+				if element['anime_english_title'] == anime_input:
+					anime_index = element['anime_id']
+			anime_indexes.append(anime_index)
 
-		if anime_index == -1:
+		tag_array = tag.split('|')
+		tag_indexes = []
+		for tag_input in tag_array:
+			tag_index = -1
+			for element in tags_set:
+				if element == tag_input:
+					tag_index = tags_array.index(tag_input)
+			tag_indexes.append(tag_index)
+
+
+		if (-1 in tag_indexes) and (-1 in anime_indexes):
+			data = []
+			output_message = 'Wrong Tag(s) and Anime.'
+
+		elif -1 in anime_indexes:
 			data = []
 			output_message = 'Wrong Anime'
-
-		elif tag_index == -1:
+		
+		elif -1 in tag_indexes:
 			data = []
 			output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
-
+	
 		else:
-			column_index = np.where(firstcolumn == anime_index)[0][0]
+			query_vector = np.zeros(synposis_tfidf.shape[1])
+			for ind in anime_indexes:
+				column_index = np.where(firstcolumn == ind)[0][0]
+				query_vector += synposis_tfidf[column_index]
+
 			cossim = {}
 			for i in range(firstcolumn.size):
-				cossim[i] = get_sim(column_index, i, synposis_tfidf)
+				cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
 
 			topresults = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
 			topresults_list = topresults.keys()[1:] #these are column indexes, we need anime ids
 			# topanimes = firstcolumn[topresults_list] #these are anime ids
 
 			mytag = []
-			mytag.append(tag_index)
+			for tag_input in tag_indexes:
+				mytag.append(tag_input)
 			mytag_set = set(mytag)
 
 			# jaccsim_matrix = np.zeros(np.array(topresults_list).size)
@@ -150,6 +183,23 @@ def get_sim(index, ind2, tfidf):
     # YOUR CODE HERE
     # numpy matrix whose shape is the number of documents by the number of words you're considering max 5000
     queryvector = tfidf[index,:]
+    othervector = tfidf[ind2,:]
+    numerator = np.dot(queryvector, othervector)
+    denominator = (np.dot(np.linalg.norm(queryvector), np.linalg.norm(othervector)))
+    return numerator/denominator
+
+def get_cossim(queryvector, ind2, tfidf):
+    """Returns a float giving the cosine similarity of 
+       the two movie transcripts.
+    
+    Params: {mov1: String,
+             mov2: String,
+             input_doc_mat: Numpy Array,
+             movie_name_to_index: Dict}
+    Returns: Float (Cosine similarity of the two movie transcripts.)
+    """
+    # YOUR CODE HERE
+    # numpy matrix whose shape is the number of documents by the number of words you're considering max 5000
     othervector = tfidf[ind2,:]
     numerator = np.dot(queryvector, othervector)
     denominator = (np.dot(np.linalg.norm(queryvector), np.linalg.norm(othervector)))
