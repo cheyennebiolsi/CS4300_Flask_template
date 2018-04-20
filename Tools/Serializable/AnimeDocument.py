@@ -173,16 +173,21 @@ class AnimeDocument:
             genreDictionary[genre] = 1
         return genreDictionary
 
-    def toTaggedDocument(self):
+    def toTaggedDocument(self, option="review"):
         """Returns a TaggedDocument object with words equal to the list of tokens from the
         tokenized reviews (all concatenated).  The TaggedDocument tag is equal to 'anime_id_{{self.anime_id}}'.
         Stop word tokens are not included in the list of tokens.
         Note: this method is for use in gensim's Doc2Vec model."""
         tokenizer = RegexpTokenizer(r'\w+')
         englishStopwords = set(stopwords.words('english'))
-        reviewText = self.getAllReviewText().lower()
-        reviewTokens = [token for token in tokenizer.tokenize(reviewText) if token not in englishStopwords]
-        return TaggedDocument(reviewTokens, ["anime_id_{}".format(self.anime_id)])
+        if option == "review":
+            text = self.getAllReviewText().lower()
+        elif option == "synopsis":
+            text = self.anime_synopsis.lower()
+        else:
+            raise ValueError("Unknown option " + option + " in AnimeDocument.toTaggedDocument")
+        tokens = [token for token in tokenizer.tokenize(text) if token not in englishStopwords]
+        return TaggedDocument(tokens, ["anime_id_{}".format(self.anime_id)])
 
     def toJSON(self):
         dictionaryRepresentation = self.__dict__

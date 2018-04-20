@@ -8,19 +8,23 @@ from Serializable.SerializableToModel import SerializableToModelConverter
 converter = SerializableToModelConverter()
 serializedJsonFileName = sys.argv[1] #just get it from command line arguments
 data = converter.convertFromFile(serializedJsonFileName)
+
+# USING REVIEW DATA
 taggedDocuments = []
 for animeDocument in data:
-    taggedDocuments.append(animeDocument.toTaggedDocument())
-print(len(taggedDocuments))
+    taggedDocuments.append(animeDocument.toTaggedDocument(option="review"))
 model = Doc2Vec(vector_size=300, window=20, min_count=5, alpha=0.025, min_alpha=0.025, workers=4)
 model.build_vocab(taggedDocuments)
-print("done building vocab")
+print("done building vocab review")
 model.train(taggedDocuments, total_examples=model.corpus_count, epochs=model.iter)
-model.save('doc2vec.model')
-#header = ["anime_id"] + [genre.genre_name for genre in sorted(data[0].getGenreDictionary().keys(), key = lambda genre : genre.genre_id)]
-#with open("tags_anime_documents.csv", "w+") as csvFile:
-#    writer = csv.writer(csvFile)
-#    writer.writerow(header)
-#    for animeDocument in data:
-#        row = [animeDocument.anime_id] + animeDocument.getGenreVector()
-#        writer.writerow(row)
+model.save('../../data/doc2vecreview.model')
+
+# USING SYNOPSIS DATA
+taggedDocuments = []
+for animeDocument in data:
+    taggedDocuments.append(animeDocument.toTaggedDocument(option="synopsis"))
+model = Doc2Vec(vector_size=300, window=20, min_count=5, alpha=0.025, min_alpha=0.025, workers=4)
+model.build_vocab(taggedDocuments)
+print("done building vocab synopsis")
+model.train(taggedDocuments, total_examples=model.corpus_count, epochs=model.iter)
+model.save('../../data/doc2vecsynopsis.model')
