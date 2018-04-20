@@ -1,6 +1,10 @@
 import json
 from Review import Review
 from Genre import Genre
+from gensim.models.doc2vec import TaggedDocument
+from nltk import RegexpTokenizer
+from nltk.tokenize import sent_tokenize
+from nltk.corpus import stopwords
 
 class AnimeDocument:
     def __init__(self,
@@ -77,6 +81,7 @@ class AnimeDocument:
         self.anime_reviews = anime_reviews
 
     def addReview(self, review):
+        """Adds a Review object to self.anime_reviews"""
         if isinstance(review, Review):
             if not any(other.__dict__ == review.__dict__ for other in self.anime_reviews):
                 self.anime_reviews.append(review)
@@ -86,6 +91,7 @@ class AnimeDocument:
             raise ValueError("object is not instance of Review")
 
     def addGenre(self, genre):
+        """Adds a Genre object to self.anime_genres"""
         if isinstance(genre, Genre):
             pass
         elif isinstance(genre, str):
@@ -100,6 +106,7 @@ class AnimeDocument:
             self.anime_genres.append(genre)
 
     def getAllReviewText(self):
+        """Returns all review text concatenated with a space"""
         return " ".join([review.review_text for review in self.anime_reviews])
 
     def getGenreVector(self):
@@ -165,6 +172,17 @@ class AnimeDocument:
         for genre in self.anime_genres:
             genreDictionary[genre] = 1
         return genreDictionary
+
+    def toTaggedDocument(self):
+        """Returns a TaggedDocument object with words equal to the list of tokens from the
+        tokenized reviews (all concatenated).  The TaggedDocument tag is equal to 'anime_id_{{self.anime_id}}'.
+        Stop word tokens are not included in the list of tokens.
+        Note: this method is for use in gensim's Doc2Vec model."""
+        tokenizer = RegexpTokenizer(r'\w+')
+        englishStopwords = set(stopwords.words('english'))
+        reviewText = self.getAllReviewText().lower()
+        reviewTokens = [token for token in tokenizer.tokenize(reviewText) if token not in englishStopwords]
+        return TaggedDocument(reviewTokens, ["anime_id_{}".format(self.anime_id)])
 
     def toJSON(self):
         dictionaryRepresentation = self.__dict__
