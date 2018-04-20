@@ -6,6 +6,9 @@
         <link rel="stylesheet" href="/static/aniai.css">
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="templates/autocomplete.js"></script>
+        <script src="templates/theme.js"></script>
         <script type="text/javascript">function chBackcolor(color) {
             document.body.style.background = color;
         }</script>
@@ -35,7 +38,7 @@
             <br><br>
             
             <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control shortinput" placeholder="Anime Title">
+                <input id="input" type="text" name="search" class="form-control shortinput" placeholder="Anime Title" autocomplete="off">
                  <button type="submit" class="btn btn-info"> Add </button>
             </div>
             <br>
@@ -55,21 +58,37 @@
         <div class="container-fluid table custom">
             <!-- <div> -->
             {% if data %}
-                {% for d in data %}  
+                {% for d in data %}
+                    {% if loop.first %}<div class="row">{% endif %}  
                     <br>
                     <div class="boxed sidebyside">
                         <!-- <p>{{d}}</p> -->
-                        <div class="col-sm-6 col-md-6 col-xs-12 image-container">
-                            <img src={{d["anime_image_url"]}} class="curved"></img>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xs-12 text">  
-                            <p>
+                        <div class="col-sm-6 col-md-6 col-xs-12 image-container" id='meeperZ'>
+                            <img src={{d["anime_image_url"]}} class="curved hover"></img>
+                             <p class="meep">
                                 <b>{{d["anime_english_title"]}}</b> 
+                                Rating: {{d["anime_rating_value"]}}
+                                Number of Ratings: {{d["anime_rating_count"]}}
+                                Type: {{d["anime_type"]}}
                                 <!-- <i>Synposis:</i> {{d["anime_synopsis"]}} -->
                             </p>
                         </div>
+                        <!-- <div class="col-sm-6 col-md-6 col-xs-12 text">   -->
+                           
+                        <!-- </div> -->
                     </div>
+                    {% if loop.index % 3 == 0 %}</div>
+                    <div class="row">{% endif %}
+                    {% if loop.last %}</div>{% endif %}
 
+
+
+
+<!-- <div class="border row">
+  <div class="border col-md-4">.col-md-4</div>
+  <div class="border col-md-4">.col-md-4</div>
+  <div class="border col-md-4">.col-md-4</div>
+</div> -->
                 {% endfor %}
             {% endif %}
             <!-- </div> -->
