@@ -4,20 +4,16 @@ from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 import numpy as np
 import json
 import operator
-import gensim.models
 
 project_name = "AniAi: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
 # animelite.csv
 animelite = json.load(open('data/animelite.json'))
 
+
 synposis_tfidf = np.load('data/synposis_tfidf.npy')
 tags_data = np.load('data/tags.npy')
 firstcolumn = synposis_tfidf[:,0]
-
-# dov2vec
-review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
-synopsis_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
 
 tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
 tags_set = set(tags_array)
@@ -72,7 +68,6 @@ def search():
 				if element['anime_english_title'] == anime_input:
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
-			 
 
 		if -1 in anime_indexes:
 			data = []
@@ -80,47 +75,24 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
 
-			# query_vector = np.zeros(synposis_tfidf.shape[1])
-			# for ind in anime_indexes:
-				# column_index = np.where(firstcolumn == ind)[0][0]
-				# query_vector += synposis_tfidf[column_index]
-			
-			# cossim = {}
-			# for i in range(firstcolumn.size):
-				# cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
-
-			positive = []
+			query_vector = np.zeros(synposis_tfidf.shape[1])
 			for ind in anime_indexes:
-				positive.append("anime_id_" + str(ind))
+				column_index = np.where(firstcolumn == ind)[0][0]
+				query_vector += synposis_tfidf[column_index]
+			
+			cossim = {}
+			for i in range(firstcolumn.size):
+				cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
 
-			positive_vectors = []
-			for anime_id in positive:
-				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
-				positive_vectors.append(reviewvector)
-
-			most_similar = review_model.docvecs.most_similar(positive=positive_vectors, negative=[]) #returns most similar anime ids and similarity scores
-			top10 = most_similar[0:10]
-			# print(top10)
-
+			top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
+			top10results_list = top10results.keys()[1:] #these are column indexes, we need anime ids
+			top10animes = firstcolumn[top10results_list]
 
 			json_array = []
-			# get_anime(anime_id, animelite):
-			for result in top10:
-				# print(result[0].replace("anime_id_", ""))
-				jsonfile = get_anime(int(result[0].replace("anime_id_", "")), animelite)
-				print(jsonfile)
-				json_array.append(jsonfile)
+			for result in top10animes:
+				json_array.append(get_anime(result, animelite))
 
 			data = json_array
-			# top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
-			# top10results_list = top10results.keys()[1:] #these are column indexes, we need anime ids
-			# top10animes = firstcolumn[top10results_list]
-
-			# json_array = []
-			# for result in top10animes:
-			# 	json_array.append(get_anime(result, animelite))
-
-			# data = json_array
 
 	else: # Tag and Anime Still Needs Work
 
