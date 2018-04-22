@@ -81,6 +81,7 @@ def search():
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
 			 
+		set_anime_ids = set(anime_indexes)
 
 		if -1 in anime_indexes:
 			data = []
@@ -107,9 +108,12 @@ def search():
 			# get_anime(anime_id, animelite):
 			for result in top10:
 				# print(result[0].replace("anime_id_", ""))
-				jsonfile = get_anime(int(result[0].replace("anime_id_", "")), animelite)
-				# print(jsonfile)
-				json_array.append(jsonfile)
+				get_anime_id = int(result[0].replace("anime_id_", ""))
+				# print(get_anime_id)
+				# if get_anime_id not in set_anime_ids:
+				jsonfile = get_anime(get_anime_id, animelite)
+				if get_anime_id not in set_anime_ids and jsonfile != "not found":
+					json_array.append(jsonfile)
 
 			data = json_array
 
