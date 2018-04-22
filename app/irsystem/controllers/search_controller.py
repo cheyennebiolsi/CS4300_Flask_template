@@ -5,6 +5,7 @@ import numpy as np
 import json
 import operator
 import gensim.models
+import re
 
 project_name = "AniAi: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
@@ -12,12 +13,18 @@ net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary 
 animelite = json.load(open('data/animelite.json'))
 
 synposis_tfidf = np.load('data/synposis_tfidf.npy')
+tsynposis = synposis_tfidf
+# u, s, vh = np.linalg.svd(synposis_tfidf, full_matrices=True)
+
 tags_data = np.load('data/tags.npy')
 firstcolumn = synposis_tfidf[:,0]
 
 # dov2vec
 review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 synopsis_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
+
+# truncated svd
+
 
 tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
 tags_set = set(tags_array)
@@ -26,6 +33,7 @@ tags_set = set(tags_array)
 def search():
 	query = request.args.get('search')
 	tag = request.args.get('tagsearch')
+	hide_ss = request.args.get('hide_ss')
 
 	if not query and not tag:
 		data = []
@@ -80,15 +88,8 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
 
-			# query_vector = np.zeros(synposis_tfidf.shape[1])
-			# for ind in anime_indexes:
-				# column_index = np.where(firstcolumn == ind)[0][0]
-				# query_vector += synposis_tfidf[column_index]
-			
-			# cossim = {}
-			# for i in range(firstcolumn.size):
-				# cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
 
+			# ## DOC2VEC
 			positive = []
 			for ind in anime_indexes:
 				positive.append("anime_id_" + str(ind))
@@ -98,20 +99,33 @@ def search():
 				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
 				positive_vectors.append(reviewvector)
 
-			most_similar = review_model.docvecs.most_similar(positive=positive_vectors, negative=[]) #returns most similar anime ids and similarity scores
-			top10 = most_similar[0:10]
-			# print(top10)
-
+			most_similar = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=200) #returns most similar anime ids and similarity scores
+			top10 = most_similar
+			# print(np.array(top10).shape)
 
 			json_array = []
 			# get_anime(anime_id, animelite):
 			for result in top10:
 				# print(result[0].replace("anime_id_", ""))
 				jsonfile = get_anime(int(result[0].replace("anime_id_", "")), animelite)
-				print(jsonfile)
+				# print(jsonfile)
 				json_array.append(jsonfile)
 
 			data = json_array
+
+			if hide_ss:
+				data = hide(anime_indexes, data, animelite)
+
+
+			# Trucated SVD
+			# query_vector = np.zeros(synposis_tfidf.shape[1])
+			# for ind in anime_indexes:
+			# 	column_index = np.where(firstcolumn == ind)[0][0]
+			# 	query_vector += synposis_tfidf[column_index]
+			
+			# cossim = {}
+			# for i in range(firstcolumn.size):
+			# 	cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
 			# top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
 			# top10results_list = top10results.keys()[1:] #these are column indexes, we need anime ids
 			# top10animes = firstcolumn[top10results_list]
@@ -196,7 +210,7 @@ def get_anime(anime_id, jsonfile):
 		# print(element['anime_id'])
 		if element['anime_id'] == anime_id:
 			return element
-	return "meep"
+	return "not found"
 
 def get_sim(index, ind2, tfidf):
     """Returns a float giving the cosine similarity of 
@@ -236,5 +250,39 @@ def get_cossim(queryvector, ind2, tfidf):
 def get_jaccard(setA, setB):
 	jacsim = len(setA & setB)/len(setA | setB) 
 	return jacsim
+
+def hide(anime_ids, data, jsonfile):
+	hide = []
+	for anime_id in anime_ids:
+		anime = get_anime(anime_id, jsonfile)
+		sidestory = anime["anime_side_story"]
+		sidestory_anime = re.findall('\((.*?)\)',sidestory)
+		for ss in sidestory_anime:
+			hide.append(int(ss.replace('anime ','')))
+	# print('hide these', hide)
+
+	hide_set = set(hide)
+	new_data = []
+	# print(data[0]['anime_id'])
+	# print(data)
+	# print(data[0])
+	for entry in data:
+		# print('---------------------------------------------------------------------------------')
+		# print(entry)
+		# print('---------------------------------------------------------------------------------')
+		# datapoint["anime_id"]
+		# print(datapoint["anime_id"])
+		# print(entry['anime_id'])
+		if entry != "not found":
+			if entry['anime_id'] not in hide_set:
+				new_data.append(entry)
+
+	return new_data
+		
+
+
+
+
+
 
 

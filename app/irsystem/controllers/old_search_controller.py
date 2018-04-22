@@ -163,6 +163,9 @@ def search():
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 def get_anime(anime_id, jsonfile):
+	"""Returns the json object of an anime according to animeID. 
+
+	"""
 	# print(anime_id)
 	for element in jsonfile:
 		# print(element['anime_id'])
