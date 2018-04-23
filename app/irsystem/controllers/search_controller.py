@@ -151,6 +151,7 @@ def search():
 				data = hide(anime_indexes, data, animelite)
 
 			data = hide2(data, animelite, show, min_rating, time, finished, licensed)
+			
 			# hide2(data, jsonfile, show, min_rating, time, finished, licensed):
 
 			# Trucated SVD
@@ -352,8 +353,8 @@ def hide2(data, jsonfile, show, min_rating, time, finished, licensed):
 			# print(show_set)
 			show_add = True
 			if show:
-				print('show', entry['anime_type'])
-				print(entry['anime_type'] not in show_set)
+				# print('show', entry['anime_type'])
+				# print(entry['anime_type'] not in show_set)
 				if entry['anime_type'] not in show_set:
 					# TV, Movie, OVA, Special, OVA 
 					show_add = False
