@@ -13,16 +13,106 @@
             document.body.style.background = color;
         }</script>
     </head>
+    <!--<body style="background-image:url(../static/bg3.png); background-size: 100% 100%;""> -->
     <body>
+
+        <script language="JavaScript1.2">
+        //https://pbs.twimg.com/profile_images/1096714485/gary_busey_400x400.jpeg
+        //background: url("myPicture.jpg");
+
+        grphcs=new Array(6)
+        Image0=new Image(20,20);
+        Image0.src=grphcs[0]="../static/petal1.png";
+
+        Image1=new Image();
+        Image1.src=grphcs[1]="../static/petal2.png"
+        Image2=new Image();
+        Image2.src=grphcs[2]="../static/petal3.png"
+        Image3=new Image();
+        Image3.src=grphcs[3]="../static/petal4.png"
+        Image4=new Image();
+        Image4.src=grphcs[4]="../static/petal5.png"
+        Image5=new Image();
+        Image5.src=grphcs[5]="../static/petal6.png" 
+
+        Amount=25; //Smoothness depends on image file size, the smaller the size the more you can use
+        Ypos=new Array();
+        Xpos=new Array();
+        Speed=new Array();
+        Step=new Array();
+        Cstep=new Array();
+        ns=(document.layers)?1:0;
+        ns6=(document.getElementById&&!document.all)?1:0;
+
+        if (ns){
+        for (i = 0; i < Amount; i++){
+        var P=Math.floor(Math.random()*grphcs.length);
+        rndPic=grphcs[P];
+        document.write("<LAYER NAME='sn"+i+"' LEFT=0 TOP=0><img src="+rndPic+"></LAYER>");
+        }
+        }
+        else{
+        document.write('<div style="position:absolute;top:0px;left:0px"><div style="position:relative">');
+        for (i = 0; i < Amount; i++){
+        var P=Math.floor(Math.random()*grphcs.length);
+        rndPic=grphcs[P];
+        document.write('<img id="si'+i+'" src="'+rndPic+'" style="position:absolute;top:0px;left:0px">');
+        }
+        document.write('</div></div>');
+        }
+        WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
+        WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
+        for (i=0; i < Amount; i++){                                                                
+         Ypos[i] = Math.round(Math.random()*WinHeight);
+         Xpos[i] = Math.round(Math.random()*WinWidth);
+         Speed[i]= Math.random()*5+3;
+         Cstep[i]=0;
+         Step[i]=Math.random()*0.1+0.05;
+        }
+        function fall(){
+        var WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
+        var WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
+        var hscrll=(ns||ns6)?window.pageYOffset:document.body.scrollTop;
+        var wscrll=(ns||ns6)?window.pageXOffset:document.body.scrollLeft;
+        for (i=0; i < Amount; i++){
+        sy = Speed[i]*Math.sin(90*Math.PI/180);
+        sx = Speed[i]*Math.cos(Cstep[i]);
+        Ypos[i]+=.2*sy;
+        Xpos[i]+=.3*sx; 
+        if (Ypos[i] > WinHeight){
+        Ypos[i]=-60;
+        Xpos[i]=Math.round(Math.random()*WinWidth);
+        Speed[i]=Math.random()*5+3;
+        }
+        if (ns){
+        document.layers['sn'+i].left=Xpos[i];
+        document.layers['sn'+i].top=Ypos[i]+hscrll;
+        }
+        else if (ns6){
+        document.getElementById("si"+i).style.left=Math.min(WinWidth,Xpos[i]);
+        document.getElementById("si"+i).style.top=Ypos[i]+hscrll;
+        }
+        else{
+        eval("document.all.si"+i).style.left=Xpos[i];
+        eval("document.all.si"+i).style.top=Ypos[i]+hscrll;
+        } 
+        Cstep[i]+=Step[i];
+        }
+        setTimeout('fall()',20);
+        }
+
+        window.onload=fall
+        //-->
+        </script>
         <input type="button" onclick="chBackcolor('pink');">
         <input type="button" onclick="chBackcolor('#2e51a2');">
-        <input type="button" onclick="chBackcolor('black');">
+        <input type="button" onclick="chBackcolor('white');">
         <div class="topcorner">
             <p class="white">Project {{ name }}</p>
             <p class="white">Built at Cornell University by {{ netid }}</p>
         </div>
         <form class="form-inline global-search">
-            <h1 style="font-size: 85px; font-family:Futura; color: white"> <!--#4285F4 -->
+            <h1 style="font-size: 85px; font-family:Futura; color: black"> <!--#4285F4 -->
        <!--          A
                 <font color=#EA4335>n</font>
                 <font color=#FBBC05>i</font>
@@ -33,7 +123,7 @@
             </h1>
             <!-- <br class="shortbr"> -->
             <hr style="height:30pt; visibility:hidden;" />
-            <h3 style="font-family:Futura; color: white"><i>アニメーション</i>
+            <h3 style="font-family:Futura; color: black"><i>アニメーション</i>
             </h3>
             <br><br>
             
