@@ -23,6 +23,47 @@ tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery'
 tags_set = set(tags_array)
 
 @irsystem.route('/', methods=['GET'])
+
+def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
+    
+    
+    q0 = query
+    
+    
+    
+    if len(relevant)!=0:
+        f = lambda i: np.array(relevant)[i]
+        dREL = np.fromfunction(np.vectorize(f), (len(relevant),) , dtype=int)
+        dREL = np.sum(dREL,axis=0)
+    else:
+        dREL = 0
+    
+    
+    
+    if len(irrelevant)!=0:
+        f = lambda i: np.array(irrelevant)[i]
+        dIRREL = np.fromfunction(np.vectorize(f), (len(irrelevant),) , dtype=int)
+        dIRREL = np.sum(dIRREL,axis=0)
+    else:
+        dIRREL = 0    
+    
+    if len(relevant)!=0 and len(irrelevant)!=0:
+        q1 = (a*q0)+(b*(1/len(relevant))*dREL)-(c*((1/len(irrelevant))*dIRREL))
+    elif len(relevant)==0:
+        q1 = (a*q0)-(c*((1/len(irrelevant))*dIRREL))
+    elif len(irrelevant)==0:
+        q1 = (a*q0)+(b*(1/len(relevant))*dREL)
+        
+   
+    if clip:
+        q1[q1<0] = 0
+
+    return q1
+        
+        
+
+
+
 def search():
 	query = request.args.get('search')
 	tag = request.args.get('tagsearch')
