@@ -78,7 +78,8 @@ def search():
 	ova = request.args.get('ova')
 	ona = request.args.get('ona')
 	special = request.args.get('special')
-	doc2vec = request.args.get('doc2vec')
+	method = request.args.get('method')
+	# doc2vec = request.args.get('doc2vec')
 	show = []
 	if tv:
 		show.append('TV')
@@ -150,7 +151,16 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
 
-			if doc2vec:
+			# 			if method == "doc2vecreviews":
+			# 	review_model = review_model
+
+			if method == "doc2vecsynopsis":
+				review_model = synopsis_model
+
+			if method == "doc2vecreviews":
+				review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+
+			if method == "doc2vecreviews" or method == "doc2vecsynopsis":
 				# ## DOC2VEC
 				positive = []
 				for ind in anime_indexes:

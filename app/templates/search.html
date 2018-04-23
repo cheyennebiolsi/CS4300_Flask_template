@@ -67,7 +67,13 @@
             <br>
             Minimum Rating: <input id="minratinginput" type="text" name="min_rating">
             <br>
-            Doc2Vec <input id="checkBox" type="checkbox" name="doc2vec">
+            NSFW off <input id="checkBox" type="checkbox" name="nsfw">
+            Debug Controls:
+            Doc2Vec Reviews <input type="radio", name="method" value = "doc2vecreviews" >
+            Doc2Vec Synopsis <input type="radio", name="method" value = "doc2vecsynopsis" >
+            tSVD w/ Cossim Reviews <input type="radio", name="method" value = "tsvdreviews" >
+            tSVD w/ Cossim Synopsis <input type="radio", name="method" value = "tsvdynopsis" disabled>
+            tfIDF w/ Cossim Synposis <input type="radio", name="method" value = "oldmethod" disabled>
             <br>
             <button type="submit" class="btn btn-info"> Submit </button>
 
