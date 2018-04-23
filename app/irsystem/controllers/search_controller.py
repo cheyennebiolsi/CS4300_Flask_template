@@ -124,25 +124,31 @@ def search():
 			output_message = 'You looked for the Tag(s) ' + tag
 			mytag_set = set(tag_indexes)
 
-			jaccsim_matrix = np.zeros(firstcolumn.size)
+			jaccsim = {}
 			for i in range(firstcolumn.size):
 				anime_i_tags = np.where(tags_data[i,:] > 0)[0]
 				anime_i_set = set(anime_i_tags)
-				# print(anime_i_set)
-				# print(float(len(anime_i_set & mytag_set)/len(anime_i_set | mytag_set)))
-				# print(len(anime_i_set | mytag_set))
-				jaccsim_matrix[i] = get_jaccard(mytag_set, anime_i_set)
-				# print(jaccsim_matrix[i])
-			# print(mytag_set)
+				jaccsim[i] = get_jaccard(mytag_set, anime_i_set)
+				# print(jaccsim[i])
+			
+			anime_i_tags = np.where(tags_data[3294,:] > 0)[0]
+			print(mytag_set)
+			print(anime_i_tags)
+			print(jaccsim[3294])
 
-			jaccard_order = np.argpartition(jaccsim_matrix, number_results)
-			# print(jaccsim_matrix[jaccard_order])
-			jaccard_order = jaccard_order[::-1]
-			data = []
-			for ind in jaccard_order[:number_results]: #ind is row index not anime id
+			sorted_results = sorted(jaccsim.items(), key=operator.itemgetter(1), reverse=True)
+			topanimes = [i[0] for i in sorted_results] # returns key in order as 1D array
+			# print(topanimes)
+			top_n_animes = topanimes[:number_results] # these are by row id not anime id
+			
+			json_array = []
+			for ind in top_n_animes: #ind is row index not anime id
 				jsonfile = animelite[ind]
-				jsonfile['score'] = jaccsim_matrix[ind]
-				data.append(jsonfile)
+				jsonfile['score'] = jaccsim[ind]
+				# print(jaccsim[ind])
+				json_array.append(jsonfile)
+
+			data = json_array
 
 	# Option 3: Only Anime
 	elif not tag and query:
