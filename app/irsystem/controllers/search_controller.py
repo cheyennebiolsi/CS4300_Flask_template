@@ -34,6 +34,36 @@ def search():
 	query = request.args.get('search')
 	tag = request.args.get('tagsearch')
 	hide_ss = request.args.get('hide_ss')
+	tv = request.args.get('TV')
+	movie = request.args.get('movie')
+	ova = request.args.get('ova')
+	ona = request.args.get('ona')
+	special = request.args.get('special')
+
+	show = []
+	if tv:
+		show.append('TV')
+
+	if movie:
+		show.append('Movie')
+
+	if ova:
+		show.append('OVA')
+
+	if ona:
+		show.append('ONA')
+
+	if special:
+		show.append('Special')
+
+	print('Show', show)
+
+
+	min_rating = request.args.get('min_rating')
+	# print('minimum', min_rating)
+	time = request.args.get('time')
+	finished = request.args.get('finished')
+	licensed = request.args.get('licensed')
 
 	if not query and not tag:
 		data = []
@@ -120,6 +150,8 @@ def search():
 			if hide_ss:
 				data = hide(anime_indexes, data, animelite)
 
+			data = hide2(data, animelite, show, min_rating, time, finished, licensed)
+			# hide2(data, jsonfile, show, min_rating, time, finished, licensed):
 
 			# Trucated SVD
 			# query_vector = np.zeros(synposis_tfidf.shape[1])
@@ -256,6 +288,8 @@ def get_jaccard(setA, setB):
 	return jacsim
 
 def hide(anime_ids, data, jsonfile):
+
+	#hide
 	hide = []
 	for anime_id in anime_ids:
 		anime = get_anime(anime_id, jsonfile)
@@ -263,20 +297,10 @@ def hide(anime_ids, data, jsonfile):
 		sidestory_anime = re.findall('\((.*?)\)',sidestory)
 		for ss in sidestory_anime:
 			hide.append(int(ss.replace('anime ','')))
-	# print('hide these', hide)
-
 	hide_set = set(hide)
 	new_data = []
-	# print(data[0]['anime_id'])
-	# print(data)
-	# print(data[0])
+
 	for entry in data:
-		# print('---------------------------------------------------------------------------------')
-		# print(entry)
-		# print('---------------------------------------------------------------------------------')
-		# datapoint["anime_id"]
-		# print(datapoint["anime_id"])
-		# print(entry['anime_id'])
 		if entry != "not found":
 			if entry['anime_id'] not in hide_set:
 				new_data.append(entry)
@@ -284,7 +308,70 @@ def hide(anime_ids, data, jsonfile):
 	return new_data
 		
 
+def hide2(data, jsonfile, show, min_rating, time, finished, licensed):
+	# Filters: TV, Movie, OVA, Special, OVA, Minimum Anime Rating, Time Period
+	new_data = []
+	for entry in data:
+		if entry != "not found":
 
+			min_rating_add = True
+			# print('wtf2', min_rating)
+			if min_rating: 
+				if entry['anime_rating_value'] != "":
+					# print('wtf', float(entry['anime_rating_value']))
+					# print('help',entry['anime_rating_value'] < min_rating)
+					# print(entry['anime_rating_value'])
+					if float(entry['anime_rating_value']) < float(min_rating):
+						min_rating_add = False
+				else:
+					min_rating_add = False
+			# Fixed
+
+			time_add = True
+			if time:
+				if entry['anime_premiered'] != 'N/A':
+					year = re.findall('\d', entry['anime_premiered'])
+					year = ''.join(year)
+					# print(re.findall('\d',entry['anime_premiered'])[0:4])
+					# print(year)
+					if year < int(time):
+						time_add = False
+				else:
+					time_add = False
+			# Fixed			
+
+			finished_add = True
+			if finished:
+				if entry['anime_status'] != "Finished Airing" and entry['anime_status'] != "":
+					finished_add = False
+
+			# Fixed
+
+			
+			show_set = set(show)
+			# print(show_set)
+			show_add = True
+			if show:
+				print('show', entry['anime_type'])
+				print(entry['anime_type'] not in show_set)
+				if entry['anime_type'] not in show_set:
+					# TV, Movie, OVA, Special, OVA 
+					show_add = False
+
+			# Fixed
+
+			licensed_add = True
+			if licensed:
+				if entry['anime_licensors'] == "":
+					licensed_add = False
+
+			# Fixed
+
+			if min_rating_add and time_add and finished_add and show_add and licensed_add:
+				new_data.append(entry)
+
+
+	return new_data
 
 
 
