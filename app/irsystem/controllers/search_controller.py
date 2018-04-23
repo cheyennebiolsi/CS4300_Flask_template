@@ -6,6 +6,8 @@ import json
 import operator
 import gensim.models
 import re
+from scipy.sparse.linalg import svds
+from sklearn.preprocessing import normalize
 
 project_name = "AniAi: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
@@ -13,8 +15,10 @@ net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary 
 animelite = json.load(open('data/animelite.json'))
 
 synposis_tfidf = np.load('data/synposis_tfidf.npy')
-tsynposis = synposis_tfidf
+syn_tfidf = np.load('data/syntfidf.npy')
 # u, s, vh = np.linalg.svd(synposis_tfidf, full_matrices=True)
+
+
 
 tags_data = np.load('data/tags.npy')
 firstcolumn = synposis_tfidf[:,0]
@@ -24,7 +28,6 @@ review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 synopsis_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
 
 # truncated svd
-
 
 tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
 tags_set = set(tags_array)
@@ -76,7 +79,7 @@ def search():
 	ova = request.args.get('ova')
 	ona = request.args.get('ona')
 	special = request.args.get('special')
-
+	doc2vec = request.args.get('doc2vec')
 	show = []
 	if tv:
 		show.append('TV')
@@ -156,7 +159,7 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
 
-
+		if doc2vec:
 			# ## DOC2VEC
 			positive = []
 			for ind in anime_indexes:
@@ -169,6 +172,7 @@ def search():
 
 			most_similar = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=200) #returns most similar anime ids and similarity scores
 			top10 = most_similar
+			# print(top10)
 			# print(np.array(top10).shape)
 
 			json_array = []
@@ -194,8 +198,34 @@ def search():
 			data = hide2(data, animelite, show, min_rating, time, finished, licensed)
 
 			# hide2(data, jsonfile, show, min_rating, time, finished, licensed):
-
+		else:
 			# Trucated SVD
+			u, s, v_trans = svds(syn_tfidf, k = 40) 
+			# u2 = normalize(u, axis=1) #(4056, 40)
+			u2 = u
+			v = v_trans.transpose()
+			# v_trans = (40, 2875)
+			# v = (2875, 40)
+
+			query_vector = np.zeros(u2.shape[1])
+			for ind in anime_indexes:
+				column_index = np.where(firstcolumn == ind)[0][0]
+				query_vector += u2[column_index]
+
+			cossim = {}
+			for i in range(firstcolumn.size):
+				print(i)
+				cossim[i] = get_cossim(query_vector, i, u2)
+				top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
+				top10results_list = top10results.keys() #these are column indexes, we need anime ids
+				top10animes = firstcolumn[top10results_list]
+
+			json_array = []
+			for result in top10animes:
+				json_array.append(get_anime(result, animelite))
+
+			data = json_array
+
 			# query_vector = np.zeros(synposis_tfidf.shape[1])
 			# for ind in anime_indexes:
 			# 	column_index = np.where(firstcolumn == ind)[0][0]
