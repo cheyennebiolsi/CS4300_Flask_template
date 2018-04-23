@@ -8,7 +8,7 @@ import gensim.models
 import re
 from scipy.sparse.linalg import svds
 from sklearn.preprocessing import normalize
-import html
+# import html
 
 project_name = "Aniai: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
