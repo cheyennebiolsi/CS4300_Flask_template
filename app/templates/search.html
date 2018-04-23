@@ -86,31 +86,29 @@
             <!-- <div> -->
             {% if data %}
                 {% for d in data %}
-                    {% if loop.first %}<div class="row">{% endif %}  
+                    <div class="row"> 
                     <br>
-                    <div class="boxed sidebyside">
-                        <!-- <p>{{d}}</p> -->
-                        <div class="col-sm-6 col-md-6 col-xs-12 image-container" id='meeperZ'>
-                            <img src={{d["anime_image_url"]}} class="curved hover"></img>
-                             <p class="meep">
-                                <b>{{d["anime_english_title"]}}</b> 
-                                ID: {{d["anime_id"]}}
-                                Rating: {{d["anime_rating_value"]}}
-                                Number of Ratings: {{d["anime_rating_count"]}}
-                                Type: {{d["anime_type"]}}
-                                Time: {{d["anime_premiered"]}}
-                                Score: {{d["score"]}}
-                                Genre: {{d["anime_genres"]}}
-                                <!-- <i>Synposis:</i> {{d["anime_synopsis"]}} -->
-                            </p>
+                        <div class="boxed sidebyside">
+                            <!-- <p>{{d}}</p> -->
+                            <div class="col-sm-6 col-md-6 col-xs-12 image-container" id='meeperZ'>
+                                <img src={{d["anime_image_url"]}} class="curved hover"></img>
+                                 <p class="meep">
+                                    <b>{{d["anime_english_title"]}}</b> 
+                                    ID: {{d["anime_id"]}}
+                                    Rating: {{d["anime_rating_value"]}}
+                                    Number of Ratings: {{d["anime_rating_count"]}}
+                                    Type: {{d["anime_type"]}}
+                                    Time: {{d["anime_premiered"]}}
+                                    Score: {{d["score"]}}
+                                    Genre: {{d["anime_genres"]}}
+                                    <!-- <i>Synposis:</i> {{d["anime_synopsis"]}} -->
+                                </p>
+                            </div>
+                            <!-- <div class="col-sm-6 col-md-6 col-xs-12 text">   -->
+                               
+                            <!-- </div> -->
                         </div>
-                        <!-- <div class="col-sm-6 col-md-6 col-xs-12 text">   -->
-                           
-                        <!-- </div> -->
-                    </div>
-                    {% if loop.index % 3 == 0 %}</div>
-                    <div class="row">{% endif %}
-                    {% if loop.last %}</div>{% endif %}
+                   </div>
 
 
 
