@@ -12,22 +12,26 @@ from sklearn.preprocessing import normalize
 project_name = "AniAi: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
 
+
+number_results = 200 #Number Results Before PostProcessing
+number_results_final = 100
+score_tags = 1
+score_title = 6
+
 animelite = json.load(open('data/animelite.json'))
 tags_data = np.load('data/tags.npy')
 
 # Trucated SVD
-
 firstcolumn = np.load('data/firstcolumn.npy')
 u = np.load('data/u_reviewk40.npy')
 s = np.load('data/s_reviewk40.npy')
 vT = np.load('data/vT_reviewk40.npy')
 
 # dov2vec
-review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
-synopsis_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
+# review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+# synopsis_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
 
-# truncated svd
-
+# Tags and Jaccard Similarity
 tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
 tags_set = set(tags_array)
 
@@ -79,7 +83,7 @@ def search():
 	ona = request.args.get('ona')
 	special = request.args.get('special')
 	method = request.args.get('method')
-	# doc2vec = request.args.get('doc2vec')
+	
 	show = []
 	if tv:
 		show.append('TV')
@@ -97,11 +101,13 @@ def search():
 	finished = request.args.get('finished')
 	licensed = request.args.get('licensed')
 
+
+	# Option 1: No Anime or Tags
 	if not query and not tag:
 		data = []
 		output_message = ''
-
-	elif not query and tag: # Need Still Work
+	# Option 2: Only Tags
+	elif not query and tag:
 		tag_array = tag.split('|')
 		tag_indexes = []
 		for tag_input in tag_array:
@@ -116,22 +122,29 @@ def search():
 			output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
 		else:
 			output_message = 'You looked for the Tag(s) ' + tag
-			mytag = []
-			for tag_input in tag_indexes:
-				mytag.append(tag_input)
-			mytag_set = set(mytag)
+			mytag_set = set(tag_indexes)
 
 			jaccsim_matrix = np.zeros(firstcolumn.size)
-			for i in range(firstcolumn.size-1):
+			for i in range(firstcolumn.size):
 				anime_i_tags = np.where(tags_data[i,:] > 0)[0]
 				anime_i_set = set(anime_i_tags)
+				# print(anime_i_set)
+				# print(float(len(anime_i_set & mytag_set)/len(anime_i_set | mytag_set)))
+				# print(len(anime_i_set | mytag_set))
 				jaccsim_matrix[i] = get_jaccard(mytag_set, anime_i_set)
+				# print(jaccsim_matrix[i])
+			# print(mytag_set)
 
-			jaccard_order = np.argpartition(jaccsim_matrix, -10)[-10:]
+			jaccard_order = np.argpartition(jaccsim_matrix, number_results)
+			# print(jaccsim_matrix[jaccard_order])
+			jaccard_order = jaccard_order[::-1]
 			data = []
-			for ind in jaccard_order:
-				data.append(animelite[ind])
+			for ind in jaccard_order[:number_results]: #ind is row index not anime id
+				jsonfile = animelite[ind]
+				jsonfile['score'] = jaccsim_matrix[ind]
+				data.append(jsonfile)
 
+	# Option 3: Only Anime
 	elif not tag and query:
 		
 		query_array = query.split('|')
@@ -151,17 +164,14 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
 
-			# 			if method == "doc2vecreviews":
-			# 	review_model = review_model
-
 			if method == "doc2vecsynopsis":
-				review_model = synopsis_model
+				review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
 
 			if method == "doc2vecreviews":
 				review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 
-			if method == "doc2vecreviews" or method == "doc2vecsynopsis":
-				# ## DOC2VEC
+			if method == "doc2vecreviews" or method == "doc2vecsynopsis": # DOC2VEC
+				
 				positive = []
 				for ind in anime_indexes:
 					positive.append("anime_id_" + str(ind))
@@ -171,36 +181,31 @@ def search():
 					reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
 					positive_vectors.append(reviewvector)
 
-				most_similar = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=200) #returns most similar anime ids and similarity scores
-				top10 = most_similar
-				# print(top10)
-				# print(top10)
-				# print(np.array(top10).shape)
+				top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=number_results) 
+				#returns most similar anime ids and similarity scores
 
 				json_array = []
 				score_array = []
-				# get_anime(anime_id, animelite):
-				for result in top10:
-					# print(result[0].replace("anime_id_", ""))
+				for result in top_n_animes:
 					get_anime_id = int(result[0].replace("anime_id_", ""))
 					score = result[1]
-					# print(get_anime_id)
-					# if get_anime_id not in set_anime_ids:
 					jsonfile = get_anime(get_anime_id, animelite)
 					if get_anime_id not in set_anime_ids and jsonfile != "not found":
 						jsonfile['score'] = score
 						json_array.append(jsonfile)
 						
-
 				data = json_array
+			
+				if show or min_rating or time or finished or licensed:
+					data = hide2(data, animelite, show, min_rating, time, finished, licensed)
 
-				# print('animeId', anime_indexes)
+					#Needs to be Fixed
 
-				# hide2(data, jsonfile, show, min_rating, time, finished, licensed):
-			else:
-				# Trucated SVD
-				# u2 = normalize(u, axis=1) #(4056, 40)
-				u2 = u
+
+			else: # Trucated SVD
+				
+				# u2 = normalize(u, axis=1) #(4056, 40) #Option 1
+				u2 = u #option 2
 
 				query_vector = np.zeros(u2.shape[1])
 				for ind in anime_indexes:
@@ -209,66 +214,32 @@ def search():
 
 				cossim = {}
 				for i in range(firstcolumn.size):
-					# print(i)
 					cossim[firstcolumn[i]] = round(get_cossim(query_vector, i, u2),4)
 				
-				print('len', len(cossim))
-				# top10results = sorted(cossim.items(), key=lambda x: x[1], reverse=True)
 				sorted_results = sorted(cossim.items(), key=operator.itemgetter(1), reverse=True)
-				top10results = [i[0] for i in sorted_results]
-				top10animes = top10results[0:10]
-				# top10results = sorted(cossim.items(), key= lambda.get)[0:10]
-
-				print('meos',top10animes)
-				# top10animes = top10results.keys() #these are anime_ids
-					# top10animes = firstcolumn[top10results_list]
-
-				# print(cossim)
-				# print('-----------------------')
-				print(top10animes)
+				topanimes = [i[0] for i in sorted_results] # returns key in order as 1D array
+				top_n_animes = topanimes[0:number_results]
+			
 				json_array = []
-				for result in top10animes:
+				for result in top_n_animes:
 					jsonfile = get_anime(result, animelite)
 					if result not in set_anime_ids and jsonfile != "not found":
-						# print(result)
-						score = cossim[int(result)]
-						# print(score)
+						score = cossim[int(result)] #get score from diction
 						jsonfile['score'] = score
 						json_array.append(jsonfile)
 
 				data = json_array
 
+			# if Further Filters are chosen
 			if hide_ss:
-				# print('meep', anime_indexes)
 				data = hide(anime_indexes, data, animelite)
 
 			if show or min_rating or time or finished or licensed:
 				data = hide2(data, animelite, show, min_rating, time, finished, licensed)
 
-				# TF_IDF with Cosine Similarity
-				# query_vector = np.zeros(synposis_tfidf.shape[1])
-				# for ind in anime_indexes:
-				# 	column_index = np.where(firstcolumn == ind)[0][0]
-				# 	query_vector += synposis_tfidf[column_index]
-				
-				# cossim = {}
-				# for i in range(firstcolumn.size):
-				# 	cossim[i] = get_cossim(query_vector, i, synposis_tfidf)
-				# top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
-				# top10results_list = top10results.keys()[1:] #these are column indexes, we need anime ids
-				# top10animes = firstcolumn[top10results_list]
-
-				# json_array = []
-				# for result in top10animes:
-				# 	json_array.append(get_anime(result, animelite))
-
-				# data = json_array
-
+	# Option 4: Anime and Tags
 	else: # Tag and Anime Still Needs Work
-
 		data = []
-		# output_message = "Your search: " + query + ' ' + 'tags ' + tag
-
 		# query_array = query.split('|')
 		# anime_indexes = []
 		# for anime_input in query_array:
@@ -277,6 +248,8 @@ def search():
 		# 		if element['anime_english_title'] == anime_input:
 		# 			anime_index = element['anime_id']
 		# 	anime_indexes.append(anime_index)
+			 
+		# set_anime_ids = set(anime_indexes)
 
 		# tag_array = tag.split('|')
 		# tag_indexes = []
@@ -299,8 +272,88 @@ def search():
 		# elif -1 in tag_indexes:
 		# 	data = []
 		# 	output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
-	
+
 		# else:
+		# 	output_message = 'Your search: ' + query
+
+		# 	if method == "doc2vecsynopsis":
+		# 		review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
+
+		# 	if method == "doc2vecreviews":
+		# 		review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+
+		# 	if method == "doc2vecreviews" or method == "doc2vecsynopsis": # DOC2VEC
+				
+		# 		positive = []
+		# 		for ind in anime_indexes:
+		# 			positive.append("anime_id_" + str(ind))
+
+		# 		positive_vectors = []
+		# 		for anime_id in positive:
+		# 			reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
+		# 			positive_vectors.append(reviewvector)
+
+		# 		top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=number_results) 
+		# 		#returns most similar anime ids and similarity scores
+
+		# 		cossim = {} #Cosine Score
+		# 		for result in top_n_animes:
+		# 			get_anime_id = int(result[0].replace("anime_id_", ""))
+		# 			score = result[1]
+		# 			cossim[get_anime_id] = score
+
+		# 	else: # Trucated SVD
+				
+		# 		# u2 = normalize(u, axis=1) #(4056, 40) #Option 1
+		# 		u2 = u #option 2
+
+		# 		query_vector = np.zeros(u2.shape[1])
+		# 		for ind in anime_indexes:
+		# 			column_index = np.where(firstcolumn == ind)[0][0]
+		# 			query_vector += u2[column_index]
+
+		# 		cossim = {}
+		# 		for i in range(firstcolumn.size):
+		# 			cossim[firstcolumn[i]] = round(get_cossim(query_vector, i, u2),4)
+				
+		# 	sorted_results = sorted(cossim.items(), key=operator.itemgetter(1), reverse=True)
+		# 	topanimes = [i[0] for i in sorted_results] # returns key in order as 1D array
+		# 	top_n_animes = topanimes[0:number_results]
+			
+
+		# # TAGS
+		# mytag_set = set(tag_indexes)
+
+		# jaccsim_matrix = {}
+		# for i in top_n_animes: #animeid
+		# 	anime_i_tags = np.where(tags_data[i,:] > 0)[0]
+		# 	anime_i_set = set(anime_i_tags)
+		# 	jaccsim_matrix[top_n_animes[i]](get_jaccard(mytag_set, anime_i_set))
+
+
+		# jaccard_order = np.argpartition(jaccsim_matrix, -10)[-10:]
+		# data = []
+		# for ind in jaccard_order:
+		# 	data.append(animelite[topresults_list[ind]]) # need column ids
+		# # output_message = "Your search: " + query + ' ' + 'tags ' + tag
+
+		# 		for result in top_n_animes:
+		# 			get_anime_id = int(result[0].replace("anime_id_", ""))
+		# 			score = result[1]
+		# 			jsonfile = get_anime(get_anime_id, animelite)
+		# 			if get_anime_id not in set_anime_ids and jsonfile != "not found":
+		# 				jsonfile['score'] = score
+		# 				json_array.append(jsonfile)
+						
+		# 		data = json_array
+		# 	# if Further Filters are chosen
+		# 	if hide_ss:
+		# 		data = hide(anime_indexes, data, animelite)
+
+		# 	if show or min_rating or time or finished or licensed:
+		# 		data = hide2(data, animelite, show, min_rating, time, finished, licensed)
+		
+		#skafskafskfakskfk
 		# 	query_vector = np.zeros(synposis_tfidf.shape[1])
 		# 	for ind in anime_indexes:
 		# 		column_index = np.where(firstcolumn == ind)[0][0]
@@ -377,7 +430,7 @@ def get_cossim(queryvector, ind2, tfidf):
     return numerator/denominator
 
 def get_jaccard(setA, setB):
-	jacsim = len(setA & setB)/len(setA | setB) 
+	jacsim = float(len(setA & setB))/float(len(setA | setB))
 	return jacsim
 
 def hide(anime_ids, data, jsonfile):
