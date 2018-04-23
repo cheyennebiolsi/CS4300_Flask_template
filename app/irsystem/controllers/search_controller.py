@@ -9,7 +9,7 @@ import re
 from scipy.sparse.linalg import svds
 from sklearn.preprocessing import normalize
 
-project_name = "AniAi: Anime Recommender"
+project_name = "Aniai: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
 
 
@@ -19,6 +19,8 @@ weight_tags = 1
 weight_title = 6
 
 animelite = json.load(open('data/animelite.json'))
+allanimelite = json.load(open('data/allanimelite.json'))
+
 tags_data = np.load('data/tags.npy')
 tags_column = tags_data[:,0]
 tags_nocolumn = np.delete(tags_data, 0, 1)
@@ -158,34 +160,36 @@ def search():
 	# Option 3: Only Anime
 	elif not tag and query:
 		
-		query_array = query.split('|')
-		anime_indexes = []
-		for anime_input in query_array:
-			anime_index = -1
-			for element in animelite:
-				if element['anime_english_title'] == anime_input:
-					anime_index = element['anime_id']
-			anime_indexes.append(anime_index)
-			 
-		set_anime_ids = set(anime_indexes)
+		if method == "doc2vecreviews" or method == "doc2vecsynopsis": # DOC2VEC
 
-		if -1 in anime_indexes:
-			data = []
-			output_message = 'Could not find ' + query + '. Please try again pls.'
-		else:
-			output_message = 'Your search: ' + query
+			query_array = query.split('|')
+			anime_indexes = []
+			for anime_input in query_array:
+				anime_index = -1
+				for element in allanimelite:
+					if element['anime_english_title'] == anime_input:
+						anime_index = element['anime_id']
+				anime_indexes.append(anime_index)
+			# print(anime_indexes)
+			set_anime_ids = set(anime_indexes)
 
-			if method == "doc2vecsynopsis":
-				review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
+			if -1 in anime_indexes:
+				data = []
+				output_message = 'Could not find ' + query + '. Please try again pls.'
+			else:
+				output_message = 'Your search: ' + query
 
-			if method == "doc2vecreviews":
-				review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+				if method == "doc2vecsynopsis":
+					review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
 
-			if method == "doc2vecreviews" or method == "doc2vecsynopsis": # DOC2VEC
-				
+				if method == "doc2vecreviews":
+					review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+
 				positive = []
 				for ind in anime_indexes:
 					positive.append("anime_id_" + str(ind))
+
+				print('Postive', positive)
 
 				positive_vectors = []
 				for anime_id in positive:
@@ -207,13 +211,31 @@ def search():
 						
 				data = json_array
 			
+				# if Further Filters are chosen
+				if hide_ss:
+					data = hide(anime_indexes, data, allanimelite)
+
 				if show or min_rating or time or finished or licensed:
-					data = hide2(data, animelite, show, min_rating, time, finished, licensed)
-
-					#Needs to be Fixed
+					data = hide2(data, allanimelite, show, min_rating, time, finished, licensed)
 
 
-			else: # Trucated SVD
+		else: # Trucated SVD
+			query_array = query.split('|')
+			anime_indexes = []
+			for anime_input in query_array:
+				anime_index = -1
+				for element in animelite:
+					if element['anime_english_title'] == anime_input:
+						anime_index = element['anime_id']
+				anime_indexes.append(anime_index)
+			# print(anime_indexes)
+			set_anime_ids = set(anime_indexes)
+
+			if -1 in anime_indexes:
+				data = []
+				output_message = 'Could not find ' + query + '. Please try again pls.'
+			else:
+				output_message = 'Your search: ' + query
 				
 				# u2 = normalize(u, axis=1) #(4056, 40) #Option 1
 				u2 = u #option 2
@@ -241,12 +263,12 @@ def search():
 
 				data = json_array
 
-			# if Further Filters are chosen
-			if hide_ss:
-				data = hide(anime_indexes, data, animelite)
+				# if Further Filters are chosen
+				if hide_ss:
+					data = hide(anime_indexes, data, animelite)
 
-			if show or min_rating or time or finished or licensed:
-				data = hide2(data, animelite, show, min_rating, time, finished, licensed)
+				if show or min_rating or time or finished or licensed:
+					data = hide2(data, animelite, show, min_rating, time, finished, licensed)
 
 	# Option 4: Anime and Tags
 	else: # Tag and Anime Still Needs Work

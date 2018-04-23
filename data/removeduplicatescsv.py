@@ -3,8 +3,8 @@ import ast
 
 # use python csvhelper.py to create csv file
 
-infile = "anime.csv"
-outfile = "animelite.csv"
+infile = "allanime.csv"
+outfile = "allanimelite.csv"
 
 with open(infile, encoding='utf-8') as f, open(outfile, 'w') as o:
 	reader = csv.reader(f)
