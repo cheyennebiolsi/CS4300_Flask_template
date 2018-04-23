@@ -174,6 +174,7 @@ def search():
 				most_similar = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=200) #returns most similar anime ids and similarity scores
 				top10 = most_similar
 				# print(top10)
+				# print(top10)
 				# print(np.array(top10).shape)
 
 				json_array = []
@@ -187,16 +188,13 @@ def search():
 					# if get_anime_id not in set_anime_ids:
 					jsonfile = get_anime(get_anime_id, animelite)
 					if get_anime_id not in set_anime_ids and jsonfile != "not found":
+						jsonfile['score'] = score
 						json_array.append(jsonfile)
-						score_array.append(score)
+						
 
 				data = json_array
 
 				# print('animeId', anime_indexes)
-				if hide_ss:
-					data = hide(anime_indexes, data, animelite)
-
-				data = hide2(data, animelite, show, min_rating, time, finished, licensed)
 
 				# hide2(data, jsonfile, show, min_rating, time, finished, licensed):
 			else:
@@ -212,16 +210,40 @@ def search():
 				cossim = {}
 				for i in range(firstcolumn.size):
 					# print(i)
-					cossim[i] = get_cossim(query_vector, i, u2)
-					top10results = dict(sorted(cossim.items(), key=lambda x: x[1], reverse=True)[:11])
-					top10results_list = top10results.keys() #these are column indexes, we need anime ids
-					top10animes = firstcolumn[top10results_list]
+					cossim[firstcolumn[i]] = round(get_cossim(query_vector, i, u2),4)
+				
+				print('len', len(cossim))
+				# top10results = sorted(cossim.items(), key=lambda x: x[1], reverse=True)
+				sorted_results = sorted(cossim.items(), key=operator.itemgetter(1), reverse=True)
+				top10results = [i[0] for i in sorted_results]
+				top10animes = top10results[0:10]
+				# top10results = sorted(cossim.items(), key= lambda.get)[0:10]
 
+				print('meos',top10animes)
+				# top10animes = top10results.keys() #these are anime_ids
+					# top10animes = firstcolumn[top10results_list]
+
+				# print(cossim)
+				# print('-----------------------')
+				print(top10animes)
 				json_array = []
 				for result in top10animes:
-					json_array.append(get_anime(result, animelite))
+					jsonfile = get_anime(result, animelite)
+					if result not in set_anime_ids and jsonfile != "not found":
+						# print(result)
+						score = cossim[int(result)]
+						# print(score)
+						jsonfile['score'] = score
+						json_array.append(jsonfile)
 
 				data = json_array
+
+			if hide_ss:
+				# print('meep', anime_indexes)
+				data = hide(anime_indexes, data, animelite)
+
+			if show or min_rating or time or finished or licensed:
+				data = hide2(data, animelite, show, min_rating, time, finished, licensed)
 
 				# TF_IDF with Cosine Similarity
 				# query_vector = np.zeros(synposis_tfidf.shape[1])
@@ -398,11 +420,12 @@ def hide(anime_ids, data, jsonfile):
 										hide.append(int(ss2.replace('anime ','')))
 
 	hide_set = set(hide)
-	print(hide_set)
+	print('wtf2222', hide_set)
 	new_data = []
 
 	for entry in data:
 		if entry != "not found":
+			print('wombocombo', entry['anime_id'])
 			if entry['anime_id'] not in hide_set:
 				new_data.append(entry)
 
