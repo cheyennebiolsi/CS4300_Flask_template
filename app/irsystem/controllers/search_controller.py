@@ -331,28 +331,30 @@ def hide(anime_ids, data, jsonfile):
 	hide = []
 	for anime_id in anime_ids:
 		anime = get_anime(anime_id, jsonfile)
-		
-		sidestory = anime["anime_side_story"]
-		sidestory_anime = re.findall('\((.*?)\)',sidestory)
-		if sidestory != []:
-			for ss in sidestory_anime:
-				hide.append(int(ss.replace('anime ','')))
-		
-		parentstory = anime["anime_parent_story"]
-		print('parent',parentstory)
-		parentstory = re.findall('\((.*?)\)',sidestory)
 
-		if parentstory != []:
-			for ps in parentstory:
-				pstory = int(ps.replace('anime ',''))
-				if pstory not in hide:
-					hide.append(pstory)
-					pstory_anime = get_anime(pstory, json)
-					sidestory2 = pstory_anime["anime_side_story"]
-					sidestory_anime2 = re.findall('\((.*?)\)',sidestory2)
-					if sidestory2 != []:
-						for ss2 in sidestory_anime2:
-							hide.append(int(ss2.replace('anime ','')))
+		if anime["anime_side_story"] != "":
+			sidestory = anime["anime_side_story"]
+			sidestory_anime = re.findall('\((.*?)\)',sidestory)
+			if sidestory != []:
+				for ss in sidestory_anime:
+					hide.append(int(ss.replace('anime ','')))
+		
+		if anime["anime_parent_story"] != "":
+			parentstory = anime["anime_parent_story"]
+			# print('parent',parentstory)
+			parentstory = re.findall('\((.*?)\)',sidestory)
+
+			if parentstory != []:
+				for ps in parentstory:
+					pstory = int(ps.replace('anime ',''))
+					if pstory not in hide:
+						hide.append(pstory)
+						pstory_anime = get_anime(pstory, json)
+						sidestory2 = pstory_anime["anime_side_story"]
+						sidestory_anime2 = re.findall('\((.*?)\)',sidestory2)
+						if sidestory2 != []:
+							for ss2 in sidestory_anime2:
+								hide.append(int(ss2.replace('anime ','')))
 
 	hide_set = set(hide)
 	new_data = []
