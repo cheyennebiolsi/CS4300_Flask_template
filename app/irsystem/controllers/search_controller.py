@@ -8,6 +8,7 @@ import gensim.models
 import re
 from scipy.sparse.linalg import svds
 from sklearn.preprocessing import normalize
+import html
 
 project_name = "Aniai: Anime Recommender"
 net_id = "Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53), Gary Gao (gg392), Cheyenne Biolsi (ckb59)"
@@ -360,7 +361,7 @@ def search():
 
 				total = {}
 				print('JEJFJFSJ')
-				print('COSSIM',cossim[8]) #COSSIM is missing
+				print('COSSIM',cossim[8]) #COSSIM is missing but it's in the json
 				print('assfajsfjajafsja')
 				# print('JACCSIM', jaccsim[8])
 				for element in alltags_column: #animeid
