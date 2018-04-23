@@ -172,18 +172,22 @@ def search():
 			# print(np.array(top10).shape)
 
 			json_array = []
+			score_array = []
 			# get_anime(anime_id, animelite):
 			for result in top10:
 				# print(result[0].replace("anime_id_", ""))
 				get_anime_id = int(result[0].replace("anime_id_", ""))
+				score = result[1]
 				# print(get_anime_id)
 				# if get_anime_id not in set_anime_ids:
 				jsonfile = get_anime(get_anime_id, animelite)
 				if get_anime_id not in set_anime_ids and jsonfile != "not found":
 					json_array.append(jsonfile)
+					score_array.append(score)
 
 			data = json_array
 
+			# print('animeId', anime_indexes)
 			if hide_ss:
 				data = hide(anime_indexes, data, animelite)
 
@@ -288,7 +292,7 @@ def get_anime(anime_id, jsonfile):
 
 def get_sim(index, ind2, tfidf):
     """Returns a float giving the cosine similarity of 
-       the two movie transcripts.
+       the two anime's npy (either based on reviews/reviews and synopsis/synopsis.
     
     Params: {mov1: String,
              mov2: String,
@@ -306,7 +310,7 @@ def get_sim(index, ind2, tfidf):
 
 def get_cossim(queryvector, ind2, tfidf):
     """Returns a float giving the cosine similarity of 
-       the two movie transcripts.
+       the two anime's npy (either based on reviews/reviews and synopsis/synopsis.
     
     Params: {mov1: String,
              mov2: String,
@@ -328,8 +332,11 @@ def get_jaccard(setA, setB):
 def hide(anime_ids, data, jsonfile):
 
 	#hide
+	print('wtf???A?A?')
 	hide = []
+	print('wtf--------------',anime_ids)
 	for anime_id in anime_ids:
+		# print('stop',anime_id)
 		anime = get_anime(anime_id, jsonfile)
 
 		if anime["anime_side_story"] != "":
@@ -342,21 +349,27 @@ def hide(anime_ids, data, jsonfile):
 		if anime["anime_parent_story"] != "":
 			parentstory = anime["anime_parent_story"]
 			# print('parent',parentstory)
-			parentstory = re.findall('\((.*?)\)',sidestory)
+			parentstory = re.findall('\((.*?)\)',parentstory)
 
 			if parentstory != []:
 				for ps in parentstory:
-					pstory = int(ps.replace('anime ',''))
-					if pstory not in hide:
-						hide.append(pstory)
-						pstory_anime = get_anime(pstory, json)
-						sidestory2 = pstory_anime["anime_side_story"]
-						sidestory_anime2 = re.findall('\((.*?)\)',sidestory2)
-						if sidestory2 != []:
-							for ss2 in sidestory_anime2:
-								hide.append(int(ss2.replace('anime ','')))
+					pstory = ps.replace('anime ','')
+					# print(pstory, 'pstory')
+					if int(pstory) not in hide:
+						print('yes')
+						pstory_anime = get_anime(int(pstory), jsonfile)
+						print(pstory_anime)
+						if pstory_anime != "not found":
+							hide.append(int(pstory))
+							if pstory_anime["anime_side_story"] != "":
+								sidestory2 = pstory_anime["anime_side_story"]
+								sidestory_anime2 = re.findall('\((.*?)\)',sidestory2)
+								if sidestory2 != []:
+									for ss2 in sidestory_anime2:
+										hide.append(int(ss2.replace('anime ','')))
 
 	hide_set = set(hide)
+	print(hide_set)
 	new_data = []
 
 	for entry in data:
