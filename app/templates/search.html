@@ -2,9 +2,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<!--        <link rel="stylesheet" href="/static/bootstrap.min.css">-->
         <script src="/static/bootstrap-tagsinput.js"></script>
         <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
         <link rel="stylesheet" href="/static/css/search.css" type="text/css">
@@ -32,13 +32,13 @@
                             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
                             queryTokenizer: Bloodhound.tokenizers.whitespace,
                             prefetch: {
-                                url: '/static/anime_titles.json'
+                                url: '/static/data/anime_info.json'
                             }
                         });
                         anime.initialize();
                         $('input').tagsinput({
                             typeaheadjs: {
-                                name: 'anime_titles',
+                                name: 'anime_info',
                                 displayKey: 'anime_english_title',
                                 valueKey: 'anime_english_title',
                                 source: anime.ttAdapter(),
@@ -57,7 +57,7 @@
 <div style="padding:2%">
 {% if data%}
 <ul class="list-unstyled">
-  {% for d in data %}
+  {% for d in data[:10] %}
   <li class="media">
     <a class = "media-left media-bottom" href="#">
         <img src={{d["anime_image_url"]}} alt="Generic placeholder image">
@@ -72,22 +72,67 @@
 {% endif %}
 </div>
 
-  <li class="media my-4">
-    <img class="mr-3" src="" alt="Generic placeholder image">
-    <div class="media-body">
-      <h5 class="mt-0 mb-1">List-based media object</h5>
-      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-    </div>
-  </li>
-  <li class="media">
-    <img class="mr-3" src="..." alt="Generic placeholder image">
-    <div class="media-body">
-      <h5 class="mt-0 mb-1">List-based media object</h5>
-      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-    </div>
-  </li>
-</ul>
 
+<div id="cardCarousel" class="carousel slide" date-ride="carousel">
+<ol class="carousel-indicators">
+   <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
+   <li data-target="#cardCarousel" data-slide-to="1"></li>
+   <li data-target="#cardCarousel" data-slide-to="2"></li>
+</ol>
+
+{% if data %}
+<div class = "carousel-inner">
+    <div class="carousel-item active">
+<!--        <div class="container">
+            <div class="row">
+                {% for d in data[:8] %}
+                <div class="col-sm-3">
+                    <div class="card">
+                        <img class="card-img-top" src={{d["anime_image_url"]}}>
+                    </div>
+                 </div>
+                {% endfor %}
+            </div>
+        </div> -->
+
+       <div class="card-deck">
+       {% for d in data[:4] %}
+             <div class="card">
+                 <img class="card-img-top" src={{d["anime_image_url"]}}>
+             </div>
+        {% endfor %}
+        </div>
+        <div class="card-deck">
+        {% for d in data[4:8] %}
+             <div class="card" text={{d["anime_english_title"]}}>
+                 <img class="card-img-top" src={{d["anime_image_url"]}} data-doc={{d}}>
+   <script>
+    $(".card").unbind().click(function() {
+        var animeinfo = $(this).attr('text');
+        alert("Handler for click was called for " + animeinfo);
+    }); </script>
+             </div>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="carousel-item">
+        <h1> item2 </h1>
+    </div>
+    <div class="carousel-item">
+        <h1> item3 </h1>
+    </div>
+</div>
+
+<a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+</a>
+<a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+</a>
+</div>
+{% endif %}
 
     </body>
 </html>
