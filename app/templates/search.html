@@ -1,19 +1,39 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="/static/bootstrap.min.css">
+        <script src="/static/bootstrap-tagsinput.js"></script>
+        <link rel="stylesheet" href="../static/bootstrap-tagsinput.css">
         <link rel="stylesheet" href="/static/main.css">
         <link rel="stylesheet" href="/static/aniai.css">
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="templates/autocomplete.js"></script>
-        <script src="templates/theme.js"></script>
+        <!-- <script src="/static/autocomplete.js"></script> -->
+        <script src="/static/theme.js"></script>
         <script type="text/javascript">function chBackcolor(color) {
             document.body.style.background = color;
         }</script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#tags-input').tagsinput({
+                  confirmKeys: [13, 44]
+                });
+
+                
+                $("#stopthis").click(function() {
+                    $('#myForm').submit();
+                });
+
+                $("show").click(function() {
+                    
+                });
+            });
+        </script>
+
     </head>
-    <!--<body style="background-image:url(../static/bg3.png); background-size: 100% 100%;""> -->
+   <!--  <body style="background-image:url(../static/meep.png); background-size: 100% 100%;"">  -->
     <body>
 
         <script language="JavaScript1.2">
@@ -104,15 +124,15 @@
         window.onload=fall
         //-->
         </script>
-        <input type="button" onclick="chBackcolor('pink');">
+ <!--        <input type="button" onclick="chBackcolor('pink');">
         <input type="button" onclick="chBackcolor('#2e51a2');">
-        <input type="button" onclick="chBackcolor('white');">
+        <input type="button" onclick="chBackcolor('white');"> -->
         <div class="topcorner">
             <p class="white">Project {{ name }}</p>
             <p class="white">Built at Cornell University by {{ netid }}</p>
         </div>
-        <form class="form-inline global-search">
-            <h1 style="font-size: 85px; font-family:Futura; color: black"> <!--#4285F4 -->
+        <form id="myForm" class="form-inline global-search">
+            <h1 style="font-size: 85px; font-family:Futura; color: white"> <!--#4285F4 -->
        <!--          A
                 <font color=#EA4335>n</font>
                 <font color=#FBBC05>i</font>
@@ -123,21 +143,23 @@
             </h1>
             <!-- <br class="shortbr"> -->
             <hr style="height:30pt; visibility:hidden;" />
-            <h3 style="font-family:Futura; color: black"><i>アニメーション</i>
+            <h3 style="font-family:Futura; color: white"><i>アニメーション</i>
             </h3>
             <br><br>
             
             <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control shortinput" placeholder="Anime Title" autocomplete="off">
-                 <button type="submit" class="btn btn-info"> Add </button>
+                <input id="input" type="text" name="search" class="form-control input-lg" placeholder="Anime Title" autocomplete="off" data-role="tagsinput">
+                 <!-- <button type="submit" class="btn btn-info"> Add </button> -->
             </div>
             <br>
             <br>
             <div>
-                <input id="taginput" type="text" name="tagsearch" class="form-control shortinput" placeholder="Tag">
-                 <button type="submit" class="btn btn-info"> Add </button>
+                <input id="taginput" type="text" size="50" name="tagsearch" class="form-control input-lg" placeholder="Tag" data-role="tagsinput">
+                 <!-- <button type="submit" class="btn btn-info"> Add </button> -->
             </div>
             <br>
+            
+
             Show Additional Settings:
             <br>
             Hide Same Series <input id="checkBox" type="checkbox" name="hide_ss">
@@ -165,7 +187,7 @@
             tSVD w/ Cossim Synopsis <input type="radio", name="method" value = "tsvdynopsis" disabled>
             tfIDF w/ Cossim Synposis <input type="radio", name="method" value = "oldmethod" disabled>
             <br>
-            <button type="submit" class="btn btn-info"> Submit </button>
+            <button type="button" id="stopthis" class="btn btn-info"> Submit </button>
 
         </form>
         <form class="form-inline global-search">
