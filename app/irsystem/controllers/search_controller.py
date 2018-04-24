@@ -119,7 +119,7 @@ def search():
 		output_message = ''
 	# Option 2: Only Tags
 	elif not query and tag:
-		tag_array = tag.split('|')
+		tag_array = tag.split(',')
 		tag_indexes = []
 		for tag_input in tag_array:
 			tag_index = -1
@@ -169,7 +169,7 @@ def search():
 		
 		if method == "doc2vecreviews" or method == "doc2vecsynopsis" or not method: # DOC2VEC
 
-			query_array = query.split('|')
+			query_array = query.split(',')
 			anime_indexes = []
 			for anime_input in query_array:
 				anime_index = -1
@@ -227,7 +227,7 @@ def search():
 
 
 		else: # Trucated SVD
-			query_array = query.split('|')
+			query_array = query.split(',')
 			anime_indexes = []
 			for anime_input in query_array:
 				anime_index = -1
@@ -280,8 +280,8 @@ def search():
 	# Option 4: Anime and Tags
 	else: # Tag and Anime Still Needs Work
 		
-		if method == "doc2vecreviews" or method == "doc2vecsynopsis" or not method: # DOC2VEC
-			query_array = query.split('|')
+		if method == "doc2vecreviews" or method == "doc2vecsynopsis": # DOC2VEC
+			query_array = query.split(',')
 			anime_indexes = []
 			for anime_input in query_array:
 				anime_index = -1
@@ -292,7 +292,7 @@ def search():
 				 
 			set_anime_ids = set(anime_indexes)
 
-			tag_array = tag.split('|')
+			tag_array = tag.split(',')
 			tag_indexes = []
 			for tag_input in tag_array:
 				tag_index = -1
@@ -319,7 +319,7 @@ def search():
 				if method == "doc2vecsynopsis":
 					review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecsynopsis.model")
 
-				if method == "doc2vecreviews" or not method:
+				if method == "doc2vecreviews":
 					review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 					
 				positive = []
@@ -393,7 +393,7 @@ def search():
 					data = hide2(data, allanimelite, show, min_rating, time, finished, licensed)
 
 		else: # Trucated SVD
-			query_array = query.split('|')
+			query_array = query.split(',')
 			anime_indexes = []
 			for anime_input in query_array:
 				anime_index = -1
@@ -404,7 +404,7 @@ def search():
 				 
 			set_anime_ids = set(anime_indexes)
 
-			tag_array = tag.split('|')
+			tag_array = tag.split(',')
 			tag_indexes = []
 			for tag_input in tag_array:
 				tag_index = -1
