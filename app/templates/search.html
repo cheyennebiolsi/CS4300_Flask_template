@@ -2,6 +2,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="/static/bootstrap.min.css">
         <script src="/static/bootstrap-tagsinput.js"></script>
@@ -23,8 +24,9 @@
             
             </div>
             <h1 style="font-size: 85px; font-family:Futura; color:white">Aniai&#24859</h1>
+            <form class = "form-inline global-search">
             <div class="form-group" style:"height:30px vertical-align:bottom">
-                <input id="input" type="text" placeholder="Similar anime...">
+                <input id="input" type="text" name="search" placeholder="Similar anime...">
                     <script>
                         var anime = new Bloodhound({
                             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
@@ -49,6 +51,43 @@
                         });
                     </script>
             </div>
+            <button type = "submit" class="btn btn-info btn-submit">Submit</button>
+        </form>
         </div>
+<div style="padding:2%">
+{% if data%}
+<ul class="list-unstyled">
+  {% for d in data %}
+  <li class="media">
+    <a class = "media-left media-bottom" href="#">
+        <img src={{d["anime_image_url"]}} alt="Generic placeholder image">
+    </a>
+    <div class="media-body">
+      <h5 class="mt-0 mb-1">List-based media object</h5>
+      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+</div>
+
+  <li class="media my-4">
+    <img class="mr-3" src="" alt="Generic placeholder image">
+    <div class="media-body">
+      <h5 class="mt-0 mb-1">List-based media object</h5>
+      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+    </div>
+  </li>
+  <li class="media">
+    <img class="mr-3" src="..." alt="Generic placeholder image">
+    <div class="media-body">
+      <h5 class="mt-0 mb-1">List-based media object</h5>
+      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+    </div>
+  </li>
+</ul>
+
+
     </body>
 </html>

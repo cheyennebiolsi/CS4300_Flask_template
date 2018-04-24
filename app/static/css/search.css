@@ -14,8 +14,12 @@
     display: block;
 }
 
+.form-group {
+    width: 85%
+} 
+
 .bootstrap-tagsinput{
-    width: 95%;
+    width: 100%;
 }
 
 .twitter-typeahead {
