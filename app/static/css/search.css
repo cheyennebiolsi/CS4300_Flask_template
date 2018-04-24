@@ -1,0 +1,35 @@
+.header {
+    padding: 1em;
+    color: white;
+    height: 50%;
+    background-color: black;
+    text-align: center;
+    overflow:auto;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.header bootstrap-tagsinput {
+    display: block;
+}
+
+.bootstrap-tagsinput{
+    width: 95%;
+}
+
+.twitter-typeahead {
+    display: inline;
+    position: relative;
+}
+
+.tt-hint, .tt-input, .tt-menu {
+    width: 100%;
+    vertical-align: middle !important;
+}
+
+.header-left {
+    float: left;
+    position: absolute;
+    top : 10px;
+}

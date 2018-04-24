@@ -6,269 +6,49 @@
         <link rel="stylesheet" href="/static/bootstrap.min.css">
         <script src="/static/bootstrap-tagsinput.js"></script>
         <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
-        <link rel="stylesheet" href="/static/main.css">
-        <link rel="stylesheet" href="/static/aniai.css">
+        <link rel="stylesheet" href="/static/css/search.css" type="text/css">
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
-<script src="/static/typeahead.bundle.js"></script>
-<script src="/static/bloodhound.js"></script>
-   <!--     <script type="text/javascript" src="static/typeahead.bundle.js"></script>--> <!-- <script src="/static/autocomplete.js"></script> -->
-        <script src="/static/theme.js"></script>
-        <script type="text/javascript">function chBackcolor(color) {
-            document.body.style.background = color;
-        }</script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#tags-input').tagsinput({
-                  confirmKeys: [13, 44]
-                });
-
-                
-                $("#stopthis").click(function() {
-                    $('#myForm').submit();
-                });
-
-                $("show").click(function() {
-                    
-                });
-            });
-        </script>
-
+        <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+        <script src="/static/typeahead.bundle.js"></script>
+        <script src="/static/bloodhound.js"></script>
     </head>
-   <!--  <body style="background-image:url(../static/meep.png); background-size: 100% 100%;"">  -->
     <body>
-
-        <script language="JavaScript1.2">
-        //https://pbs.twimg.com/profile_images/1096714485/gary_busey_400x400.jpeg
-        //background: url("myPicture.jpg");
-
-        grphcs=new Array(6)
-        Image0=new Image(20,20);
-        Image0.src=grphcs[0]="../static/petal1.png";
-
-        Image1=new Image();
-        Image1.src=grphcs[1]="../static/petal2.png"
-        Image2=new Image();
-        Image2.src=grphcs[2]="../static/petal3.png"
-        Image3=new Image();
-        Image3.src=grphcs[3]="../static/petal4.png"
-        Image4=new Image();
-        Image4.src=grphcs[4]="../static/petal5.png"
-        Image5=new Image();
-        Image5.src=grphcs[5]="../static/petal6.png" 
-
-        Amount=25; //Smoothness depends on image file size, the smaller the size the more you can use
-        Ypos=new Array();
-        Xpos=new Array();
-        Speed=new Array();
-        Step=new Array();
-        Cstep=new Array();
-        ns=(document.layers)?1:0;
-        ns6=(document.getElementById&&!document.all)?1:0;
-
-        if (ns){
-        for (i = 0; i < Amount; i++){
-        var P=Math.floor(Math.random()*grphcs.length);
-        rndPic=grphcs[P];
-        document.write("<LAYER NAME='sn"+i+"' LEFT=0 TOP=0><img src="+rndPic+"></LAYER>");
-        }
-        }
-        else{
-        document.write('<div style="position:absolute;top:0px;left:0px"><div style="position:relative">');
-        for (i = 0; i < Amount; i++){
-        var P=Math.floor(Math.random()*grphcs.length);
-        rndPic=grphcs[P];
-        document.write('<img id="si'+i+'" src="'+rndPic+'" style="position:absolute;top:0px;left:0px">');
-        }
-        document.write('</div></div>');
-        }
-        WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
-        WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
-        for (i=0; i < Amount; i++){                                                                
-         Ypos[i] = Math.round(Math.random()*WinHeight);
-         Xpos[i] = Math.round(Math.random()*WinWidth);
-         Speed[i]= Math.random()*5+3;
-         Cstep[i]=0;
-         Step[i]=Math.random()*0.1+0.05;
-        }
-        function fall(){
-        var WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
-        var WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
-        var hscrll=(ns||ns6)?window.pageYOffset:document.body.scrollTop;
-        var wscrll=(ns||ns6)?window.pageXOffset:document.body.scrollLeft;
-        for (i=0; i < Amount; i++){
-        sy = Speed[i]*Math.sin(90*Math.PI/180);
-        sx = Speed[i]*Math.cos(Cstep[i]);
-        Ypos[i]+=.2*sy;
-        Xpos[i]+=.3*sx; 
-        if (Ypos[i] > WinHeight){
-        Ypos[i]=-60;
-        Xpos[i]=Math.round(Math.random()*WinWidth);
-        Speed[i]=Math.random()*5+3;
-        }
-        if (ns){
-        document.layers['sn'+i].left=Xpos[i];
-        document.layers['sn'+i].top=Ypos[i]+hscrll;
-        }
-        else if (ns6){
-        document.getElementById("si"+i).style.left=Math.min(WinWidth,Xpos[i]);
-        document.getElementById("si"+i).style.top=Ypos[i]+hscrll;
-        }
-        else{
-        eval("document.all.si"+i).style.left=Xpos[i];
-        eval("document.all.si"+i).style.top=Ypos[i]+hscrll;
-        } 
-        Cstep[i]+=Step[i];
-        }
-        setTimeout('fall()',20);
-        }
-
-        window.onload=fall
-        //-->
-        </script>
- <!--        <input type="button" onclick="chBackcolor('pink');">
-        <input type="button" onclick="chBackcolor('#2e51a2');">
-        <input type="button" onclick="chBackcolor('white');"> -->
-        <div class="topcorner">
-            <p class="white">Project {{ name }}</p>
-            <p class="white">Built at Cornell University by {{ netid }}</p>
-        </div>
-<input type="text" value="Anime..." data-role="tagsinput"/>
-                <script>
-                    var movies = new Bloodhound({
-                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
-                      queryTokenizer: Bloodhound.tokenizers.whitespace,
-                      prefetch: {
-                        url: '/static/anime_titles.json'
-                      }
-                    });
-                    movies.initialize();
-                    $('input').tagsinput({
-                        typeaheadjs: {
-                            name: 'anime_titles',
-                            displayKey: 'anime_english_title',
-                            valueKey: 'anime_english_title',
-                            source: movies.ttAdapter(),
-                            hint: true,
-                            higlight: true,
-                            minLength: 1
-                        },
-                        confirmKeys: [13, 44],
-                        maxTags: 5, 
-                        freeInput: false, 
-                        delimiter: ';'
-                    });
-                </script>
-              </div>
-
-
-        <form id="myForm" class="form-inline global-search">
-            <h1 style="font-size: 85px; font-family:Futura; color: white"> <!--#4285F4 -->
-       <!--          A
-                <font color=#EA4335>n</font>
-                <font color=#FBBC05>i</font>
-                a
-                <font color=#34A853>i</font>
-                <font color=#EA4335>&#24859;</font> -->
-                Aniai&#24859;
-            </h1>
-            <!-- <br class="shortbr"> -->
-            <hr style="height:30pt; visibility:hidden;" />
-            <h3 style="font-family:Futura; color: white"><i>アニメーション</i>
-            </h3>
-            <br><br>
-
-                          
-            <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control input-lg" placeholder="Anime Title" autocomplete="off" data-role="tagsinput">
-                 <!-- <button type="submit" class="btn btn-info"> Add </button> -->
-            </div>
-            <br>
-            <br>
-            <div>
-                <input id="taginput" type="text" size="50" name="tagsearch" class="form-control input-lg" placeholder="Tag" data-role="tagsinput">
-                 <!-- <button type="submit" class="btn btn-info"> Add </button> -->
-            </div>
-            <br>
+        <div class="header">
+            <div class="header-left">
+            <p> Prototype 3
+            <br> This is a test </br>
+            </p>
             
-
-            Show Additional Settings:
-            <br>
-            Hide Same Series <input id="checkBox" type="checkbox" name="hide_ss">
-            <br>
-            Licensed in America <input id="checkBox" type="checkbox" name="licensed">
-            <br>
-            Finished <input id="checkBox" type="checkbox" name="finished">
-            <br>
-            Time Range Early:  <input id="time" type="text" name="time">
-             <br>
-            Show:
-            TV: <input id="checkBox" type="checkbox" name="TV">
-            Movies: <input id="checkBox" type="checkbox" name="movie">
-            OVA: <input id="checkBox" type="checkbox" name="ova">
-            ONA: <input id="checkBox" type="checkbox" name="ona">
-            SPECIAL: <input id="checkBox" type="checkbox" name="special">
-            <br>
-            Minimum Rating: <input id="minratinginput" type="text" name="min_rating">
-            <br>
-            NSFW off <input id="checkBox" type="checkbox" name="nsfw">
-            Debug Controls:
-            Doc2Vec Reviews <input type="radio", name="method" value = "doc2vecreviews" >
-            Doc2Vec Synopsis <input type="radio", name="method" value = "doc2vecsynopsis" >
-            tSVD w/ Cossim Reviews <input type="radio", name="method" value = "tsvdreviews" >
-            tSVD w/ Cossim Synopsis <input type="radio", name="method" value = "tsvdynopsis" disabled>
-            tfIDF w/ Cossim Synposis <input type="radio", name="method" value = "oldmethod" disabled>
-            <br>
-            <button type="button" id="stopthis" class="btn btn-info"> Submit </button>
-
-        </form>
-        <form class="form-inline global-search">
-
-        <h1>{{output_message}}</h1>
-
-        <div class="container-fluid table custom">
-            <!-- <div> -->
-            {% if data %}
-                {% for d in data %}
-                    <div class="row"> 
-                    <br>
-                        <div class="boxed sidebyside">
-                            <!-- <p>{{d}}</p> -->
-                            <div class="col-sm-6 col-md-6 col-xs-12 image-container" id='meeperZ'>
-                                <img src={{d["anime_image_url"]}} class="curved hover"></img>
-                                 <p class="meep">
-                                    <b>{{d["anime_english_title"]}}</b> 
-                                    ID: {{d["anime_id"]}}
-                                    Rating: {{d["anime_rating_value"]}}
-                                    Number of Ratings: {{d["anime_rating_count"]}}
-                                    Type: {{d["anime_type"]}}
-                                    Time: {{d["anime_premiered"]}}
-                                    Score: {{d["score"]}}
-                                    Genre: {{d["anime_genres"]}}
-                                    <!-- <i>Synposis:</i> {{d["anime_synopsis"]}} -->
-                                </p>
-                            </div>
-                            <!-- <div class="col-sm-6 col-md-6 col-xs-12 text">   -->
-                               
-                            <!-- </div> -->
-                        </div>
-                   </div>
-
-
-
-
-<!-- <div class="border row">
-  <div class="border col-md-4">.col-md-4</div>
-  <div class="border col-md-4">.col-md-4</div>
-  <div class="border col-md-4">.col-md-4</div>
-</div> -->
-                {% endfor %}
-            {% endif %}
-            <!-- </div> -->
+            </div>
+            <h1 style="font-size: 85px; font-family:Futura; color:white">Aniai&#24859</h1>
+            <div class="form-group" style:"height:30px vertical-align:bottom">
+                <input id="input" type="text" placeholder="Similar anime...">
+                    <script>
+                        var anime = new Bloodhound({
+                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
+                            queryTokenizer: Bloodhound.tokenizers.whitespace,
+                            prefetch: {
+                                url: '/static/anime_titles.json'
+                            }
+                        });
+                        anime.initialize();
+                        $('input').tagsinput({
+                            typeaheadjs: {
+                                name: 'anime_titles',
+                                displayKey: 'anime_english_title',
+                                valueKey: 'anime_english_title',
+                                source: anime.ttAdapter(),
+                                minLength: 3
+                            },
+                            confirmKeys: [13, 44],
+                            maxTags: 5,
+                            freeInput: false,
+                            delimiter: ','
+                        });
+                    </script>
+            </div>
         </div>
-        </form>
     </body>
-
 </html>
