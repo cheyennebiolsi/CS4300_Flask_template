@@ -13,6 +13,7 @@ data = converter.convertFromFile(serializedJsonFileName)
 taggedDocuments = []
 for animeDocument in data:
     taggedDocuments.append(animeDocument.toTaggedDocument(option="review"))
+print("got models")
 model = Doc2Vec(vector_size=300, window=20, min_count=5, alpha=0.025, min_alpha=0.025, workers=4)
 model.build_vocab(taggedDocuments)
 print("done building vocab review")

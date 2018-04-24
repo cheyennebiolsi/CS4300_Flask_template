@@ -5,12 +5,16 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="/static/bootstrap.min.css">
         <script src="/static/bootstrap-tagsinput.js"></script>
-        <link rel="stylesheet" href="../static/bootstrap-tagsinput.css">
+        <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
         <link rel="stylesheet" href="/static/main.css">
         <link rel="stylesheet" href="/static/aniai.css">
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <!-- <script src="/static/autocomplete.js"></script> -->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script src="/static/typeahead.bundle.js"></script>
+<script src="/static/bloodhound.js"></script>
+   <!--     <script type="text/javascript" src="static/typeahead.bundle.js"></script>--> <!-- <script src="/static/autocomplete.js"></script> -->
         <script src="/static/theme.js"></script>
         <script type="text/javascript">function chBackcolor(color) {
             document.body.style.background = color;
@@ -131,6 +135,35 @@
             <p class="white">Project {{ name }}</p>
             <p class="white">Built at Cornell University by {{ netid }}</p>
         </div>
+<input type="text" value="Anime..." data-role="tagsinput"/>
+                <script>
+                    var movies = new Bloodhound({
+                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
+                      queryTokenizer: Bloodhound.tokenizers.whitespace,
+                      prefetch: {
+                        url: '/static/anime_titles.json'
+                      }
+                    });
+                    movies.initialize();
+                    $('input').tagsinput({
+                        typeaheadjs: {
+                            name: 'anime_titles',
+                            displayKey: 'anime_english_title',
+                            valueKey: 'anime_english_title',
+                            source: movies.ttAdapter(),
+                            hint: true,
+                            higlight: true,
+                            minLength: 1
+                        },
+                        confirmKeys: [13, 44],
+                        maxTags: 5, 
+                        freeInput: false, 
+                        delimiter: ';'
+                    });
+                </script>
+              </div>
+
+
         <form id="myForm" class="form-inline global-search">
             <h1 style="font-size: 85px; font-family:Futura; color: white"> <!--#4285F4 -->
        <!--          A
@@ -146,7 +179,8 @@
             <h3 style="font-family:Futura; color: white"><i>アニメーション</i>
             </h3>
             <br><br>
-            
+
+                          
             <div class="form-group">
                 <input id="input" type="text" name="search" class="form-control input-lg" placeholder="Anime Title" autocomplete="off" data-role="tagsinput">
                  <!-- <button type="submit" class="btn btn-info"> Add </button> -->
