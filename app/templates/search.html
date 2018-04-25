@@ -13,6 +13,9 @@
         <script src="/static/typeahead.bundle.js"></script>
         <script src="/static/bloodhound.js"></script>
         <script src="/static/aniai.js"></script>
+        <link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro">
     </head>
     
     <body>
@@ -20,6 +23,7 @@
             <div class="header-left">
                 <p> Prototype 3
                 <br> This is a test </br>
+                <i class="fa fa-external-link"></i>
                 </p>
             </div>
             <h1 style="font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
@@ -75,8 +79,16 @@
 
 {% if data %}
     <div class="media">
-        <a class = "media-left media-bottom">
-            <img src={{data[0]["anime_image_url"]}} alt = "Anime Image" style = "height:50%">
+        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
+            <div class="view overlay">
+                <img src={{data[0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
+                <div class="mask flex-center rgba-black-light">
+                    <ul class="fa-ul" style="margin-left:0">
+                      <li><p class="white-text" style="font-size: 20px">watch on <img src="/static/images/Crunchyroll_24x24.png" style="display:inline"><span style="font-family:Maven pro">crunchyroll </span><i class="fa fa-external-link"></i></p></li>
+                    <li><i class="fa fa-play-circle-o"  style="font-size:60px; color:white"></i></li>
+                    </ul>
+                </div>
+            </div>
         </a>
         <div class="media-body" style="height:50%">
             <h5> This is a header </h5>
@@ -120,6 +132,7 @@
             var synopsis = $(this).attr("data-synposis") // this is messed up because of ""
             // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
             // Seems slightly better than going through all json until thing is found
+
             // but either way works I guess since overhead into putting it into html data tag doesn't seem to be that bad. 
             
             // $.getJSON("/static/data/anime_info.json", function(data) {
@@ -168,5 +181,9 @@
              document.getElementById('anime_info').innerHTML = data;
         });
     </script> -->
+
+
+        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
+        <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script>
     </body>
 </html>
