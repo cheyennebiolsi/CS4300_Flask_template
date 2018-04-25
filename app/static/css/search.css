@@ -26,12 +26,30 @@ html, body {
 .twitter-typeahead {
     display: inline;
     position: relative;
+    width: 40% !important;
+}
+
+.twitter-typeahead .tt-hint {
+  color: rgba(255,255,255,0.65);
 }
 
 .tt-hint, .tt-input, .tt-menu {
-    width: 100%;
-    background-color: white;
+    width: 80%;
+    background-color: white !important; 
     vertical-align: middle !important;
+    border: 1px solid lightgray;
+    /*border-radius: 4px;*/
+}
+
+span.twitter-typeahead .tt-suggestion:hover {
+    color: #3b5998;
+    height: 110%;
+    font-weight: 1000;
+}
+
+#scrollable-dropdown-menu .tt-dropdown-menu {
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 .header-left {
@@ -39,6 +57,12 @@ html, body {
     position: absolute;
     top : 10px;
 }
+
+.meta-info {
+  font-size: 13px;
+  color: gray;
+}
+
 
 .media {
     background-color: black;

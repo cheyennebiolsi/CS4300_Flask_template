@@ -89,7 +89,7 @@ tags_set = set(tags_array)
 #     return q1
 
 def search():
-	query = request.args.get('search')
+	query = request.args.get('animesearch')
 	tag = request.args.get('tagsearch')
 	hide_ss = request.args.get('hide_ss')
 	tv = request.args.get('TV')

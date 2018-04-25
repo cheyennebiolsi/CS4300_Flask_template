@@ -9,50 +9,50 @@
         <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
         <link rel="stylesheet" href="/static/css/search.css" type="text/css">
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
         <script src="/static/typeahead.bundle.js"></script>
         <script src="/static/bloodhound.js"></script>
+        <script src="/static/aniai.js"></script>
     </head>
+    
     <body>
         <div class="header">
             <div class="header-left">
-            <p> Prototype 3
-            <br> This is a test </br>
-            </p>
-            
+                <p> Prototype 3
+                <br> This is a test </br>
+                </p>
             </div>
             <h1 style="font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
-            <form class = "form-inline global-search">
-            <div class="form-group" style:"height:30px vertical-align:bottom">
-                <input id="input" type="text" name="search" placeholder="Similar anime...">
-                    <script>
-                        var anime = new Bloodhound({
-                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
-                            queryTokenizer: Bloodhound.tokenizers.whitespace,
-                            prefetch: {
-                                url: '/static/data/anime_info.json'
-                            }
-                        });
-                        anime.initialize();
-                        $('input').tagsinput({
-                            typeaheadjs: {
-                                name: 'anime_info',
-                                displayKey: 'anime_english_title',
-                                valueKey: 'anime_english_title',
-                                source: anime.ttAdapter(),
-                                minLength: 3
-                            },
-                            confirmKeys: [13, 44],
-                            maxTags: 5,
-                            freeInput: false,
-                            delimiter: ','
-                        });
-                    </script>
-            </div>
-            <button type = "submit" class="btn btn-info btn-submit">Submit</button>
-        </form>
+            <form class = "form-inline global-search" id="myform">
+                <div class="form-group" style:"height:30px vertical-align:bottom">
+                    <div id="scrollable-dropdown-menu">
+                        <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime...">
+                    </div>
+                        <!-- <input id="input" type="text" name="search" placeholder="Similar anime..."> -->
+                </div>
+                <button type="submit" id="submit" class="btn btn-info btn-submit">Submit</button>
+                <!-- can change this to type="button" and use jquery -->
+                <!-- Show Additional Settings:
+                <br> Hide Same Series <input id="checkBox" type="checkbox" name="hide_ss">
+                <br> Licensed in America <input id="checkBox" type="checkbox" name="licensed">
+                <br> Finished <input id="checkBox" type="checkbox" name="finished">
+                <br> Time Range Early:  <input id="time" type="text" name="time">
+                <br> Show:
+                TV: <input id="checkBox" type="checkbox" name="TV">
+                Movies: <input id="checkBox" type="checkbox" name="movie">
+                OVA: <input id="checkBox" type="checkbox" name="ova">
+                ONA: <input id="checkBox" type="checkbox" name="ona">
+                SPECIAL: <input id="checkBox" type="checkbox" name="special">
+                <br> Minimum Rating: <input id="minratinginput" type="text" name="min_rating">
+                <br> NSFW off <input id="checkBox" type="checkbox" name="nsfw"> -->
+               <!--  Debug Controls:
+                Doc2Vec Reviews <input type="radio", name="method" value = "doc2vecreviews" >
+                Doc2Vec Synopsis <input type="radio", name="method" value = "doc2vecsynopsis" >
+                tSVD w/ Cossim Reviews <input type="radio", name="method" value = "tsvdreviews" >
+                tSVD w/ Cossim Synopsis <input type="radio", name="method" value = "tsvdynopsis" disabled>
+                tfIDF w/ Cossim Synposis <input type="radio", name="method" value = "oldmethod" disabled> -->
+                <br>
+            </form>
         </div>
 <!--
 <div style="padding:2%">
@@ -74,79 +74,92 @@
 </div> -->
 
 {% if data %}
-<div class="media">
-    <a class = "media-left media-bottom">
-        <img src={{data[0]["anime_image_url"]}} alt = "Anime Image" style = "height:50%">
-    </a>
-    <div class="media-body" style="height:50%">
-        <h5> This is a header </h5>
-    </div>
-</div>
-
-<div id="cardCarousel" class="carousel slide" date-ride="carousel">
-<ol class="carousel-indicators">
-   <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
-   <li data-target="#cardCarousel" data-slide-to="1"></li>
-   <li data-target="#cardCarousel" data-slide-to="2"></li>
-</ol>
-<div class = "carousel-inner">
-    <div class="carousel-item active">
-<!--        <div class="container">
-            <div class="row">
-                {% for d in data[:8] %}
-                <div class="col-sm-3">
-                    <div class="card">
-                        <img class="card-img-top" src={{d["anime_image_url"]}}>
-                    </div>
-                 </div>
-                {% endfor %}
-            </div>
-        </div> -->
-
-        <div class="card-group">
-        {% for d in data[:6] %}
-             <div class="card" anime-id={{d["anime_id"]}} anime-index={{d["anime_index"]}}>
-                 <img class="card-img-top img-fluid" src={{d["anime_image_url"]}}>
-                 <div class="card-body" style="background-color:black;padding-bottom:20px">
-                     <h4 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h4>
-                 </div>
-   <script>
-    $(".card").unbind().click(function() {
-        var anime_id = $(this).attr('anime-id');
-        $.getJSON("/static/data/anime_info.json", function(data) {
-             data.forEach(function(anime) {
-                 if (anime.anime_id == anime_id) {
-
-             var anime_title = anime.anime_synopsis;
-
-             var anime_image_url = anime.anime_image_url;
-             $(".media").replaceWith(
-                '<div class="media">' +
-                    '<a class = "media-left media-bottom">' +
-                        '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
-                     '<h5> ' + anime_title + ' </h5></div>');  };     }); });
-    }); </script>
-             </div>
-        {% endfor %}
+    <div class="media">
+        <a class = "media-left media-bottom">
+            <img src={{data[0]["anime_image_url"]}} alt = "Anime Image" style = "height:50%">
+        </a>
+        <div class="media-body" style="height:50%">
+            <h5> This is a header </h5>
         </div>
     </div>
-    <div class="carousel-item">
-        <h1> item2 </h1>
-    </div>
-    <div class="carousel-item">
-        <h1> item3 </h1>
-    </div>
-</div>
 
-<a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-</a>
-<a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-</a>
-</div>
+    <div id="cardCarousel" class="carousel slide" date-ride="carousel">
+    <ol class="carousel-indicators">
+       <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
+       <li data-target="#cardCarousel" data-slide-to="1"></li>
+       <li data-target="#cardCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class = "carousel-inner">
+        <div class="carousel-item active">
+    <!--        <div class="container">
+                <div class="row">
+                    {% for d in data[:8] %}
+                    <div class="col-sm-3">
+                        <div class="card">
+                            <img class="card-img-top" src={{d["anime_image_url"]}}>
+                        </div>
+                     </div>
+                    {% endfor %}
+                </div>
+            </div> -->
+
+            <div class="card-group">
+            {% for d in data[:6] %}
+                 <div class="card" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}}>
+                     <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
+                     <div class="card-body" style="background-color:black;padding-bottom:20px">
+                         <h4 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h4>
+                     </div>
+       <script>
+        $(".card").unbind().click(function() {
+            var anime_id = $(this).attr('data-anime-id');
+            var anime_img = $(this).attr('data-anime-id');
+            var anime_id = $(this).attr('data-anime-id');
+            var anime_image_url = $(this).attr('data-url')
+            var anime_title = $(this).attr('data-title')
+            var synopsis = $(this).attr("data-synposis") // this is messed up because of ""
+            // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
+            // Seems slightly better than going through all json until thing is found
+            // but either way works I guess since overhead into putting it into html data tag doesn't seem to be that bad. 
+            
+            // $.getJSON("/static/data/anime_info.json", function(data) {
+            //      data.forEach(function(anime) {
+            //          if (anime.anime_id == anime_id) {
+
+            //      var anime_title = anime.anime_synopsis;
+
+            //      var anime_image_url = anime.anime_image_url;
+            //      $(".media").replaceWith(
+            //         '<div class="media">' +
+            //             '<a class = "media-left media-bottom">' +
+            //                 '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
+            //              '<h5> ' + anime_title + ' </h5></div>');  };     }); });
+             $(".media").replaceWith(
+                    '<div class="media">' +
+                        '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
+                         '<h5> ' + synopsis + ' </h5></div>');
+        }); </script>
+                 </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <h1> item2 </h1>
+        </div>
+        <div class="carousel-item">
+            <h1> item3 </h1>
+        </div>
+    </div>
+
+    <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+    </div>
 {% endif %}
 
 <!--    <script>
