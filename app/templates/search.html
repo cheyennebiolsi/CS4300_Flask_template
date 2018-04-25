@@ -80,12 +80,12 @@
 {% if data %}
     <div class="media">
         <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
-            <div class="view overlay">
+            <div class="view overlay" style="cursor:pointer">
                 <img src={{data[0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
                 <div class="mask flex-center rgba-black-light">
                     <ul class="fa-ul" style="margin-left:0">
                       <li><p class="white-text" style="font-size: 20px">watch on <img src="/static/images/Crunchyroll_24x24.png" style="display:inline"><span style="font-family:Maven pro">crunchyroll </span><i class="fa fa-external-link"></i></p></li>
-                    <li><i class="fa fa-play-circle-o"  style="font-size:60px; color:white"></i></li>
+                    <li><i class="fa fa-play"  style="font-size:60px; color:white"></i></li>
                     </ul>
                 </div>
             </div>
@@ -101,7 +101,7 @@
        <li data-target="#cardCarousel" data-slide-to="1"></li>
        <li data-target="#cardCarousel" data-slide-to="2"></li>
     </ol>
-    <div class = "carousel-inner">
+    <div class = "carousel-inner" style="overflow:visible">
         <div class="carousel-item active">
     <!--        <div class="container">
                 <div class="row">
@@ -116,12 +116,36 @@
             </div> -->
 
             <div class="card-group">
-            {% for d in data[:6] %}
-                 <div class="card" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}}>
-                     <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
-                     <div class="card-body" style="background-color:black;padding-bottom:20px">
-                         <h4 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h4>
-                     </div>
+            {% for d in data[:8] %}
+                 <div class="card expandable" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}}>
+                 <!--    <div class="view zoom"> -->
+                         <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
+                         <div class="card-body" style="background-color:black;padding-bottom:20px">
+                             <h4 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h4>
+                         </div>
+                     <!--</div>-->
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <h1> item2 </h1>
+        </div>
+        <div class="carousel-item">
+            <h1> item3 </h1>
+        </div>
+    </div>
+
+    <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+    </div>
+
        <script>
         $(".card").unbind().click(function() {
             var anime_id = $(this).attr('data-anime-id');
@@ -152,27 +176,7 @@
                         '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
                          '<h5> ' + synopsis + ' </h5></div>');
         }); </script>
-                 </div>
-            {% endfor %}
-            </div>
-        </div>
-        <div class="carousel-item">
-            <h1> item2 </h1>
-        </div>
-        <div class="carousel-item">
-            <h1> item3 </h1>
-        </div>
-    </div>
-
-    <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-    </div>
+ 
 {% endif %}
 
 <!--    <script>

@@ -66,4 +66,13 @@ span.twitter-typeahead .tt-suggestion:hover {
 
 .media {
     background-color: black;
-};
+}
+
+.expandable {
+    transition: transform .2s;
+}
+
+.expandable:hover {
+    transform: scale(1.07);
+    z-index:1;
+]
