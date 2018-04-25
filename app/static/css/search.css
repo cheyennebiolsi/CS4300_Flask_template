@@ -6,7 +6,6 @@ html, body {
     padding: 1em;
     height: 50%;
     background-color: black;
-    overflow:auto;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;

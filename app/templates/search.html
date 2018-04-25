@@ -11,7 +11,7 @@
         <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-        <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+        <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
         <script src="/static/typeahead.bundle.js"></script>
         <script src="/static/bloodhound.js"></script>
     </head>
@@ -105,24 +105,26 @@
 
         <div class="card-group">
         {% for d in data[:6] %}
-             <div class="card" text={{d["anime_english_title"]}} anime-index={{d["anime_index"]}}>
-                 <img class="card-img-top" src={{d["anime_image_url"]}} data-doc={{d}}>
+             <div class="card" anime-id={{d["anime_id"]}} anime-index={{d["anime_index"]}}>
+                 <img class="card-img-top img-fluid" src={{d["anime_image_url"]}}>
+                 <div class="card-body" style="background-color:black;padding-bottom:20px">
+                     <h4 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h4>
+                 </div>
    <script>
     $(".card").unbind().click(function() {
-        var anime_index = $(this).attr('anime-index');
+        var anime_id = $(this).attr('anime-id');
         $.getJSON("/static/data/anime_info.json", function(data) {
-             console.log(data[anime_index]);
-             var anime_title = data[anime_index].anime_synopsis;
+             data.forEach(function(anime) {
+                 if (anime.anime_id == anime_id) {
 
-             var anime_image_url = data[anime_index].anime_image_url;
-             console.log(anime_title);
- 
-             console.log("Anime title outside of braces: " + anime_title);
+             var anime_title = anime.anime_synopsis;
+
+             var anime_image_url = anime.anime_image_url;
              $(".media").replaceWith(
                 '<div class="media">' +
                     '<a class = "media-left media-bottom">' +
                         '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
-                     '<h5> ' + anime_title + ' </h5></div>');       });
+                     '<h5> ' + anime_title + ' </h5></div>');  };     }); });
     }); </script>
              </div>
         {% endfor %}
