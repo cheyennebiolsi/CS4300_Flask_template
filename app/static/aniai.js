@@ -30,6 +30,13 @@ $(document).ready(function() {
         delimiter: ','
     });
 
+    $('#furtherfilters').click(function() {
+    	if ($('#furtherfilters').text() == "Show Additional Filters") {
+    		$('#furtherfilters').text("Hide Additional Filters");
+    	} else {
+    		$('#furtherfilters').text("Show Additional Filters");
+    	};
+    });
     // var genre = new Bloodhound({
     //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
     //     queryTokenizer: Bloodhound.tokenizers.whitespace,
