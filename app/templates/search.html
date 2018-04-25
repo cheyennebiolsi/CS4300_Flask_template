@@ -103,15 +103,8 @@
             </div>
         </div> -->
 
-       <div class="card-deck">
-       {% for d in data[:6] %}
-             <div class="card" anime-index={{d["anime_index"]}}>
-                 <img class="card-img-top" src={{d["anime_image_url"]}}>
-             </div>
-        {% endfor %}
-        </div>
-        <div class="card-deck">
-        {% for d in data[6:12] %}
+        <div class="card-group">
+        {% for d in data[:6] %}
              <div class="card" text={{d["anime_english_title"]}} anime-index={{d["anime_index"]}}>
                  <img class="card-img-top" src={{d["anime_image_url"]}} data-doc={{d}}>
    <script>
