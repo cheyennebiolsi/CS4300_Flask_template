@@ -20,7 +20,11 @@ weight_tags = 1
 weight_title = 6
 
 animelite = json.load(open('data/animelite.json'))
+for index, element in enumerate(animelite):
+    element["anime_index"] = index
 allanimelite = json.load(open('data/allanimelite.json'))
+for index, element in enumerate(allanimelite):
+    element["anime_index"] = index
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')

@@ -4,7 +4,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-<!--        <link rel="stylesheet" href="/static/bootstrap.min.css">-->
+        <link rel="stylesheet" href="/static/bootstrap.min.css">
         <script src="/static/bootstrap-tagsinput.js"></script>
         <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
         <link rel="stylesheet" href="/static/css/search.css" type="text/css">
@@ -23,7 +23,7 @@
             </p>
             
             </div>
-            <h1 style="font-size: 85px; font-family:Futura; color:white">Aniai&#24859</h1>
+            <h1 style="font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
             <form class = "form-inline global-search">
             <div class="form-group" style:"height:30px vertical-align:bottom">
                 <input id="input" type="text" name="search" placeholder="Similar anime...">
@@ -54,6 +54,7 @@
             <button type = "submit" class="btn btn-info btn-submit">Submit</button>
         </form>
         </div>
+<!--
 <div style="padding:2%">
 {% if data%}
 <ul class="list-unstyled">
@@ -70,8 +71,17 @@
   {% endfor %}
 </ul>
 {% endif %}
-</div>
+</div> -->
 
+{% if data %}
+<div class="media">
+    <a class = "media-left media-bottom">
+        <img src={{data[0]["anime_image_url"]}} alt = "Anime Image" style = "height:50%">
+    </a>
+    <div class="media-body" style="height:50%">
+        <h5> This is a header </h5>
+    </div>
+</div>
 
 <div id="cardCarousel" class="carousel slide" date-ride="carousel">
 <ol class="carousel-indicators">
@@ -79,8 +89,6 @@
    <li data-target="#cardCarousel" data-slide-to="1"></li>
    <li data-target="#cardCarousel" data-slide-to="2"></li>
 </ol>
-
-{% if data %}
 <div class = "carousel-inner">
     <div class="carousel-item active">
 <!--        <div class="container">
@@ -96,20 +104,32 @@
         </div> -->
 
        <div class="card-deck">
-       {% for d in data[:4] %}
-             <div class="card">
+       {% for d in data[:6] %}
+             <div class="card" anime-index={{d["anime_index"]}}>
                  <img class="card-img-top" src={{d["anime_image_url"]}}>
              </div>
         {% endfor %}
         </div>
         <div class="card-deck">
-        {% for d in data[4:8] %}
-             <div class="card" text={{d["anime_english_title"]}}>
+        {% for d in data[6:12] %}
+             <div class="card" text={{d["anime_english_title"]}} anime-index={{d["anime_index"]}}>
                  <img class="card-img-top" src={{d["anime_image_url"]}} data-doc={{d}}>
    <script>
     $(".card").unbind().click(function() {
-        var animeinfo = $(this).attr('text');
-        alert("Handler for click was called for " + animeinfo);
+        var anime_index = $(this).attr('anime-index');
+        $.getJSON("/static/data/anime_info.json", function(data) {
+             console.log(data[anime_index]);
+             var anime_title = data[anime_index].anime_synopsis;
+
+             var anime_image_url = data[anime_index].anime_image_url;
+             console.log(anime_title);
+ 
+             console.log("Anime title outside of braces: " + anime_title);
+             $(".media").replaceWith(
+                '<div class="media">' +
+                    '<a class = "media-left media-bottom">' +
+                        '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
+                     '<h5> ' + anime_title + ' </h5></div>');       });
     }); </script>
              </div>
         {% endfor %}
@@ -134,5 +154,11 @@
 </div>
 {% endif %}
 
+<!--    <script>
+        $.getJSON("/static/data/anime_info.json", function(data) {
+             console.log(data);
+             document.getElementById('anime_info').innerHTML = data;
+        });
+    </script> -->
     </body>
 </html>
