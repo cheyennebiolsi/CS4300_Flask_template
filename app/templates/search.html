@@ -26,24 +26,27 @@
 			<i class="fa fa-external-link"></i>
 			</p>
 		    </div>
-		    <h1 style="font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
+		    <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
 		    <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
 			<div class="form row"> <!-- style:"height:30px vertical-align:bottom"> -->
-                            <div class="form-group col-lg-10">
+                            <div class="form-group col-lg-10" style="padding-right:0">
 			        <div id="scrollable-dropdown-menu">
 				    <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
 			        </div>
                             </div>
-                            <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button>
-                            <button class="btn btn-primary" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">Filter</button>
+<!--                            <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
+                            <button class="search-button" type="submit" style="height:32"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;height:32">Filter</button>
 <!--                            <div class="form-group col-md-4">
                                 <input type="submit" value="Submit">
                             </div> -->
                         </div>
                         <div class="collapse" id="collapseForm">
- 		            <div class="form-group row">
-		                <div class="col-md-6">
-		                    <div class="form-check">
+ 		            <div class="form-group row" style="margin:0">
+		                <div class="col-md-5.5">
+                                    <h3 style="color:white; text-align:center">Tags</h3>
+                                    <hr>
+		                    <div class="form-check filter">
 		                        <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
 		                        <label for="actionTag" class="tag-button active">action</label>
 		                        <input type="checkbox" class="form-check-input tag" id="adventureTag" name="adventureTag" checked>
@@ -55,137 +58,31 @@
 		                        <input type="checkbox" class="form-check-input tag" id="dementiaTag" name="dementiaTag" checked>
 		                        <label for="dementiaTag" class="tag-button active">dementia</label>
 		                    </div> 
+		                    <div class="form-check filter">
+		                        <input type="checkbox" class="form-check-input tag" id="demonsTag" name="demonsTag" checked>
+		                        <label for="demonsTag" class="tag-button active">demons</label>
+		                        <input type="checkbox" class="form-check-input tag" id="dramaTag" name="dramaTag" checked>
+		                        <label for="dramaTag" class="tag-button active">drama</label>
+		                        <input type="checkbox" class="form-check-input tag" id="fantasyTag" name="fantasyTag" checked>
+		                        <label for="fantasyTag" class="tag-button active">fantasy</label>
+		                        <input type="checkbox" class="form-check-input tag" id="gameTag" name="gameTag" checked>
+		                        <label for="gameTag" class="tag-button active">game</label>
+		                        <input type="checkbox" class="form-check-input tag" id="historicalTag" name="historicalTag" checked>
+		                        <label for="historicalTag" class="tag-button active">historical</label>
+		                    </div>
                                 </div>
-                            </div>                          
-                            <div class="form row md-2">
-                                <div class="form-group col-lg-1">
-                                    <input type="text" name="search" placeholder="blah"> 
+                                <div class="col-md-3">
+                                    <h3> Other filter options </h3>
+                                    <hr>
+                                </div>>
+                                <div class="col-md-3">
+                                    <h3> Other filter options 2 </h3>
+                                    <hr>
                                 </div>
-                            </div>
+                            </div>             
                         </div>
-<!--                            <div class="col-sm-4">
-                                <input type="submit" value="Submit" style="float: right"/>
-                            </div> -->
-                        
-				<!-- <input id="input" type="text" name="search" placeholder="Similar anime..."> -->
-                        <button type="submit" id="submit" class="btn btn-info btn-submit md-2">Submit</button>
-	                <button type="submit" id="submit" class="btn btn-info btn-submit md-2">Submit2</button>		
                     </form>
                         			
-
-<!--		<div class="form-group row">
-		<div class="col-md-6">
-		<div class="form-check">
-		    <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
-		    <label for="actionTag" class="tag-button active">action</label>
-		    <input type="checkbox" class="form-check-input tag" id="adventureTag" name="adventureTag" checked>
-		    <label for="adventureTag" class="tag-button active">adventure</label>
-		    <input type="checkbox" class="form-check-input tag" id="carsTag" name="carsTag" checked>
-		    <label for="carsTag" class="tag-button active">cars</label>
-		    <input type="checkbox" class="form-check-input tag" id="comedyTag" name="comedyTag" checked>
-		    <label for="comedyTag" class="tag-button active">comedy</label>
-		    <input type="checkbox" class="form-check-input tag" id="dementiaTag" name="dementiaTag" checked>
-		    <label for="dementiaTag" class="tag-button active">dementia</label>
-		</div>
-		<div class="form-check">
-		    <input type="checkbox" class="form-check-input tag" id="demonsTag" name="demonsTag" checked>
-		    <label for="demonsTag" class="tag-button active">demons</label>
-		    <input type="checkbox" class="form-check-input tag" id="dramaTag" name="dramaTag" checked>
-		    <label for="dramaTag" class="tag-button active">drama</label>
-		    <input type="checkbox" class="form-check-input tag" id="fantasyTag" name="fantasyTag" checked>
-		    <label for="fantasyTag" class="tag-button active">fantasy</label>
-		    <input type="checkbox" class="form-check-input tag" id="gameTag" name="gameTag" checked>
-		    <label for="gameTag" class="tag-button active">game</label>
-		    <input type="checkbox" class="form-check-input tag" id="historicalTag" name="historicalTag" checked>
-		    <label for="historicalTag" class="tag-button active">historical</label>
-		</div>
-	    </div 
-		<div class="col-md-6">
-		    <div class="form-group">
-			<input type="text" class="form-control" id="inputAddress" placeholder="1234">
-			<label for="inputAddress"> Address</label>
-            </div>
-        </div>
-
-    <div> 
-</div> -->
-
-			<!-- can change this to type="button" and use jquery -->
-			<!-- Show Additional Settings:
-			<br> Hide Same Series <input id="checkBox" type="checkbox" name="hide_ss">
-			<br> Licensed in America <input id="checkBox" type="checkbox" name="licensed">
-			<br> Finished <input id="checkBox" type="checkbox" name="finished">
-			<br> Time Range Early:  <input id="time" type="text" name="time">
-			<br> Show:
-			TV: <input id="checkBox" type="checkbox" name="TV">
-			Movies: <input id="checkBox" type="checkbox" name="movie">
-			OVA: <input id="checkBox" type="checkbox" name="ova">
-			ONA: <input id="checkBox" type="checkbox" name="ona">
-			SPECIAL: <input id="checkBox" type="checkbox" name="special">
-			<br> Minimum Rating: <input id="minratinginput" type="text" name="min_rating">
-			<br> NSFW off <input id="checkBox" type="checkbox" name="nsfw"> -->
-		       <!--  Debug Controls:
-			Doc2Vec Reviews <input type="radio", name="method" value = "doc2vecreviews" >
-			Doc2Vec Synopsis <input type="radio", name="method" value = "doc2vecsynopsis" >
-			tSVD w/ Cossim Reviews <input type="radio", name="method" value = "tsvdreviews" >
-			tSVD w/ Cossim Synopsis <input type="radio", name="method" value = "tsvdynopsis" disabled>
-			tfIDF w/ Cossim Synposis <input type="radio", name="method" value = "oldmethod" disabled> -->
-			
-		</div>
-	<!--
-	<div style="padding:2%">
-	{% if data%}
-	<ul class="list-unstyled">
-	  {% for d in data[:10] %}
-	  <li class="media">
-	    <a class = "media-left media-bottom" href="#">
-		<img src={{d["anime_image_url"]}} alt="Generic placeholder image">
-	    </a>
-	    <div class="media-body">
-	      <h5 class="mt-0 mb-1">List-based media object</h5>
-	      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-	    </div>
-	  </li>
-	  {% endfor %}
-	</ul>
-	{% endif %}
-	</div> -->
-	<!--<div class="btn-group" data-toggle="buttons">
-	    <label class="btn btn-primary active"> label button
-		<input type="checkbox" checked>
-	    </label>
-	</div>
-	    <form>
-	      <div class="form-group">
-		<div class="btn-group col-xs-12" data-toggle="buttons">
-		    <label class="btn btn-default">
-			<input type= "checkbox" name="fruit" id="apple" value="apple">apple
-		    </label>
-		    <label class="btn btn-default">
-			<input type ="checkbox" name = "fruit1" id="pear" value="pear">pear
-		    </label>
-		    <label class="btn btn-default">
-			<input type="checkbox" name="meowmeow" id="meowmeow" value="mew">pear2
-		    </label>
-
-		</div>
-	</div>
-		<input type="checkbox" id="thisisacheckbox"><label for="thisisacheckbox" id="labelid"></label>test if works
-		<button type="submit" id="filterForm" class="btn btn-default">Submit</button>
-	    </form>
--->
-<!--	<form>
-	    <div class="form-check">
-		<input type="checkbox" class="form-check-input tag" id="exampleCheck1" name="test label"><label for="exampleCheck1" class="tag-button">testbuttnnow</label>
-	    </div>
-            <div class="form-group">
-                <label for="inputaddr">Addresstest"</label>
-                <input type="text" class="form-control" id="inputaddr" placeholder="your address" name="post">
-            </div>
-	    <button type="submit" class="btn btn-primary">Submit</button>
-	</form>
--->	
-
 	{% if data %}
 	    <div>
 	<p>
