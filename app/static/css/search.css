@@ -18,11 +18,13 @@ html, body {
     display: inline-block;
     cursor: pointer;
     border-radius: 12px;
-    width: 80px;
     padding: 6px;
     background-color: white;
     color: #e7e7e7;
     border: 2px solid #e7e7e7;
+    margin-left: 1.5px;
+    margin-right: 1.5px;
+    font-size: 13;
 }
 
 .form-check-input.tag {
@@ -30,10 +32,16 @@ html, body {
 }
 
 .tag-button.active {
-    border: 2px solid black;
+    border: 2px solid pink;
     color: black;
 }
 
+.tag-button:hover {
+   background-color: lightpink;
+   border-color: hotpink;
+}
+   
+  
 .form-check.filter {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
