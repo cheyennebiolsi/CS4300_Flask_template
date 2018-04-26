@@ -1,6 +1,7 @@
 <html>
     <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--		<link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -13,7 +14,6 @@
 		<script src="/static/typeahead.bundle.js"></script>
 		<script src="/static/bloodhound.js"></script>
 		<script src="/static/aniai.js"></script>
-		<link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
 	    </head>
@@ -28,22 +28,22 @@
 		    </div>
 		    <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
 		    <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
-			<div class="form row"> <!-- style:"height:30px vertical-align:bottom"> -->
+			<div class="form row" style="height:32px"> <!-- style:"height:30px vertical-align:bottom"> -->
                             <div class="form-group col-lg-10" style="padding-right:0">
 			        <div id="scrollable-dropdown-menu">
 				    <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
 			        </div>
                             </div>
 <!--                            <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
-                            <button class="search-button" type="submit" style="height:32"><i class="fa fa-search"></i></button>
-                            <button class="btn btn-primary" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;height:32">Filter</button>
+                            <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white"><i class="fa fa-filter"></i>Filter</button>
+                            <button class="search-button" type="submit" style="border-top-right-radius:4px;border-bottom-right-radius:4px"><i class="fa fa-search"></i></button>
 <!--                            <div class="form-group col-md-4">
                                 <input type="submit" value="Submit">
                             </div> -->
                         </div>
                         <div class="collapse" id="collapseForm">
- 		            <div class="form-group row" style="margin:0">
-		                <div class="col-md-5.5">
+ 		            <div class="form-group row justify-content-md-around" style="margin:0">
+		                <div class="col-md-auto">
                                     <h3 style="color:white; text-align:center">Tags</h3>
                                     <hr>
 		                    <div class="form-check filter">
@@ -86,7 +86,7 @@
 	{% if data %}
 	    <div>
 	<p>
-	  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+	  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-filter"></i>
 	    Toggle filter
 	  </button>
 	</p>
@@ -265,7 +265,7 @@ $('.tag-button').click(function(){
 }
 });
 </script>
-        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
-        <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script>
+<!--        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
+        <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
     </body>
 </html>
