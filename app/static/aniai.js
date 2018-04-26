@@ -21,7 +21,7 @@ $(document).ready(function() {
             valueKey: 'anime_english_title',
             source: anime.ttAdapter(),
             hint: true,
-            highlight: true,
+            // highlight: true,
             minLength: 3
         },
         confirmKeys: [13, 44, 188],
