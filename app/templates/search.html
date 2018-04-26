@@ -35,14 +35,32 @@
 			        </div>
                             </div>
                             <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button>
-                            <button type="submit" id="submit" class="btn btn-info btn-submit">Submit4</button>
+                            <button class="btn btn-primary" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">Filter</button>
 <!--                            <div class="form-group col-md-4">
                                 <input type="submit" value="Submit">
                             </div> -->
                         </div>
-                        <div class="form row md-2">
-                            <div class="form-group col-lg-1">
-                                <input type="text" name="search" placeholder="blah"> 
+                        <div class="collapse" id="collapseForm">
+ 		            <div class="form-group row">
+		                <div class="col-md-6">
+		                    <div class="form-check">
+		                        <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
+		                        <label for="actionTag" class="tag-button active">action</label>
+		                        <input type="checkbox" class="form-check-input tag" id="adventureTag" name="adventureTag" checked>
+		                        <label for="adventureTag" class="tag-button active">adventure</label>
+		                        <input type="checkbox" class="form-check-input tag" id="carsTag" name="carsTag" checked>
+		                        <label for="carsTag" class="tag-button active">cars</label>
+		                        <input type="checkbox" class="form-check-input tag" id="comedyTag" name="comedyTag" checked>
+		                        <label for="comedyTag" class="tag-button active">comedy</label>
+		                        <input type="checkbox" class="form-check-input tag" id="dementiaTag" name="dementiaTag" checked>
+		                        <label for="dementiaTag" class="tag-button active">dementia</label>
+		                    </div> 
+                                </div>
+                            </div>                          
+                            <div class="form row md-2">
+                                <div class="form-group col-lg-1">
+                                    <input type="text" name="search" placeholder="blah"> 
+                                </div>
                             </div>
                         </div>
 <!--                            <div class="col-sm-4">
