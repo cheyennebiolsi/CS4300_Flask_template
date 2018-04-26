@@ -2,6 +2,31 @@ html, body {
     height: 100%;
 }
 
+.collapse.show {
+    visibility: visible;
+}
+
+.tag-button {
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 12px;
+    width: 80px;
+    padding: 6px;
+    background-color: white;
+    color: #e7e7e7;
+    border: 2px solid #e7e7e7;
+}
+
+.form-check-input.tag {
+    opacity: 0;
+}
+
+.tag-button.active {
+    border: 2px solid black;
+    color: black;
+}
+
 .header {
     padding: 1em;
     height: 50%;
