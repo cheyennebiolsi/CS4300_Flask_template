@@ -27,14 +27,71 @@
 			</p>
 		    </div>
 		    <h1 style="font-size: 85px; font-family:Futura; color:white; text-align:center">Aniai&#24859</h1>
-		    <form class = "form-inline global-search" id="myform">
-			<div class="form-group" style:"height:30px vertical-align:bottom">
-			    <div id="scrollable-dropdown-menu">
-				<input id="animeinput" type="text" name="animesearch" placeholder="Similar anime...">
-			    </div>
+		    <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
+			<div class="form row"> <!-- style:"height:30px vertical-align:bottom"> -->
+                            <div class="form-group col-lg-10">
+			        <div id="scrollable-dropdown-menu">
+				    <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
+			        </div>
+                            </div>
+                            <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button>
+                            <button type="submit" id="submit" class="btn btn-info btn-submit">Submit4</button>
+<!--                            <div class="form-group col-md-4">
+                                <input type="submit" value="Submit">
+                            </div> -->
+                        </div>
+                        <div class="form row md-2">
+                            <div class="form-group col-lg-1">
+                                <input type="text" name="search" placeholder="blah"> 
+                            </div>
+                        </div>
+<!--                            <div class="col-sm-4">
+                                <input type="submit" value="Submit" style="float: right"/>
+                            </div> -->
+                        
 				<!-- <input id="input" type="text" name="search" placeholder="Similar anime..."> -->
-			</div>
-			<button type="submit" id="submit" class="btn btn-info btn-submit">Submit</button>
+                        <button type="submit" id="submit" class="btn btn-info btn-submit md-2">Submit</button>
+	                <button type="submit" id="submit" class="btn btn-info btn-submit md-2">Submit2</button>		
+                    </form>
+                        			
+
+<!--		<div class="form-group row">
+		<div class="col-md-6">
+		<div class="form-check">
+		    <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
+		    <label for="actionTag" class="tag-button active">action</label>
+		    <input type="checkbox" class="form-check-input tag" id="adventureTag" name="adventureTag" checked>
+		    <label for="adventureTag" class="tag-button active">adventure</label>
+		    <input type="checkbox" class="form-check-input tag" id="carsTag" name="carsTag" checked>
+		    <label for="carsTag" class="tag-button active">cars</label>
+		    <input type="checkbox" class="form-check-input tag" id="comedyTag" name="comedyTag" checked>
+		    <label for="comedyTag" class="tag-button active">comedy</label>
+		    <input type="checkbox" class="form-check-input tag" id="dementiaTag" name="dementiaTag" checked>
+		    <label for="dementiaTag" class="tag-button active">dementia</label>
+		</div>
+		<div class="form-check">
+		    <input type="checkbox" class="form-check-input tag" id="demonsTag" name="demonsTag" checked>
+		    <label for="demonsTag" class="tag-button active">demons</label>
+		    <input type="checkbox" class="form-check-input tag" id="dramaTag" name="dramaTag" checked>
+		    <label for="dramaTag" class="tag-button active">drama</label>
+		    <input type="checkbox" class="form-check-input tag" id="fantasyTag" name="fantasyTag" checked>
+		    <label for="fantasyTag" class="tag-button active">fantasy</label>
+		    <input type="checkbox" class="form-check-input tag" id="gameTag" name="gameTag" checked>
+		    <label for="gameTag" class="tag-button active">game</label>
+		    <input type="checkbox" class="form-check-input tag" id="historicalTag" name="historicalTag" checked>
+		    <label for="historicalTag" class="tag-button active">historical</label>
+		</div>
+	    </div 
+		<div class="col-md-6">
+		    <div class="form-group">
+			<input type="text" class="form-control" id="inputAddress" placeholder="1234">
+			<label for="inputAddress"> Address</label>
+            </div>
+        </div>
+
+    <div> 
+</div> -->
+
 			<!-- can change this to type="button" and use jquery -->
 			<!-- Show Additional Settings:
 			<br> Hide Same Series <input id="checkBox" type="checkbox" name="hide_ss">
@@ -55,8 +112,7 @@
 			tSVD w/ Cossim Reviews <input type="radio", name="method" value = "tsvdreviews" >
 			tSVD w/ Cossim Synopsis <input type="radio", name="method" value = "tsvdynopsis" disabled>
 			tfIDF w/ Cossim Synposis <input type="radio", name="method" value = "oldmethod" disabled> -->
-			<br>
-		    </form>
+			
 		</div>
 	<!--
 	<div style="padding:2%">
