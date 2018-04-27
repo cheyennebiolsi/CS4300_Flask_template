@@ -2,6 +2,51 @@ html, body {
     height: 100%;
 }
 
+body {
+    padding-left: 15%;
+    padding-right: 15%;
+    background-color: black;
+}
+
+.media-body h2 {
+    color: white;
+    margin: 0;
+    padding: 15;
+    background-color: lightslategrey;
+    width: 100%;
+}
+
+.media-body {
+    overflow: hidden;
+}
+
+.media-body .container {
+    height: 100%;
+    width: 100%;
+}
+
+.media-body .col {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 10;
+    padding-bottom: 10;
+    color: white;
+    overflow-y: scroll;
+    width: 100% + 8px;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.card-body {
+    justify-content: normal;
+    flex-direction: column;
+    display: flex;
+}
+
+
 .fancy-checkbox input[type="checkbox"],
 .fancy-checkbox .checked {
     display: none;

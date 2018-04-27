@@ -224,7 +224,7 @@
                                 </div>
                                 <div class="col-md-auto">
 		                    <div class="form-check filter" style="padding-top:16px; font-size:30; text-align:center">
-                                        Rating
+                                        Rated
 		                        <input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
 		                        <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">  SFW ON  </label>
                                     </div>
@@ -283,6 +283,7 @@
 
                             </div>             
                         </div>
+                        <hr>
                     </form>
                         			
 {% if data %}
@@ -299,7 +300,23 @@
             </div>
         </a>
         <div class="media-body" style="height:50%">
-            <h5> This is a header </h5>
+            <div class="container">
+                <div class="row"><h2> This is a header </h2>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Genres: Action, Adventure, Comedy</p>
+                        <p>Duration: 24 min per ep</p>
+                   1 of 3
+                    </div>
+                    <div class="col-6">
+                    2 of 3 (wider)
+                    </div>
+                    <div class="col">
+                   3 of 3
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -329,7 +346,7 @@
                  <!--    <div class="view zoom"> -->
                          <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
                          <div class="card-body" style="background-color:black;padding-bottom:20px">
-                             <h4 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h4>
+                             <h5 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h5>
                          </div>
                      <!--</div>-->
                 </div>
@@ -344,12 +361,14 @@
         </div>
     </div>
 
-    <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev" style="width:30px;margin:0">
+<!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span> -->
+        <i class="fa fa-chevron-left fa-2x"></i>
         <span class="sr-only">Previous</span>
     </a>
-    <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next" style="width:30px;margin:0">
+        <!--<span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+        <i class="fa fa-chevron-right fa-2x"></i>
         <span class="sr-only">Next</span>
     </a>
     </div>
