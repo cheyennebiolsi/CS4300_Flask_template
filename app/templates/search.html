@@ -42,7 +42,7 @@
                             </div> -->
                         </div>
                         <div class="collapse" id="collapseForm">
- 		            <div class="form-group row justify-content-md-around" style="margin:0">
+ 		            <div class="form-group row justify-content-md-around" style="color:white;margin:0">
 		                <div class="col-md-auto" style="text-align:center">
                                     <h2 style="color:white; text-align:center">Tags</h2>
                                     <hr>
@@ -149,17 +149,38 @@
                                     <h2> Type </h2>
                                     <hr>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="showCheckbox" name="displayShow" checked>
-					<label for="showCheckbox" class="tag-button active" id="show-button">meow</label>
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="displayTv" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            television
+                                        </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox">
-                                            <input type="checkbox" name="displayShow"/>
-                                            <i class="fa fa-fw fa-microphone unchecked"></i>
-                                            <i class="fa fa-fw fa-microphone-slash checked"></i>
-                                            Test label
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="displayMovie" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            movie
                                         </label>
-                                </div>>
+                                   </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="displaySpecial" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            special
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="displayOva" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            OVA
+                                        </label>
+                                   </div>
+                                </div>
                                 <div class="col-md-auto">
                                     <h2> Other filter options 2 </h3>
                                     <hr>
@@ -281,7 +302,6 @@
 
 <script>
 $('.tag-button').click(function(){
-   alert("buttonclicked");
    if ($(this).hasClass('active')){
     $(this).removeClass('active')
 } else {
@@ -289,15 +309,6 @@ $('.tag-button').click(function(){
 }
 });
 </script>
-<script>
-$('#show-button').click(function() {
-    alert("showclicked");
-    if ($(this).hasClass('active')) {
-      $(this).rmoveClass('active')
-} else {
-    $(this).addClass('active')
-}
-});
 
 <!--        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
         <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
