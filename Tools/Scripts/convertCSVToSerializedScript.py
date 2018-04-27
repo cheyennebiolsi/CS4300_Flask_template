@@ -47,6 +47,7 @@ def makeAnimeDocuments(fileName, destName):
     animeDocuments = sorted(animeDocuments.values(), key = lambda document: document.anime_id)
     for index, document in enumerate(animeDocuments):
         document.anime_index = index
+    print("Found {} anime".format(len(animeDocuments)))
     modelToSerializableConverter.dumpModel(destName, animeDocuments)
 
 if len(sys.argv) < 3:
