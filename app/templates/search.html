@@ -1,7 +1,7 @@
 <html>
     <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!--		<link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">-->
+		<link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -44,7 +44,7 @@
                         <div class="collapse" id="collapseForm">
  		            <div class="form-group row justify-content-md-around" style="margin:0">
 		                <div class="col-md-auto" style="text-align:center">
-                                    <h3 style="color:white; text-align:center">Tags</h3>
+                                    <h2 style="color:white; text-align:center">Tags</h2>
                                     <hr>
 		                    <div class="form-check filter">
 		                        <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
@@ -145,81 +145,31 @@
 		                        <label for="shounenTag" class="tag-button active">historical</label> -->
 		                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <h3> Other filter options </h3>
+                                <div class="col-md-auto">
+                                    <h2> Type </h2>
                                     <hr>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="showCheckbox" name="displayShow" checked>
+					<label for="showCheckbox" class="tag-button active" id="show-button">meow</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox">
+                                            <input type="checkbox" name="displayShow"/>
+                                            <i class="fa fa-fw fa-microphone unchecked"></i>
+                                            <i class="fa fa-fw fa-microphone-slash checked"></i>
+                                            Test label
+                                        </label>
                                 </div>>
-                                <div class="col-md-3">
-                                    <h3> Other filter options 2 </h3>
+                                <div class="col-md-auto">
+                                    <h2> Other filter options 2 </h3>
                                     <hr>
                                 </div>
                             </div>             
                         </div>
                     </form>
                         			
-	{% if data %}
-	    <div>
-	<p>
-	  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-filter"></i>
-	    Toggle filter
-	  </button>
-	</p>
-	<div class="collapse" id="collapseExample">
-	    <form>
-	<!--        <div class="btn-group col-xs-12" data-toggle="buttons">
-		    <label class="btn btn-default">
-			<input type= "checkbox" name="fruit" id="apple" value="apple">apple
-		    </label>
-		    <label class="btn btn-default">
-			<input type ="checkbox" name = "fruit1" id="pear" value="pear">pear
-		    </label>
-		    <label class="btn btn-default">
-			<input type="checkbox" name="meowmeow" id="meowmeow" value="mew">pear2
-		    </label>
-		</div>
-		<button type="submit" class="btn btn-default">Submit</button>
-	    </form> -->
-		<div class="form-group row">
-		<div class="col-md-6">
-		<div class="form-check">
-		    <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
-		    <label for="actionTag" class="tag-button active">action</label>
-		    <input type="checkbox" class="form-check-input tag" id="adventureTag" name="adventureTag" checked>
-		    <label for="adventureTag" class="tag-button active">adventure</label>
-		    <input type="checkbox" class="form-check-input tag" id="carsTag" name="carsTag" checked>
-		    <label for="carsTag" class="tag-button active">cars</label>
-		    <input type="checkbox" class="form-check-input tag" id="comedyTag" name="comedyTag" checked>
-		    <label for="comedyTag" class="tag-button active">comedy</label>
-		    <input type="checkbox" class="form-check-input tag" id="dementiaTag" name="dementiaTag" checked>
-		    <label for="dementiaTag" class="tag-button active">dementia</label>
-		</div>
-		<div class="form-check">
-		    <input type="checkbox" class="form-check-input tag" id="demonsTag" name="demonsTag" checked>
-		    <label for="demonsTag" class="tag-button active">demons</label>
-		    <input type="checkbox" class="form-check-input tag" id="dramaTag" name="dramaTag" checked>
-		    <label for="dramaTag" class="tag-button active">drama</label>
-		    <input type="checkbox" class="form-check-input tag" id="fantasyTag" name="fantasyTag" checked>
-		    <label for="fantasyTag" class="tag-button active">fantasy</label>
-		    <input type="checkbox" class="form-check-input tag" id="gameTag" name="gameTag" checked>
-		    <label for="gameTag" class="tag-button active">game</label>
-		    <input type="checkbox" class="form-check-input tag" id="historicalTag" name="historicalTag" checked>
-		    <label for="historicalTag" class="tag-button active">historical</label>
-		</div>
-	    </div>
-		<div class="col-md-6">
-		    <div class="form-group">
-			<input type="text" class="form-control" id="inputAddress" placeholder="1234">
-			<label for="inputAddress"> Address</label>
-            </div>
-        </div>
-
-    <div> 
-</div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    </div>
-</div>
-    <div class="media">
+{% if data %}
+   <div class="media">
         <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
             <div class="view overlay" style="cursor:pointer">
                 <img src={{data[0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
@@ -339,6 +289,16 @@ $('.tag-button').click(function(){
 }
 });
 </script>
+<script>
+$('#show-button').click(function() {
+    alert("showclicked");
+    if ($(this).hasClass('active')) {
+      $(this).rmoveClass('active')
+} else {
+    $(this).addClass('active')
+}
+});
+
 <!--        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
         <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
     </body>
