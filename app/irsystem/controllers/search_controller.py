@@ -18,7 +18,7 @@ number_results_final = 100
 weight_tags = 1
 weight_title = 6
 
-animelite = json.load(open('data/animelite.json'))
+animelite = json.load(open('data/allanimelite.json'))
 for index, element in enumerate(animelite):
     element["anime_index"] = index
 allanimelite = json.load(open('data/allanimelite.json'))
@@ -283,6 +283,7 @@ def search():
 	if show or min_rating or time or finished or licensed:
 		data = hide_filter(data, animelite, show, min_rating, time, finished, licensed)
 
+        data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=query, prevtags=tag, prevhide_ss=hide_ss, prevtv=tv)
 
@@ -444,5 +445,6 @@ def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
 
     return q1
 
-
+def makeListsOfList(data_list):
+    return [data_list[i:i+8] for i in range(0, len(data_list), 8)]
 

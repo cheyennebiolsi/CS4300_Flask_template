@@ -290,7 +290,7 @@
    <div class="media">
         <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
             <div class="view overlay" style="cursor:pointer">
-                <img src={{data[0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
+                <img src={{data[0][0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
                 <div class="mask flex-center rgba-black-light">
                     <ul class="fa-ul" style="margin-left:0">
                       <li><p class="white-text" style="font-size: 20px">watch on <img src="/static/images/Crunchyroll_24x24.png" style="display:inline"><span style="font-family:Maven pro">crunchyroll </span><i class="fa fa-external-link"></i></p></li>
@@ -322,12 +322,16 @@
 
     <div id="cardCarousel" class="carousel slide" date-ride="carousel">
     <ol class="carousel-indicators">
-       <li data-target="#cardCarousel" data-slide-to="0" class="active"></li>
-       <li data-target="#cardCarousel" data-slide-to="1"></li>
-       <li data-target="#cardCarousel" data-slide-to="2"></li>
+       {% for lst in data %}
+           <li data-target="#cardCarousel" data-slide-to"{{ loop.index0}}"
+           {% if loop.index0 == 0 %}
+           class="active"
+           {% endif %}></li>
+       {% endfor %}
     </ol>
     <div class = "carousel-inner" style="overflow:visible">
-        <div class="carousel-item active">
+        {% for lst in data %}
+        <div class="carousel-item {{'active' if loop.index0 == 0}}">
     <!--        <div class="container">
                 <div class="row">
                     {% for d in data[:8] %}
@@ -341,7 +345,7 @@
             </div> -->
 
             <div class="card-group">
-            {% for d in data[:8] %}
+            {% for d in lst %}
                  <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}}>
                  <!--    <div class="view zoom"> -->
                          <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
@@ -353,12 +357,13 @@
             {% endfor %}
             </div>
         </div>
-        <div class="carousel-item">
+        {% endfor %}
+<!--        <div class="carousel-item">
             <h1> item2 </h1>
         </div>
         <div class="carousel-item">
             <h1> item3 </h1>
-        </div>
+        </div> -->
     </div>
 
     <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev" style="width:30px;margin:0">
