@@ -28,6 +28,21 @@ html, body {
     width: 70px;
 }
 
+
+.sfw-button {
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    cursor: pointer;
+    padding: 6px;
+    background-color: black;
+    border: 2px solid red;
+    color: red;
+    margin-left: 1.5px;
+    margin-right: 1.5px;
+    font-size: 13;
+    width: 70px;
+}
 .tag-button {
     text-align: center;
     display: inline-block;
@@ -49,6 +64,12 @@ html, body {
 .tag-button.active {
     border: 2px solid pink;
     color: black;
+}
+
+.sfw-button.active {
+    border: 2px solid green;
+    color: green;
+    width: 40px;
 }
 
 .tag-button:hover {

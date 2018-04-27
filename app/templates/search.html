@@ -137,16 +137,22 @@
 		                        <label for="thrillerTag" class="tag-button active">thriller</label>
 		                        <input type="checkbox" class="form-check-input tag" id="vampireTag" name="vampireTag" checked>
 		                        <label for="vampireTag" class="tag-button active">vampire</label>
-		                    </div> 
-		                    <div class="form-check filter">
-<!--		                        <input type="checkbox" class="form-check-input tag" id="gameTag" name="gameTag" checked>
-		                        <label for="shoujoaiTag" class="tag-button active">game</label>
-		                        <input type="checkbox" class="form-check-input tag" id="historicalTag" name="historicalTag" checked>
-		                        <label for="shounenTag" class="tag-button active">historical</label> -->
 		                    </div>
+                                    <div class="collapse" id="collapsensfw">
+		                        <div class="form-check filter">
+		                            <input type="checkbox" class="form-check-input tag" id="ecchiTag" name="ecchiTag" checked>
+		                            <label for="ecchiTag" class="tag-button active">ecchi</label>
+		                            <input type="checkbox" class="form-check-input tag" id="hentaiTag" name="hentaiTag" checked>
+		                            <label for="hentaiTag" class="tag-button active">hentai</label>
+		                            <input type="checkbox" class="form-check-input tag" id="yaoiTag" name="yaoiTag" checked>
+		                            <label for="yaoiTag" class="tag-button active">yaoi</label>
+		                            <input type="checkbox" class="form-check-input tag" id="yuriTag" name="yuriTag" checked>
+		                           <label for="yuriTag" class="tag-button active">yuri</label>
+		                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-auto">
-                                    <h2> Type </h2>
+                                    <h2 style="text-align:center"> Type </h2>
                                     <hr>
                                     <div class="form-check">
                                         <label class="fancy-checkbox" style="color:white; font-size:18">
@@ -180,10 +186,49 @@
                                             OVA
                                         </label>
                                    </div>
+                                   <h2 style="text-align:center">Stream Provider</h2>
+                                   <hr>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="streamCrunchy" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            crunchyroll
+                                        </label>
+                                   </div>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="streamHulu" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            hulu
+                                        </label>
+                                   </div>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="streamYahoo" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            Yahoo! View
+                                        </label>
+                                   </div>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="streamNone" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            allow no provider
+                                        </label>
+                                   </div>
+                                   
                                 </div>
                                 <div class="col-md-auto">
-                                    <h2> Other filter options 2 </h3>
-                                    <hr>
+		                    <div class="form-check filter" style="padding-top:16px; font-size:30">
+                                        Rating
+		                        <input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
+		                        <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw" aria-expanded="false" aria-controls="collapsensfw">  NSFW OFF  </label>
+                                    </div>
+                                    <hr style="margin-top:14px">
                                 </div>
                             </div>             
                         </div>
@@ -310,6 +355,17 @@ $('.tag-button').click(function(){
 });
 </script>
 
+<script>
+$('.sfw-button').click(function(){
+   if ($(this).hasClass('active')){
+    $(this).removeClass('active');
+    $(this).text('NSFW ON');
+} else {
+   $(this).addClass('active');
+   $(this).text('NSFW OFF');
+}
+});
+</script>
 <!--        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
         <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
     </body>
