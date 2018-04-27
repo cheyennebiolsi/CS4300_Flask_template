@@ -140,14 +140,14 @@
 		                    </div>
                                     <div class="collapse" id="collapsensfw">
 		                        <div class="form-check filter">
-		                            <input type="checkbox" class="form-check-input tag" id="ecchiTag" name="ecchiTag" checked>
-		                            <label for="ecchiTag" class="tag-button active">ecchi</label>
-		                            <input type="checkbox" class="form-check-input tag" id="hentaiTag" name="hentaiTag" checked>
-		                            <label for="hentaiTag" class="tag-button active">hentai</label>
-		                            <input type="checkbox" class="form-check-input tag" id="yaoiTag" name="yaoiTag" checked>
-		                            <label for="yaoiTag" class="tag-button active">yaoi</label>
-		                            <input type="checkbox" class="form-check-input tag" id="yuriTag" name="yuriTag" checked>
-		                           <label for="yuriTag" class="tag-button active">yuri</label>
+		                            <input type="checkbox" class="form-check-input tag" id="ecchiTag" name="ecchiTag">
+		                            <label for="ecchiTag" class="tag-button">ecchi</label>
+		                            <input type="checkbox" class="form-check-input tag" id="hentaiTag" name="hentaiTag">
+		                            <label for="hentaiTag" class="tag-button">hentai</label>
+		                            <input type="checkbox" class="form-check-input tag" id="yaoiTag" name="yaoiTag">
+		                            <label for="yaoiTag" class="tag-button">yaoi</label>
+		                            <input type="checkbox" class="form-check-input tag" id="yuriTag" name="yuriTag">
+		                           <label for="yuriTag" class="tag-button">yuri</label>
 		                        </div>
                                     </div>
                                 </div>
@@ -223,13 +223,64 @@
                                    
                                 </div>
                                 <div class="col-md-auto">
-		                    <div class="form-check filter" style="padding-top:16px; font-size:30">
+		                    <div class="form-check filter" style="padding-top:16px; font-size:30; text-align:center">
                                         Rating
 		                        <input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
-		                        <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw" aria-expanded="false" aria-controls="collapsensfw">  NSFW OFF  </label>
+		                        <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">  SFW ON  </label>
                                     </div>
                                     <hr style="margin-top:14px">
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="gRating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            G &#8212 all ages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="pgRating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            PG &#8212 children
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="pg13Rating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            PG-13 &#8212 teens 13 or older
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="r17Rating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            R &#8212 17+ (violence & profanity)
+                                        </label>
+                                    </div>
+                                    <div class="collapse" id="collapsensfwrating">
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="rPlusRating"/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            R+ &#8212 mild nudity
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                            <input type="checkbox" name="rxRating"/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            Rx &#8212 hentai
+                                        </label>
+                                    </div>
+                                    </div>
                                 </div>
+
                             </div>             
                         </div>
                     </form>
@@ -362,7 +413,7 @@ $('.sfw-button').click(function(){
     $(this).text('NSFW ON');
 } else {
    $(this).addClass('active');
-   $(this).text('NSFW OFF');
+   $(this).text('SFW ON');
 }
 });
 </script>
