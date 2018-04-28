@@ -471,6 +471,9 @@ def search():
 	method = request.args.get('method')
 
 def get_anime(anime_id, jsonfile):
+	"""Returns the json object of an anime according to animeID. 
+
+	"""
 	# print(anime_id)
 	for element in jsonfile:
 		# print(element['anime_id'])
