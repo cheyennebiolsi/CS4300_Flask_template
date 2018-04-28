@@ -17,6 +17,11 @@
     width: 140px;
 }
 
+.media .semantic {
+    height: 100%;
+    border-left: 2px solid white;
+}
+
 .media-header .row.title {
     padding-top: 8px;
     border-bottom: 2px solid black;
@@ -63,5 +68,6 @@
 }
 
 .media-footer {
+    height: 20px;
     background-color: #333;
 }

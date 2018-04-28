@@ -85,7 +85,7 @@
 		                        <input type="checkbox" class="form-check-input tag" id="martialArtsTag" name="martialArtsTag" checked>
 		                        <label for="martialArtsTag" class="tag-button active">martial arts</label>
 		                        <input type="checkbox" class="form-check-input tag" id="mecchaTag" name="mecchaTag" checked>
-		                        <label for="mechaTag" class="tag-button active">mecha</label>
+		                        <label for="mecchaTag" class="tag-button active">meccha</label>
 		                        <input type="checkbox" class="form-check-input tag" id="militaryTag" name="militaryTag" checked>
 		                        <label for="militaryTag" class="tag-button active">military</label>
 		                    </div> 
@@ -295,6 +295,8 @@
             <span>{{data[0][0]["anime_english_title"]}}</span>
         </div>
         <div class="col icon">
+            <img src="/static/images/Crunchyroll_24x24.png" style="padding-bottom: 4px">
+            <span style="font-family:Maven pro; font-size:25; display:iinline-block">crunchyroll </span>
             <a href="https:www.crunchyroll.com" role="button"><i class="fa fa-external-link"></i></a>
         </div>
     </div>
@@ -336,7 +338,14 @@
         </a>
         <div class="media-body" style="height:50%">
             <div class="container">
-                <div class="row"><h2> This is a header </h2>
+                <div class="row">
+                    <div class="col">
+                        <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
+                    </div>
+                    <div class="col-6 semantic">
+                    </div>
+                </div>
+<!--                <div class="row"><h2> This is a header </h2>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -350,12 +359,16 @@
                     <div class="col">
                    3 of 3
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 </div>
 <div class="media-footer"> 
-    <h3>footer </h3>
+    <div class="container">
+        <div class="row">
+            
+        </div>
+    </div>
 </div>
     <div id="cardCarousel" class="carousel slide" date-ride="carousel">
     <ol class="carousel-indicators">
