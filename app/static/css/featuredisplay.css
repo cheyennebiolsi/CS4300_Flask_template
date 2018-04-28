@@ -18,6 +18,31 @@
     src: url('/static/fonts/futura-md-bt/FuturaMediumBT.ttf');
 }
 
+.media-self-center.media-left.anime-picture {
+    width: 35%;
+    height: 50%;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.media .container.anime-picture {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:row;
+    padding: 0;
+    margin: 0;
+}
+
+.media .anime-picture img {
+    flex:1;
+    object-fit: contain;
+}
+
+
+
 .media-header .genre {
     text-align: center;
     display: inline-block;
@@ -59,6 +84,8 @@
 
 .media-header {
     background-color: darkgrey;
+    margin: 0;
+    padding: 0;
 }
 
 .media-header .col-auto.icon {
@@ -66,8 +93,16 @@
     font-size: 30;
 }
 
+.media-header .row {
+    margin: 0;
+    padding: 0;
+}
+
 .media-header .container {
     width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 2px solid gold;
 }
 
 .media-header .col.type {

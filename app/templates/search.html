@@ -45,7 +45,9 @@
                         <div class="collapse" id="collapseForm">
  		            <div class="form-group row justify-content-md-around" style="color:white;margin:0">
 		                <div class="col-md-auto" style="text-align:center">
-                                    <h2 style="color:white; text-align:center">Tags</h2>
+                                    <div class="filter-header">
+                                        <span>Tags</span>
+                                    </div>
                                     <hr>
 		                    <div class="form-check filter">
 		                        <input type="checkbox" class="form-check-input tag" id="actionTag" name="actionTag" checked>
@@ -153,10 +155,12 @@
                                     </div>
                                 </div>
                                 <div class="col-md-auto">
-                                    <h2 style="text-align:center"> Type </h2>
+                                    <div class="filter-header">
+                                        <span>Type</span>
+                                    </div>
                                     <hr>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="displayTv" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -164,7 +168,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="displayMovie" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -172,7 +176,7 @@
                                         </label>
                                    </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="displaySpecial" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -180,17 +184,19 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white;">
                                             <input type="checkbox" name="displayOva" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                             OVA
                                         </label>
                                    </div>
-                                   <h2 style="text-align:center">Stream Provider</h2>
+                                    <div class="filter-header">
+                                        <span>Stream Provider</span>
+                                    </div>
                                    <hr>
                                    <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="streamCrunchy" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -198,7 +204,7 @@
                                         </label>
                                    </div>
                                    <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="streamHulu" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -206,7 +212,7 @@
                                         </label>
                                    </div>
                                    <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="streamYahoo" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -214,7 +220,7 @@
                                         </label>
                                    </div>
                                    <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="streamNone" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -224,14 +230,16 @@
                                    
                                 </div>
                                 <div class="col-md-auto">
-		                    <div class="form-check filter" style="padding-top:16px; font-size:30; text-align:center">
-                                        Rated
-		                        <input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
-		                        <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">  SFW ON  </label>
+		                    <div class="form-check filter" style="padding-top:3px">
+                                        <div class="filter-header">
+                                            <span> Rated </span>
+		                            <input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
+		                            <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">  SFW ON  </label>
+                                        </div>
                                     </div>
-                                    <hr style="margin-top:14px">
+                                    <hr style="margin-top:8px">
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="gRating" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -239,7 +247,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="pgRating" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -247,7 +255,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="pg13Rating" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -255,7 +263,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="r17Rating" checked/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -264,7 +272,7 @@
                                     </div>
                                     <div class="collapse" id="collapsensfwrating">
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="rPlusRating"/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -272,7 +280,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <label class="fancy-checkbox" style="color:white; font-size:18">
+                                        <label class="fancy-checkbox" style="color:white">
                                             <input type="checkbox" name="rxRating"/>
                                             <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                             <i class="fa fa-fw fa-check checked" style="color:green"></i>
@@ -289,7 +297,6 @@
                         			
 {% if data %}
 <div class="media-header">
-<div class="container">
     <div class="row title">
         <div class="col title" id="media-title">
             <span>{{data[0][0]["anime_english_title"]}}</span>
@@ -327,9 +334,13 @@
         </div>
     </div>
 </div>
-</div>
    <div class="media">
-        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
+         <div class = "media-self-center media-left anime-picture" style="width: 30%; height: 50%; object-fit: fill; align-self: center !important">
+             <div class="container anime-picture" style="width:100%; height:100%; display:flex; flex-direction:row">
+                   <img src={{data[0][0]["anime_image_url"]}} style="flex: 1; object-fit: contain" class="anime-picture">
+             </div>
+         </div>
+<!--        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
             <div class="view overlay" style="cursor:pointer">
                 <img src={{data[0][0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
                 <div class="mask flex-center rgba-black-light">
@@ -339,7 +350,8 @@
                     </ul>
                 </div>
             </div>
-        </a>
+        </a> -->
+
         <div class="media-body" style="height:50%">
             <div class="container">
                 <div class="row">
