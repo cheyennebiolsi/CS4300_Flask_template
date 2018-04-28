@@ -301,7 +301,7 @@
             <div style="display:inline-block; vertical-align: top">
                 <span style="font-family:Maven pro; font-size:24; display:inline-block" >crunchyroll </span>
             </div>
-            <a href="https:www.crunchyroll.com" role="button"><i class="fa fa-external-link"></i></a>
+            <a href="https:www.crunchyroll.com" role="button" id="video-link" target="_blank"><i class="fa fa-external-link"></i></a>
         </div>
     </div>
     <div class="row episodeinfo">
@@ -452,6 +452,11 @@
                   data.forEach(function(anime) {
                       if (anime.anime_id == anime_id) {
                           var anime_title = anime.anime_english_title;
+                          var anime_video_url = anime.anime_video_url;
+                          console.log(anime_video_url);
+                          if (anime_video_url !== "none") {
+                              $('#video-link').attr('href', anime_video_url);
+                          };
                           $('#media-title span').text(anime_title);
                       };
                   });
