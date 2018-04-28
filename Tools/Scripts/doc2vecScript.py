@@ -19,6 +19,9 @@ model.build_vocab(taggedDocuments)
 print("done building vocab review")
 model.train(taggedDocuments, total_examples=model.corpus_count, epochs=model.iter)
 model.save('../../data/doc2vecreview.model')
+for reviewVector,index in enumerate(model.docvecs):
+    array[index]=reviewVector
+np.save('../../data/doc2vecreviewArray')
 
 # USING SYNOPSIS DATA
 taggedDocuments = []
