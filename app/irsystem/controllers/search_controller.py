@@ -18,9 +18,6 @@ number_results_final = 100
 weight_tags = 1
 weight_title = 6
 
-animelite = json.load(open('data/allanimelite.json'))
-for index, element in enumerate(animelite):
-    element["anime_index"] = index
 allanimelite = json.load(open('data/allanimelite.json'))
 for index, element in enumerate(allanimelite):
     element["anime_index"] = index
@@ -119,7 +116,7 @@ def search():
 			
 			json_array = []
 			for ind in top_n_animes: #ind is row index not anime id
-				jsonfile = get_anime(ind, animelite)
+				jsonfile = get_anime(ind, allanimelite)
 				if jsonfile != "not found":
 					score = jaccsim[ind] #get score from diction
 					jsonfile['score'] = score
@@ -168,7 +165,7 @@ def search():
 			for result in top_n_animes:
 				get_anime_id = int(result[0].replace("anime_id_", ""))
 				score = result[1]
-				jsonfile = get_anime(get_anime_id, animelite)
+				jsonfile = get_anime(get_anime_id, allanimelite)
 				if get_anime_id not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					json_array.append(jsonfile)
@@ -278,10 +275,10 @@ def search():
 						
 	# if Further Filters are chosen
 	if hide_ss and query:
-		data = hide_sameseries(anime_indexes, data, animelite)
+		data = hide_sameseries(anime_indexes, data, allanimelite)
 
 	if show or min_rating or time or finished or licensed:
-		data = hide_filter(data, animelite, show, min_rating, time, finished, licensed)
+		data = hide_filter(data, allanimelite, show, min_rating, time, finished, licensed)
 
         data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 

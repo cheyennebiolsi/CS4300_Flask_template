@@ -9,6 +9,7 @@
 		<script src="/static/bootstrap-tagsinput.js"></script>
 		<link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
 		<link rel="stylesheet" href="/static/css/search.css" type="text/css">
+		<link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
 		<link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
 		<script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
 		<script src="/static/typeahead.bundle.js"></script>
@@ -287,6 +288,40 @@
                     </form>
                         			
 {% if data %}
+<div class="media-header">
+<div class="container">
+    <div class="row title">
+        <div class="col-auto title" id="media-title">
+            <span>{{data[0][0]["anime_english_title"]}}</span>
+        </div>
+        <div class="col icon">
+            <a href="https:www.crunchyroll.com" role="button"><i class="fa fa-external-link"></i></a>
+        </div>
+    </div>
+    <div class="row episodeinfo">
+         <div class="col type">
+             <span> {{data[0][0]["anime_type"]}}</span>
+         </div>
+         <div class="col rating">
+            <span> {{data[0][0]["anime_rating"]}}</span>               
+         </div>
+         <div class="col duration">
+            <span> {{data[0][0]["anime_duration"]}}</span>
+         </div>
+         <div class="col episodes">
+            <span> {{data[0][0]["anime_number_of_episodes"]}} episodes</span>
+         </div>
+    </div>
+    <div class="row genres">
+        <div class="col genres">
+           {% set genrelist = data[0][0]["anime_genres"].split(' | ') %}
+           {% for tag in genrelist %}
+           <span class="genre">{{tag}}</span>
+           {% endfor %}
+        </div>
+    </div>
+</div>
+</div>
    <div class="media">
         <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
             <div class="view overlay" style="cursor:pointer">
@@ -318,8 +353,10 @@
                 </div>
             </div>
         </div>
-    </div>
-
+</div>
+<div class="media-footer"> 
+    <h3>footer </h3>
+</div>
     <div id="cardCarousel" class="carousel slide" date-ride="carousel">
     <ol class="carousel-indicators">
        {% for lst in data %}
