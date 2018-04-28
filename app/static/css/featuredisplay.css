@@ -1,0 +1,67 @@
+.media {
+    margin: 0;
+}
+
+.media-header .genre {
+    text-align: center;
+    display: inline-block;
+    border-radius: 12px;
+    padding-left: 6px;
+    padding-right: 6px;
+    background-color: white;
+    color: #333;
+    border: 2px solid #333;
+    margin-left: 1.5px;
+    margin-right: 1.5px;
+    font-size: 13;
+    width: 140px;
+}
+
+.media-header .row.title {
+    padding-top: 8px;
+    border-bottom: 2px solid black;
+    background-color: #333;
+    color: white;
+}
+
+.media-header .col-auto.title {
+    text-align: left;
+    font-size: 30;
+}
+
+.media-header .row.episodeinfo {
+   padding-top: 2px;
+   font-size: 15;
+   text-align: center;
+   font-weight: bold;
+}
+
+.media-header {
+    background-color: darkgrey;
+}
+
+.media-header .col.icon {
+    text-align: right;
+    font-size: 30;
+}
+
+.media-header .container {
+    width: 100%;
+}
+
+.media-header .col.type {
+    text-align: left;
+}
+
+.media-header .row.genres {
+   text-align: center;
+   padding-top: 4px;
+   padding-bottom: 4px;
+}
+.media-header .col.episodes {
+    text-align: right;
+}
+
+.media-footer {
+    background-color: #333;
+}
