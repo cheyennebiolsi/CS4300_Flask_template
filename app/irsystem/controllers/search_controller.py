@@ -34,9 +34,9 @@ alltags_nocolumn = np.delete(alltags_data, 0, 1)
 # Trucated SVD
 firstcolumn = np.load('data/firstcolumn.npy') #Deprecated with New data
 # allfirst_column = np.load('data/allfirst_column')
-u = np.load('data/u_reviewk40.npy')
-s = np.load('data/s_reviewk40.npy')
-vT = np.load('data/vT_reviewk40.npy')
+# u = np.load('data/u_reviewk40.npy')
+# s = np.load('data/s_reviewk40.npy')
+# vT = np.load('data/vT_reviewk40.npy')
 
 # dov2vec
 review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
