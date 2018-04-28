@@ -291,10 +291,10 @@
 <div class="media-header">
 <div class="container">
     <div class="row title">
-        <div class="col-auto title" id="media-title">
+        <div class="col title" id="media-title">
             <span>{{data[0][0]["anime_english_title"]}}</span>
         </div>
-        <div class="col icon">
+        <div class="col-auto icon">
             <img src="/static/images/yahoo-view.png" hidden>
             <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" hidden>hulu</span>
             <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0">
@@ -440,17 +440,22 @@
             var anime_id = $(this).attr('data-anime-id');
             var anime_image_url = $(this).attr('data-url')
             var anime_title = $(this).attr('data-title')
+            //$('#media-title span').text(anime_title);
             var synopsis = $(this).attr("data-synposis") // this is messed up because of ""
             // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
             // Seems slightly better than going through all json until thing is found
 
             // but either way works I guess since overhead into putting it into html data tag doesn't seem to be that bad. 
-            
-            // $.getJSON("/static/data/anime_info.json", function(data) {
-            //      data.forEach(function(anime) {
-            //          if (anime.anime_id == anime_id) {
+            //alert('clicked'); 
 
-            //      var anime_title = anime.anime_synopsis;
+             $.getJSON("/static/data/anime_info.json", function(data) {
+                  data.forEach(function(anime) {
+                      if (anime.anime_id == anime_id) {
+                          var anime_title = anime.anime_english_title;
+                          $('#media-title span').text(anime_title);
+                      };
+                  });
+             });
 
             //      var anime_image_url = anime.anime_image_url;
             //      $(".media").replaceWith(

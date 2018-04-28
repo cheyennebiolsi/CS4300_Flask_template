@@ -45,7 +45,7 @@
     color: white;
 }
 
-.media-header .col-auto.title {
+.media-header .col.title {
     text-align: left;
     font-size: 30;
 }
@@ -61,7 +61,7 @@
     background-color: darkgrey;
 }
 
-.media-header .col.icon {
+.media-header .col-auto.icon {
     text-align: right;
     font-size: 30;
 }
