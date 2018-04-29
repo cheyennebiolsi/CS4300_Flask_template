@@ -1,0 +1,364 @@
+html, body {
+    height: 100%;
+}
+
+
+.container.carousel-picture {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 25%;
+    flex-direction:column;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    white-space: normal;
+    position: relative;
+}
+
+.col.carousel-picture {
+    margin: 0;
+    padding: 0;
+}
+
+.col.carousel-picture:hover {
+/*    border: 2px solid white;
+    margin: -1px; */
+}
+
+.carousel-info.crop {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 20;
+    text-align: center;
+    padding: 10%
+}
+
+.container.carousel-picture:hover{
+/*    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    height: auto;
+    width: auto;
+    z-index: 5; */
+}
+
+.carousel-picture img {
+    flex: 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+.media .container.anime-picture2 {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:row;
+    padding: 0;
+    margin: 0;
+}
+
+.media .anime-picture2 img {
+    flex:1;
+    object-fit: contain;
+}
+
+
+#myform{
+    z-index: 2;
+}
+
+
+.testy2{
+    background-color: none;
+}
+
+body {
+    padding-left: 15%;
+    padding-right: 15%;
+    background-color: black;
+}
+
+.filter-header {
+    text-align: center;
+    font-size: 18;
+    padding-top: 10px;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.media-body h2 {
+    color: white;
+    margin: 0;
+    padding: 15;
+    background-color: lightslategrey;
+    width: 100%;
+}
+
+.media-body {
+    overflow: hidden;
+}
+
+.media-body .container {
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+
+.media-body {
+    padding-left: 5;
+    padding-right: 5;
+    padding-top: 10;
+    padding-bottom: 10;
+    color: white;
+    overflow-y: scroll;
+    width: 100% + 8px;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+
+}
+
+.col {
+    padding-left: 5;
+    padding-right: 5;
+    padding-top: 10;
+    padding-bottom: 10;
+    color: white;
+    overflow-y: scroll;
+    width: 100% + 8px;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+}
+
+.media-logo {
+    color: white;
+    position: relative, fixed;
+    top:0;
+    text-align: center;
+    vertical-align: middle;
+    line-height:300px;
+    font-size: 48;
+    font-style: normal;
+    background-color: none;
+    font-family: Futura;
+    overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.card-body {
+    justify-content: normal;
+    flex-direction: column;
+    display: flex;
+}
+
+
+.fancy-checkbox {
+   font-size:14;
+}
+
+.genre-checkbox input[type="checkbox"],
+.genre-checkbox .checked {
+    display: none;
+}
+
+.genre-checkbox input[type="checkbox"]:checked ~.checked
+{
+    display: inline-block;
+}
+
+.genre-checkbox input[type="checkbox"]:checked ~.unchecked
+{
+    display: none;
+}
+
+.fancy-checkbox input[type="checkbox"],
+.fancy-checkbox .checked {
+    display: none;
+}
+
+.fancy-checkbox input[type="checkbox"]:checked ~ .checked
+{
+    display: inline-block;
+}
+
+.fancy-checkbox input[type="checkbox"]:checked ~ .unchecked
+{
+    display: none;
+}
+
+.collapse.show {
+    visibility: visible;
+}
+
+.search-button {
+    background-color: white;
+    border: 1px solid #ccc;
+    height: 100%;
+    width: 100%;
+}
+
+
+.sfw-button {
+    text-align: center;
+    margin-left: 20px !important;
+    vertical-align: middle;
+    display: inline-block;
+    cursor: pointer;
+    padding: 6px;
+    background-color: black;
+    border: 2px solid red;
+    color: red;
+    margin-left: 1.5px;
+    margin-right: 1.5px;
+    font-size: 11;
+    width: 70px !important;
+}
+.tag-button {
+    background-color: white;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 6px;
+    margin-left: 1.5px;
+    margin-right: 1.5px;
+    font-size: 10;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.form-check-input.tag {
+    opacity: 0;
+}
+
+.tag-button.active {
+    border: 2px solid pink;
+    color: black;
+}
+
+.tag-button.inactive {
+    border: 2px solid lightslategray;
+    color: lightslategray;
+}
+
+.sfw-button.active {
+    border: 2px solid green;
+    color: green;
+    width: 70px !important;
+    font-size: 10;
+}
+
+.tag-button.inactive:hover {
+   background-color: lightpink;
+   border-color: hotpink;
+   color: white;
+}
+
+.tag-button.active:hover {
+    background-color:lightpink;
+    border-color:hotpink;
+}   
+  
+.form-check.filter {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+.header {
+
+    background-color: black;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.header bootstrap-tagsinput {
+    display: block;
+}
+
+.form-group {
+    width: 85%;
+    background: rgba(88, 88, 88, 0.3);
+    border-radius:10px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+} 
+
+.bootstrap-tagsinput{
+    width: 100%;
+    height: 100%;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.twitter-typeahead {
+    display: inline;
+    position: relative;
+    width: 40% !important;
+}
+
+.twitter-typeahead .tt-hint {
+  color: rgba(255,255,255,0.65);
+}
+
+.tt-hint, .tt-input, .tt-menu {
+    width: 80%;
+    background-color: white !important; 
+    vertical-align: middle !important;
+    border: 1px solid lightgray;
+    /*border-radius: 4px;*/
+}
+
+span.twitter-typeahead .tt-suggestion:hover {
+    color: #3b5998;
+    height: 110%;
+    font-weight: 1000;
+}
+
+#scrollable-dropdown-menu .tt-dropdown-menu {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.header-left {
+    float: left;
+    position: absolute;
+    top : 10px;
+}
+
+.meta-info {
+  font-size: 13px;
+  color: gray;
+}
+
+
+.media {
+    background-color: black;
+}
+
+.expandable {
+    transition: transform .2s;
+}
+
+.expandable:hover {
+    transform: scale(1.07);
+    z-index:1;
+]

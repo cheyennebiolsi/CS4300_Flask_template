@@ -1,0 +1,473 @@
+<html>
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/static/bootstrap.min.css">
+		<script src="/static/bootstrap-tagsinput.js"></script>
+		<link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
+		<link rel="stylesheet" href="/static/css/search.css" type="text/css">
+		<link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
+		<link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
+		<script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+		<script src="/static/typeahead.bundle.js"></script>
+		<script src="/static/bloodhound.js"></script>
+		<script src="/static/aniai.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
+	    </head>
+	    
+	    <body>
+        <style>
+            .tree{
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 400px;
+                height: 300px;
+                padding:0;
+                background: none;
+                z-index: -2;
+            }
+        </style>
+
+        <div class="tree">
+          <img src="/static/images/csscherry3.png" style='width: 100%; '>
+        </div>
+        <div class="header1">
+		    
+
+            
+
+            <!--title-->
+		    <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:#efe9e8; text-align:center">Aniai&#24859</h1>
+		    <!--tag line-->
+            <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
+            <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
+			<div class="form row" style="height:32px"> <!-- style:"height:30px vertical-align:bottom"> -->
+                            <div class="form-group col-lg-10" style="padding-right:0">
+			        <div id="scrollable-dropdown-menu">
+				    <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
+
+			        </div>
+                            </div>
+                            <div class="col-md-1" style="margin: 0; padding:0">
+<!--                            <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
+                                <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white"><i class="fa fa-filter"></i>Filter</button>
+                            </div>
+                            <div class="col-md-1" style="margin: 0; padding: 0">
+                                <button class="search-button" type="submit" style="border-top-right-radius:4px;border-bottom-right-radius:4px"><i class="fa fa-search"></i></button>
+                            </div>
+<!--                            <div class="form-group col-md-4">
+                                <input type="submit" value="Submit">
+                            </div> -->
+                        </div>
+                        <div class="collapse" id="collapseForm">
+ 		            <div class="form-group row justify-content-md-around" style="color:white;margin:0">
+		                <div class="col-md-6" style="text-align:center">
+                                    <div class="filter-header">
+                                        <span>Pick a Flavor</span>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'meccha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
+                                        {% for genre in genres %}
+                                        <label class="genre-checkbox" style="color:white">
+                                            <input type="checkbox" name={{genre}} checked/>
+                                            <div class="tag-button active checked">{{genre}}</div>
+                                            <div class="tag-button inactive unchecked">{{genre}}</div>
+                                        </label>
+                                        {% endfor %}
+                                    <div>
+                                    <div class="collapse" id="collapsensfw">
+                                        <div class="form-check">
+                                        {% set nsfwgenres=['ecchi', 'hentai', 'yaoi', 'yuri']%}
+                                        {% for nsfwgenre in nsfwgenres %}
+                                        <label class="genre-checkbox" style="color:white">
+                                            <input type="checkbox" name={{nsfwgenre}} unchecked/>
+                                            <div class="tag-button active checked">{{nsfwgenre}}</div>
+                                            <div class="tag-button inactive unchecked">{{nsfwgenre}}</div>
+                                        </label>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div> </div>
+                                <div class="col-md-auto">
+                                    <div class="filter-header">
+                                        <span>Type</span>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="displayTv" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            television
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="displayMovie" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            movie
+                                        </label>
+                                   </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="displaySpecial" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            special
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white;">
+                                            <input type="checkbox" name="displayOva" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            OVA
+                                        </label>
+                                   </div>
+                                    <div class="filter-header">
+                                        <span>Stream Provider</span>
+                                    </div>
+                                   <hr>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="streamCrunchy" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            crunchyroll
+                                        </label>
+                                   </div>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="streamHulu" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            hulu
+                                        </label>
+                                   </div>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="streamYahoo" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            Yahoo! View
+                                        </label>
+                                   </div>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="streamNone" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            allow no provider
+                                        </label>
+                                   </div>
+                                   
+                                </div>
+                                <div class="col-md-auto">
+		                    <div class="form-check filter">
+                                        <div class="filter-header">
+                                            <span> Rated </span>
+                                            <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
+                                                <input type="checkbox" name="sfw" checked/>
+                                                <div class="sfw-button unchecked">NSFW ON</div>
+                                                <div class="sfw-button active checked">SFW ON</div>
+                                            </label>
+<!--		                            <input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
+		                            <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">  SFW ON  </label> -->
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="gRating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            G &#8212 all ages
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="pgRating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            PG &#8212 children
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="pg13Rating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            PG-13 &#8212 teens 13 or older
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="r17Rating" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            R &#8212 17+ (violence & profanity)
+                                        </label>
+                                    </div>
+                                    <div class="collapse" id="collapsensfwrating">
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="rPlusRating"/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            R+ &#8212 mild nudity
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="rxRating"/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            Rx &#8212 hentai
+                                        </label>
+                                    </div>
+                                    </div>
+		                    <div class="form-check filter" style="border: 2px solid white; padding-bottom: 10px; margin-top: 4px">
+                                        <div class="filter-header">
+                                            <span> Filter Same Series </span>
+                                            <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
+                                                <input type="checkbox" name="filter same series" unchecked/>
+                                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <hr hidden>
+<!--                                    <div class="filter-header">
+                                        <span>Stream Provider</span>
+                                    </div>
+                                   <hr>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="streamCrunchy" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            crunchyroll
+                                        </label>
+                                   </div> -->
+                                </div>
+
+                            </div>             
+                        </div>
+                        <hr>
+                    </form>
+                        			
+{% if data %}
+<div class="media-header">
+    <div class="row title">
+        <div class="col title" id="media-title">
+            <span>{{data[0][0]["anime_english_title"]}}</span>
+        </div>
+        <div class="col-auto icon">
+            <img src="/static/images/yahoo-view.png" hidden>
+            <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" hidden>hulu</span>
+            <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0">
+            <div style="display:inline-block; vertical-align: top">
+                <span style="font-family:Maven pro; font-size:24; display:inline-block" >crunchyroll </span>
+            </div>
+            <a href="https:www.crunchyroll.com" role="button" id="video-link" target="_blank"><i class="fa fa-external-link"></i></a>
+        </div>
+    </div>
+    <div class="row episodeinfo">
+         <div class="col type" id="media-type">
+             <span> {{data[0][0]["anime_type"]}}</span>
+         </div>
+         <div class="col rating" id="media-rating">
+            <span> {{data[0][0]["anime_rating"]}}</span>               
+         </div>
+         <div class="col duration" id="media-duration">
+            <span> {{data[0][0]["anime_duration"]}}</span>
+         </div>
+         <div class="col episodes" id="episode-count">
+            <span> {{data[0][0]["anime_number_of_episodes"]}} episodes</span>
+         </div>
+    </div>
+    <div class="row genres">
+        <div class="col genres">
+           {% set genrelist = data[0][0]["anime_genres"].split(' | ') %}
+           {% for tag in genrelist %}
+           <span class="genre">{{tag}}</span>
+           {% endfor %}
+        </div>
+    </div>
+</div>
+   <div class="media">
+         <div class = "media-self-center media-left anime-picture">
+             <div class="container anime-picture">
+                   <img src={{data[0][0]["anime_image_url"]}} class="anime-picture" id="media-image">
+             </div>
+         </div>
+<!--        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
+            <div class="view overlay" style="cursor:pointer">
+                <img src={{data[0][0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
+                <div class="mask flex-center rgba-black-light">
+                    <ul class="fa-ul" style="margin-left:0">
+                      <li><p class="white-text" style="font-size: 20px">watch on <img src="/static/images/Crunchyroll_24x24.png" style="display:inline"><span style="font-family:Maven pro">crunchyroll </span><i class="fa fa-external-link"></i></p></li>
+                    <li><i class="fa fa-play"  style="font-size:60px; color:white"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </a> -->
+
+        <div class="media-body" style="height:50%">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
+                    </div>
+                    <div class="col-6 semantic">
+                    </div>
+                </div>
+<!--                <div class="row"><h2> This is a header </h2>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Genres: Action, Adventure, Comedy</p>
+                        <p>Duration: 24 min per ep</p>
+                   1 of 3
+                    </div>
+                    <div class="col-6">
+                    2 of 3 (wider)
+                    </div>
+                    <div class="col">
+                   3 of 3
+                    </div>
+                </div> -->
+            </div>
+        </div>
+</div>
+<div class="media-footer"> 
+    <div class="container">
+        <div class="row">
+            
+        </div>
+    </div>
+</div>
+    <div id="cardCarousel" class="carousel slide" date-ride="carousel">
+    <ol class="carousel-indicators">
+       {% for lst in data %}
+           <li data-target="#cardCarousel" data-slide-to"{{ loop.index0}}"
+           {% if loop.index0 == 0 %}
+           class="active"
+           {% endif %}></li>
+       {% endfor %}
+    </ol>
+    <div class = "carousel-inner" style="overflow:visible">
+        {% for lst in data %}
+        <div class="carousel-item {{'active' if loop.index0 == 0}}">
+    <!--        <div class="container">
+                <div class="row">
+                    {% for d in data[:8] %}
+                    <div class="col-sm-3">
+                        <div class="card">
+                            <img class="card-img-top" src={{d["anime_image_url"]}}>
+                        </div>
+                     </div>
+                    {% endfor %}
+                </div>
+            </div> -->
+
+            <div class="card-group">
+            {% for d in lst %}
+                 <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}} data-json ='{"test":"testthis", "test2":"&other"}'>
+                 <!--    <div class="view zoom"> -->
+                         <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
+                         <div class="card-body" style="background-color:black;padding-bottom:20px">
+                             <h5 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h5>
+                         </div>
+                     <!--</div>-->
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+<!--        <div class="carousel-item">
+            <h1> item2 </h1>
+        </div>
+        <div class="carousel-item">
+            <h1> item3 </h1>
+        </div> -->
+    </div>
+
+    <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev" style="width:30px;margin:0">
+<!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span> -->
+        <i class="fa fa-chevron-left fa-2x"></i>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next" style="width:30px;margin:0">
+        <!--<span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+        <i class="fa fa-chevron-right fa-2x"></i>
+        <span class="sr-only">Next</span>
+    </a>
+    </div>
+
+       <script>
+        $(".card.expandable").unbind().click(function() {
+            console.log("in card");
+            var json = $(this).data('json').test;
+            console.log("json is " + json);
+            var anime_id = $(this).attr('data-anime-id');
+            var anime_img = $(this).attr('data-anime-id');
+            var anime_id = $(this).attr('data-anime-id');
+            var anime_image_url = $(this).attr('data-url')
+            var anime_title = $(this).attr('data-title')
+            //$('#media-title span').text(anime_title);
+            var synopsis = $(this).attr("data-synposis")
+            $('#media-image').attr('src', anime_image_url); // this is messed up because of ""
+            // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
+            // Seems slightly better than going through all json until thing is found
+
+            // but either way works I guess since overhead into putting it into html data tag doesn't seem to be that bad. 
+            //alert('clicked'); 
+
+             $.getJSON("/static/data/anime_info.json", function(data) {
+                  data.forEach(function(anime) {
+                      if (anime.anime_id == anime_id) {
+                          var anime_title = anime.anime_english_title;
+                          var anime_video_url = anime.anime_video_url;
+                          console.log(anime_video_url);
+                          if (anime_video_url !== "none") {
+                              $('#video-link').attr('href', anime_video_url);
+                          };
+                          $('#media-title span').text(anime_title);
+                      };
+                  });
+             });
+
+            //      var anime_image_url = anime.anime_image_url;
+            //      $(".media").replaceWith(
+            //         '<div class="media">' +
+            //             '<a class = "media-left media-bottom">' +
+            //                 '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
+            //              '<h5> ' + anime_title + ' </h5></div>');  };     }); });
+            // $(".media").replaceWith(
+            //        '<div class="media">' +
+            //            '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
+            //             '<h5> ' + synopsis + ' </h5></div>');
+        }); </script>
+ 
+{% endif %}
+
+<!--    <script>
+        $.getJSON("/static/data/anime_info.json", function(data) {
+             console.log(data);
+             document.getElementById('anime_info').innerHTML = data;
+        });
+    </script> -->
+
+<!--        <script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
+        <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
+    </body>
+</html>

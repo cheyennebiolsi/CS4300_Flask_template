@@ -5,13 +5,30 @@ from gensim.models.doc2vec import TaggedDocument
 from nltk import RegexpTokenizer
 from nltk.tokenize import sent_tokenize
 from nltk.corpus import stopwords
+import re
+
+class AnimeDocumentManager:
+    def __init__(self, animeDocuments):
+        self.list = animeDocuments
+        self.mapping = {int(document.anime_id):document for document in animeDocuments}
+
+    def getAnimeByIndex(self, index):
+        return self.list[index]
+
+    def getAnimeById(self, anime_id):
+        try:
+            return self.mapping[int(anime_id)]
+        except:
+            return None
 
 class AnimeDocument:
     def __init__(self,
                  anime_index = "",
                  anime_id = "",
+                 anime_title = "",
                  anime_english_title = "",
                  anime_japanese_title = "",
+                 anime_synonyms = "",
                  anime_image_url = "",
                  anime_genres = None,
                  anime_synopsis = "",
@@ -26,6 +43,7 @@ class AnimeDocument:
                  anime_type = "",
                  anime_source = "",
                  anime_background = "",
+                 anime_aired = "",
                  anime_premiered = "",
                  anime_status = "",
                  anime_broadcast = "",
@@ -41,12 +59,15 @@ class AnimeDocument:
                  anime_sequel = "",
                  anime_prequel = "",
                  anime_alternative_setting = "",
+                 anime_spinoff = "",
                  anime_other = "",
                  anime_reviews = None):
         self.anime_index = anime_index
         self.anime_id = anime_id
+        self.anime_title = anime_title
         self.anime_english_title = anime_english_title
         self.anime_japanese_title = anime_japanese_title
+        self.anime_synonyms = anime_synonyms
         self.anime_image_url = anime_image_url
         if not anime_genres:
             anime_genres = []
@@ -61,6 +82,7 @@ class AnimeDocument:
         self.anime_number_of_episodes = anime_number_of_episodes
         self.anime_type = anime_type
         self.anime_source = anime_source
+        self.anime_aired = anime_aired
         self.anime_background = anime_background
         self.anime_premiered = anime_premiered
         self.anime_status = anime_status
@@ -75,6 +97,7 @@ class AnimeDocument:
         self.anime_sequel = anime_sequel
         self.anime_prequel = anime_prequel
         self.anime_alternative_setting = anime_alternative_setting
+        self.anime_spinoff = anime_spinoff
         self.anime_other = anime_other
         if not anime_reviews:
             anime_reviews = []
@@ -188,6 +211,38 @@ class AnimeDocument:
             raise ValueError("Unknown option " + option + " in AnimeDocument.toTaggedDocument")
         tokens = [token for token in tokenizer.tokenize(text) if token not in englishStopwords]
         return TaggedDocument(tokens, ["anime_id_{}".format(self.anime_id)])
+
+    def getAllRelatedAnime(self, animeDocumentManager):
+        """Returns a list of anime_ids that are related to this anime.
+        Note: an AnimeDocumentManager *must* be passed into this method
+        in order to explore all of the anime connections."""
+        stack = [self]
+        relatedAttributes = ["anime_side_story", "anime_adaptation", "anime_summary", "anime_full_story", \
+                             "anime_parent_story", "anime_sequel", "anime_prequel", "anime_alternative_setting", \
+                             "anime_spinoff"] #, "anime_other"]
+        seenIds = set()
+        while len(stack) > 0:
+            document = stack.pop()
+            if document == None:
+                continue
+            document_id = int(document.anime_id)
+            if document_id in seenIds:
+                continue
+            seenIds.add(document_id)
+            for attribute in relatedAttributes:
+                vals = getattr(document, attribute)                
+                ids = [int(anime_id) for anime_id in re.findall('(?<=\(anime )\d+(?=\))', vals) \
+                       if int(anime_id) not in seenIds]
+                for anime_id in ids:
+                    relatedDocument = animeDocumentManager.getAnimeById(anime_id)
+                #    print("Document {} added {} because of {}".format(document.anime_english_title, relatedDocument.anime_english_title, attribute))
+                    stack.append(relatedDocument)
+        otherVals = self.anime_other
+        ids = [int(anime_id) for anime_id in re.findall('(?<=\(anime )\d+(?=\))', otherVals)]
+        for other_id in ids:
+            seenIds.add(other_id)
+        return sorted(list(seenIds))
+      
 
     def toJSON(self):
         dictionaryRepresentation = self.__dict__

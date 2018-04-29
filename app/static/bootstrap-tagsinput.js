@@ -643,4 +643,4 @@
   $(function() {
     $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
   });
-})( jQuery);
+})(window.jQuery);

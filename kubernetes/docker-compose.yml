@@ -1,0 +1,7 @@
+flask:
+    image: gg392/flask-template:v5
+    ports:
+      - "5000:5000"
+    environment:
+    - APP_SETTINGS=config.DevelopmentConfig
+    - DATABASE_URL=postgresql://localhost/my_app_db
