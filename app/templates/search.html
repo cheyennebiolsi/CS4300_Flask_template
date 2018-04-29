@@ -36,7 +36,7 @@
         <div class="tree">
           <img src="/static/images/csscherry3.png" style='width: 100%; '>
         </div>
-        <div class="header2">
+        <div class="header1">
 		    
 
             
@@ -50,11 +50,16 @@
                             <div class="form-group col-lg-10" style="padding-right:0">
 			        <div id="scrollable-dropdown-menu">
 				    <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
+
 			        </div>
                             </div>
+                            <div class="col-md-1" style="margin: 0; padding:0">
 <!--                            <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
-                            <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white"><i class="fa fa-filter"></i>Filter</button>
-                            <button class="search-button" type="submit" style="border-top-right-radius:4px;border-bottom-right-radius:4px"><i class="fa fa-search"></i></button>
+                                <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white"><i class="fa fa-filter"></i>Filter</button>
+                            </div>
+                            <div class="col-md-1" style="margin: 0; padding: 0">
+                                <button class="search-button" type="submit" style="border-top-right-radius:4px;border-bottom-right-radius:4px"><i class="fa fa-search"></i></button>
+                            </div>
 <!--                            <div class="form-group col-md-4">
                                 <input type="submit" value="Submit">
                             </div> -->
@@ -72,7 +77,7 @@
                                         <label class="genre-checkbox" style="color:white">
                                             <input type="checkbox" name={{genre}} checked/>
                                             <div class="tag-button active checked">{{genre}}</div>
-                                            <div class="tag-button unchecked">{{genre}}</div>
+                                            <div class="tag-button inactive unchecked">{{genre}}</div>
                                         </label>
                                         {% endfor %}
                                     <div>
@@ -83,7 +88,7 @@
                                         <label class="genre-checkbox" style="color:white">
                                             <input type="checkbox" name={{nsfwgenre}} unchecked/>
                                             <div class="tag-button active checked">{{nsfwgenre}}</div>
-                                            <div class="tag-button unchecked">{{nsfwgenre}}</div>
+                                            <div class="tag-button inactive unchecked">{{nsfwgenre}}</div>
                                         </label>
                                         {% endfor %}
                                         </div>
@@ -229,6 +234,29 @@
                                         </label>
                                     </div>
                                     </div>
+		                    <div class="form-check filter" style="border: 2px solid white; padding-bottom: 10px; margin-top: 4px">
+                                        <div class="filter-header">
+                                            <span> Filter Same Series </span>
+                                            <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
+                                                <input type="checkbox" name="filter same series" unchecked/>
+                                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <hr hidden>
+<!--                                    <div class="filter-header">
+                                        <span>Stream Provider</span>
+                                    </div>
+                                   <hr>
+                                   <div class="form-check">
+                                        <label class="fancy-checkbox" style="color:white">
+                                            <input type="checkbox" name="streamCrunchy" checked/>
+                                            <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                            <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                            crunchyroll
+                                        </label>
+                                   </div> -->
                                 </div>
 
                             </div>             
@@ -253,16 +281,16 @@
         </div>
     </div>
     <div class="row episodeinfo">
-         <div class="col type">
+         <div class="col type" id="media-type">
              <span> {{data[0][0]["anime_type"]}}</span>
          </div>
-         <div class="col rating">
+         <div class="col rating" id="media-rating">
             <span> {{data[0][0]["anime_rating"]}}</span>               
          </div>
-         <div class="col duration">
+         <div class="col duration" id="media-duration">
             <span> {{data[0][0]["anime_duration"]}}</span>
          </div>
-         <div class="col episodes">
+         <div class="col episodes" id="episode-count">
             <span> {{data[0][0]["anime_number_of_episodes"]}} episodes</span>
          </div>
     </div>
@@ -276,9 +304,9 @@
     </div>
 </div>
    <div class="media">
-         <div class = "media-self-center media-left anime-picture" style="width: 30%; height: 50%; object-fit: fill; align-self: center !important">
-             <div class="container anime-picture" style="width:100%; height:100%; display:flex; flex-direction:row">
-                   <img src={{data[0][0]["anime_image_url"]}} style="flex: 1; object-fit: contain" class="anime-picture">
+         <div class = "media-self-center media-left anime-picture">
+             <div class="container anime-picture">
+                   <img src={{data[0][0]["anime_image_url"]}} class="anime-picture" id="media-image">
              </div>
          </div>
 <!--        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
@@ -353,7 +381,7 @@
 
             <div class="card-group">
             {% for d in lst %}
-                 <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}}>
+                 <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}} data-json ='{"test":"testthis", "test2":"&other"}'>
                  <!--    <div class="view zoom"> -->
                          <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
                          <div class="card-body" style="background-color:black;padding-bottom:20px">
@@ -387,14 +415,17 @@
 
        <script>
         $(".card.expandable").unbind().click(function() {
-            console.log("in card")
+            console.log("in card");
+            var json = $(this).data('json').test;
+            console.log("json is " + json);
             var anime_id = $(this).attr('data-anime-id');
             var anime_img = $(this).attr('data-anime-id');
             var anime_id = $(this).attr('data-anime-id');
             var anime_image_url = $(this).attr('data-url')
             var anime_title = $(this).attr('data-title')
             //$('#media-title span').text(anime_title);
-            var synopsis = $(this).attr("data-synposis") // this is messed up because of ""
+            var synopsis = $(this).attr("data-synposis")
+            $('#media-image').attr('src', anime_image_url); // this is messed up because of ""
             // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
             // Seems slightly better than going through all json until thing is found
 
@@ -421,10 +452,10 @@
             //             '<a class = "media-left media-bottom">' +
             //                 '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
             //              '<h5> ' + anime_title + ' </h5></div>');  };     }); });
-             $(".media").replaceWith(
-                    '<div class="media">' +
-                        '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
-                         '<h5> ' + synopsis + ' </h5></div>');
+            // $(".media").replaceWith(
+            //        '<div class="media">' +
+            //            '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
+            //             '<h5> ' + synopsis + ' </h5></div>');
         }); </script>
  
 {% endif %}

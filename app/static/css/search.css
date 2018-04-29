@@ -107,7 +107,7 @@ hr {
     background-color: white;
     border: 1px solid #ccc;
     height: 100%;
-    width: 70px;
+    width: 100%;
 }
 
 
@@ -127,14 +127,12 @@ hr {
     width: 70px !important;
 }
 .tag-button {
+    background-color: white;
     text-align: center;
     display: inline-block;
     cursor: pointer;
     border-radius: 12px;
     padding: 6px;
-    background-color: white;
-    color: #e7e7e7;
-    border: 2px solid #e7e7e7;
     margin-left: 1.5px;
     margin-right: 1.5px;
     font-size: 10;
@@ -153,6 +151,11 @@ hr {
     color: black;
 }
 
+.tag-button.inactive {
+    border: 2px solid lightslategray;
+    color: lightslategray;
+}
+
 .sfw-button.active {
     border: 2px solid green;
     color: green;
@@ -160,11 +163,16 @@ hr {
     font-size: 10;
 }
 
-.tag-button:hover {
+.tag-button.inactive:hover {
    background-color: lightpink;
    border-color: hotpink;
+   color: white;
 }
-   
+
+.tag-button.active:hover {
+    background-color:lightpink;
+    border-color:hotpink;
+}   
   
 .form-check.filter {
     padding-left: 1.25rem;
@@ -172,7 +180,7 @@ hr {
 }
 
 .header {
-    padding: 1em;
+
     background-color: black;
     display: flex;
     justify-content: flex-end;
