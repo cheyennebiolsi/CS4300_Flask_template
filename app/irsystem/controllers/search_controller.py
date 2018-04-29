@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from . import *  
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
@@ -44,6 +45,7 @@ review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 
 # Tags and Jaccard Similarity
 tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
+ty_pe = ['TV', 'movie', 'ova', 'ona', 'special']
 tags_set = set(tags_array)
 
 @irsystem.route('/', methods=['GET'])
@@ -51,14 +53,22 @@ tags_set = set(tags_array)
 def search():
 	query = request.args.get('animesearch')
 	tag = request.args.get('tagsearch')
-	hide_ss = request.args.get('hide_ss')
+
+	#hide same series filter
+	hide_ss = request.args.get('filter same series')
+	
+	# TV Filter
+	type_dictionary = {}
+	for meep in ty_pe:
+		type_dictionary[meep] = request.args.get(meep)
+
 	tv = request.args.get('TV')
 	movie = request.args.get('movie')
 	ova = request.args.get('ova')
 	ona = request.args.get('ona')
 	special = request.args.get('special')
 	method = request.args.get('method')
-	
+
 	show = []
 	if tv:
 		show.append('TV')
@@ -71,65 +81,114 @@ def search():
 	if special:
 		show.append('Special')
 
+	set_show = set(show)
+
+	# Genre Filter
+	tags_dictionary = {}
+	for tagz in tags_array:
+		tags_dictionary[tagz] = request.args.get(tagz)
+
+	activegenre = []
+	for key, value in tags_dictionary.iteritems():
+		if value == "on":
+			activegenre.append(key)
+
+	set_activegenre = set(activegenre)
+
+	# Age Rating Filter
+	guidance_dictionary = {}
+	for guidance_rating in ["gRating", "pgRating", "pg13Rating", "r17Rating"]:
+		guidance_dictionary[guidance_rating] = request.args.get(guidance_rating)
+
+	active_guidance = []
+	for key, value in guidance_dictionary.iteritems():
+		if value == "on":
+			active_guidance.append(key)
+
+	set_guidance = set(active_guidance)
+
+	# Stream Filter
+	stream_dictionary = {}
+	for stream in ["streamCrunchy", "streamHulu", "streamYahoo", "streamNone"]:
+		stream_dictionary[stream] = request.args.get(stream)
+
+	activestream = []
+	for key, value in guidance_dictionary.iteritems():
+		if value == "on":
+			activestream.append(key)
+
+	set_stream = set(activestream)  
+
+	#NSFW fitler
+	sfw = request.args.get('sfw')
+
+	# Min Rating Filter
 	min_rating = request.args.get('min_rating')
+
+	# Time Filter
 	time = request.args.get('time')
+
+	# Finished Filter
 	finished = request.args.get('finished')
+
+	# Licensed Filter
 	licensed = request.args.get('licensed')
+
+
+
 
 	# Option 1: No Anime or Tags
 	if not query and not tag:
 		data = []
 		output_message = ''
 	# Option 2: Only Tags
-	elif not query and tag:
-		tag_array = tag.split(',')
-		tag_indexes = []
-		for tag_input in tag_array:
-			tag_index = -1
-			for element in tags_set:
-				if element == tag_input:
-					tag_index = tags_array.index(tag_input)
-			tag_indexes.append(tag_index)
+	# elif not query and tag:
+	# 	tag_array = tag.split('|')
+	# 	tag_indexes = []
+	# 	for tag_input in tag_array:
+	# 		tag_index = -1
+	# 		for element in tags_set:
+	# 			if element == tag_input:
+	# 				tag_index = tags_array.index(tag_input)
+	# 		tag_indexes.append(tag_index)
 
-		if -1 in tag_indexes:
-			data = []
-			output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
-		else:
-			output_message = 'You looked for the Tag(s) ' + tag
-			mytag_set = set(tag_indexes)
+	# 	if -1 in tag_indexes:
+	# 		data = []
+	# 		output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
+	# 	else:
+	# 		output_message = 'You looked for the Tag(s) ' + tag
+	# 		mytag_set = set(tag_indexes)
 
-			jaccsim = {}
-			for i in range(alltags_column.size):
-				anime_i_help = np.where(alltags_nocolumn[i,:] > 0) #PROBLEM!!
-				anime_i_tags = anime_i_help[0]
-				anime_i_set = set(anime_i_tags)
-				# if alltags_column[i] == 28647:
-				# 	print(np.where(alltags_data[i,:] > 0))
-				# 	print(anime_i_help)
-				jaccsim[alltags_column[i]] = round(get_jaccard(mytag_set, anime_i_set),4)
-			# now it's be anime id
+	# 		jaccsim = {}
+	# 		for i in range(alltags_column.size):
+	# 			anime_i_help = np.where(alltags_nocolumn[i,:] > 0) #PROBLEM!!
+	# 			anime_i_tags = anime_i_help[0]
+	# 			anime_i_set = set(anime_i_tags)
+	# 			# if alltags_column[i] == 28647:
+	# 			# 	print(np.where(alltags_data[i,:] > 0))
+	# 			# 	print(anime_i_help)
+	# 			jaccsim[alltags_column[i]] = round(get_jaccard(mytag_set, anime_i_set),4)
+	# 		# now it's be anime id
 
-			sorted_results = sorted(jaccsim.items(), key=operator.itemgetter(1), reverse=True)
-			topanimes = [i[0] for i in sorted_results] # returns key in order as 1D array
-			# print(topanimes)
-			top_n_animes = topanimes[:number_results] # these are by anime id
+	# 		sorted_results = sorted(jaccsim.items(), key=operator.itemgetter(1), reverse=True)
+	# 		topanimes = [i[0] for i in sorted_results] # returns key in order as 1D array
+	# 		# print(topanimes)
+	# 		top_n_animes = topanimes[:number_results] # these are by anime id
 			
-			json_array = []
-			for ind in top_n_animes: #ind is row index not anime id
-				jsonfile = get_anime(ind, allanimelite)
-				if jsonfile != "not found":
-					score = jaccsim[ind] #get score from diction
-					jsonfile['score'] = score
-					json_array.append(jsonfile)
+	# 		json_array = []
+	# 		for ind in top_n_animes: #ind is row index not anime id
+	# 			jsonfile = get_anime(ind, allanimelite)
+	# 			if jsonfile != "not found":
+	# 				score = jaccsim[ind] #get score from diction
+	# 				jsonfile['score'] = score
+	# 				json_array.append(jsonfile)
 
-			data = json_array
+	# 		data = json_array
 
 	# Option 3: Only Anime
 	elif not tag and query:
-		
-
-
-		query_array = query.split(',')
+		query_array = query.split('|')
+		print(query_array)
 		anime_indexes = []
 		for anime_input in query_array:
 			anime_index = -1
@@ -137,7 +196,7 @@ def search():
 				if element['anime_english_title'] == anime_input:
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
-		# print(anime_indexes)
+		print(anime_indexes)
 		set_anime_ids = set(anime_indexes)
 
 		if -1 in anime_indexes:
@@ -157,8 +216,10 @@ def search():
 				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
 				positive_vectors.append(reviewvector)
 
+			# print('postive vectors', positive_vectors)
 			top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=number_results) 
 			#returns most similar anime ids and similarity scores
+			# print(top_n_animes)
 
 			json_array = []
 			score_array = []
@@ -166,121 +227,125 @@ def search():
 				get_anime_id = int(result[0].replace("anime_id_", ""))
 				score = result[1]
 				jsonfile = get_anime(get_anime_id, allanimelite)
+				print(jsonfile)
 				if get_anime_id not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					json_array.append(jsonfile)
 					
 			data = json_array
+			print('help', data)
 
 	# Option 4: Anime and Tags
-	else: # Tag and Anime Still Needs Work
+	# else: # Tag and Anime Still Needs Work
 		
-		query_array = query.split(',')
-		anime_indexes = []
-		for anime_input in query_array:
-			anime_index = -1
-			for element in allanimelite:
-				if element['anime_english_title'] == anime_input:
-					anime_index = element['anime_id']
-			anime_indexes.append(anime_index)
+	# 	query_array = query.split('|')
+	# 	anime_indexes = []
+	# 	for anime_input in query_array:
+	# 		anime_index = -1
+	# 		for element in allanimelite:
+	# 			if element['anime_english_title'] == anime_input:
+	# 				anime_index = element['anime_id']
+	# 		anime_indexes.append(anime_index)
 			 
-		set_anime_ids = set(anime_indexes)
+	# 	set_anime_ids = set(anime_indexes)
 
-		tag_array = tag.split(',')
-		tag_indexes = []
-		for tag_input in tag_array:
-			tag_index = -1
-			for element in tags_set:
-				if element == tag_input:
-					tag_index = tags_array.index(tag_input)
-			tag_indexes.append(tag_index)
+	# 	tag_array = tag.split('|')
+	# 	tag_indexes = []
+	# 	for tag_input in tag_array:
+	# 		tag_index = -1
+	# 		for element in tags_set:
+	# 			if element == tag_input:
+	# 				tag_index = tags_array.index(tag_input)
+	# 		tag_indexes.append(tag_index)
 
-		if (-1 in tag_indexes) and (-1 in anime_indexes):
-			data = []
-			output_message = 'Wrong Tag(s) and Anime.'
+	# 	if (-1 in tag_indexes) and (-1 in anime_indexes):
+	# 		data = []
+	# 		output_message = 'Wrong Tag(s) and Anime.'
 
-		elif -1 in anime_indexes:
-			data = []
-			output_message = 'Wrong Anime'
+	# 	elif -1 in anime_indexes:
+	# 		data = []
+	# 		output_message = 'Wrong Anime'
 		
-		elif -1 in tag_indexes:
-			data = []
-			output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
+	# 	elif -1 in tag_indexes:
+	# 		data = []
+	# 		output_message = 'Tag(s) ' + tag + ' do not exist. Pls try again.'
 
-		else:
-			output_message = 'Your search: ' + query
+	# 	else:
+	# 		output_message = 'Your search: ' + query
 
-			positive = []
-			for ind in anime_indexes:
-				positive.append("anime_id_" + str(ind))
+	# 		positive = []
+	# 		for ind in anime_indexes:
+	# 			positive.append("anime_id_" + str(ind))
 
-			positive_vectors = []
-			for anime_id in positive:
-				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
-				positive_vectors.append(reviewvector)
+	# 		positive_vectors = []
+	# 		for anime_id in positive:
+	# 			reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
+	# 			positive_vectors.append(reviewvector)
 
-			top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=(alltags_column.size+1)) 
-			#returns most similar anime ids and similarity scores
+	# 		top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=(alltags_column.size+1)) 
+	# 		#returns most similar anime ids and similarity scores
 
-			cossim = {} #Cosine Score
-			for result in top_n_animes:
-				get_anime_id = int(result[0].replace("anime_id_", ""))
-				score = result[1]
-				cossim[get_anime_id] = score
+	# 		cossim = {} #Cosine Score
+	# 		for result in top_n_animes:
+	# 			get_anime_id = int(result[0].replace("anime_id_", ""))
+	# 			score = result[1]
+	# 			cossim[get_anime_id] = score
 
-			# print(cossim)
-			top_n_animes_set = set(top_n_animes)
-			# TAGS
-			mytag_set = set(tag_indexes)
-			jaccsim = {}
-			for i in range(alltags_column.size):
-				# if "anime_id_" + str(int(i)) in top_n_animes_set:
-				if "anime_id_" + str(int(alltags_column[i])) in top_n_animes_set:
-					anime_i_help = np.where(alltags_nocolumn[i,:] > 0) #PROBLEM!!
-					anime_i_tags = anime_i_help[0]
-					anime_i_set = set(anime_i_tags)
-					print(anime_i_set)
-					print('weksakskdaka',get_jaccard((mytag_set, anime_i_set),4))
-					# print('merp',alltags_column[i])
-					jaccsim[alltags_column[i]] = round(get_jaccard(mytag_set, anime_i_set),4)
-				#jaccsim is always returning 0?
-			# print('wtfsfassafafs',jaccsim)
-			# now it's be anime id
+	# 		# print(cossim)
+	# 		top_n_animes_set = set(top_n_animes)
+	# 		# TAGS
+	# 		mytag_set = set(tag_indexes)
+	# 		jaccsim = {}
+	# 		for i in range(alltags_column.size):
+	# 			# if "anime_id_" + str(int(i)) in top_n_animes_set:
+	# 			if "anime_id_" + str(int(alltags_column[i])) in top_n_animes_set:
+	# 				anime_i_help = np.where(alltags_nocolumn[i,:] > 0) #PROBLEM!!
+	# 				anime_i_tags = anime_i_help[0]
+	# 				anime_i_set = set(anime_i_tags)
+	# 				print(anime_i_set)
+	# 				print('weksakskdaka',get_jaccard((mytag_set, anime_i_set),4))
+	# 				# print('merp',alltags_column[i])
+	# 				jaccsim[alltags_column[i]] = round(get_jaccard(mytag_set, anime_i_set),4)
+	# 			#jaccsim is always returning 0?
+	# 		# print('wtfsfassafafs',jaccsim)
+	# 		# now it's be anime id
 
-			total = {}
-			print('JEJFJFSJ')
-			print('COSSIM',cossim[8]) #COSSIM is missing but it's in the json
-			print('assfajsfjajafsja')
-			# print('JACCSIM', jaccsim[8])
-			for element in alltags_column: #animeid
-				if "anime_id_" + str(int(element)) in top_n_animes_set:
-				## THIS NEEDS TO BE FIXED  ##
-				## JDSJDJSJDSJSDJSDJSKDDKS ##
-				# if get_anime(element, allanimelite) != "not found":
-					total_score = weight_title * cossim[element] + weight_tags * jaccsim[element]
-					total[element] = round(total_score/(weight_title+weight_tags),4)
+	# 		total = {}
+	# 		print('JEJFJFSJ')
+	# 		print('COSSIM',cossim[8]) #COSSIM is missing but it's in the json
+	# 		print('assfajsfjajafsja')
+	# 		# print('JACCSIM', jaccsim[8])
+	# 		for element in alltags_column: #animeid
+	# 			if "anime_id_" + str(int(element)) in top_n_animes_set:
+	# 			## THIS NEEDS TO BE FIXED  ##
+	# 			## JDSJDJSJDSJSDJSDJSKDDKS ##
+	# 			# if get_anime(element, allanimelite) != "not found":
+	# 				total_score = weight_title * cossim[element] + weight_tags * jaccsim[element]
+	# 				total[element] = round(total_score/(weight_title+weight_tags),4)
 
-			sorted_results = sorted(total.items(), key=operator.itemgetter(1), reverse=True)
-			toptotal = [i[0] for i in sorted_results][0:number_results]
+	# 		sorted_results = sorted(total.items(), key=operator.itemgetter(1), reverse=True)
+	# 		toptotal = [i[0] for i in sorted_results][0:number_results]
 
-			json_array = []
-			for result in toptotal:
-				score = total[result]
-				jsonfile = get_anime(result, allanimelite)
-				if result not in set_anime_ids and jsonfile != "not found":
-					jsonfile['score'] = score
-					json_array.append(jsonfile)
+	# 		json_array = []
+	# 		for result in toptotal:
+	# 			score = total[result]
+	# 			jsonfile = get_anime(result, allanimelite)
+	# 			if result not in set_anime_ids and jsonfile != "not found":
+	# 				jsonfile['score'] = score
+	# 				json_array.append(jsonfile)
 					
-			data = json_array
+	# 		data = json_array
 						
 	# if Further Filters are chosen
 	if hide_ss and query:
 		data = hide_sameseries(anime_indexes, data, allanimelite)
 
 	if show or min_rating or time or finished or licensed:
-		data = hide_filter(data, allanimelite, show, min_rating, time, finished, licensed)
+		data = hide_filter(data, allanimelite, set_show, min_rating, time, finished, licensed, set_guidance, set_activegenre, set_stream, sfw)
 
-        data = makeListsOfList(data)
+	
+	# print(data)
+	data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=query, prevtags=tag, prevhide_ss=hide_ss, prevtv=tv)
 
@@ -368,7 +433,7 @@ def hide_sameseries(anime_ids, data, jsonfile):
 
 	return new_data
 
-def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed):
+def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age, genre, activestream, sfw):
 	# Filters: TV, Movie, OVA, Special, OVA, Minimum Anime Rating, Time Period
 	new_data = []
 	for entry in data:
@@ -397,7 +462,6 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed):
 				if entry['anime_status'] != "Finished Airing" and entry['anime_status'] != "":
 					finished_add = False
 
-			show_set = set(show)
 			show_add = True
 			if show:
 				if entry['anime_type'] not in show_set:
@@ -409,7 +473,37 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed):
 				if entry['anime_licensors'] == "":
 					licensed_add = False
 
-			if min_rating_add and time_add and finished_add and show_add and licensed_add:
+			# Doesn't work
+			age_add = True
+			if len(age) > 0:
+				if entry['anime_rating'] not in age:
+					age_add = False
+
+			# Doesn't work
+			genre_add = False #no genres no results
+			if len(genre) > 0:
+				genres = re.findall("[a-zA-z]*", entry['anime_genres'])
+				anime_genres = [x.lower() for x in genres]
+				for anime_genre in anime_genres:
+					if anime_genre in genre:
+						genre_add = True
+
+
+			# Doesn't work
+			stream_add = True
+			# if len(activestream) > 0:
+			# 	if entry['ac']
+
+			# parental_add = True
+			# if len(guidance) > 0 :
+			# 	if entry['anime_rating'] in 
+
+			sfw_add = True
+			if not sfw:
+				if entry['anime_rating'] in set(["R+ - Mild Nudity", "Rx — hentai"]):
+					sfw_add = False
+
+			if min_rating_add and time_add and finished_add and show_add and licensed_add and age_add and genre_add and stream_add and sfw_add:
 				new_data.append(entry)
 
 	return new_data
@@ -444,4 +538,10 @@ def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
 
 def makeListsOfList(data_list):
     return [data_list[i:i+8] for i in range(0, len(data_list), 8)]
+
+def keep(x):
+	if x == None:
+		return ""
+	else:
+		return x
 
