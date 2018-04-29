@@ -52,12 +52,17 @@ def search():
 	query = request.args.get('animesearch')
 	tag = request.args.get('tagsearch')
 	hide_ss = request.args.get('hide_ss')
+	
+	# TV Filter
 	tv = request.args.get('TV')
 	movie = request.args.get('movie')
 	ova = request.args.get('ova')
 	ona = request.args.get('ona')
 	special = request.args.get('special')
 	method = request.args.get('method')
+
+	# Genre Filter
+	action = 'action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'meccha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'
 	
 	show = []
 	if tv:
@@ -82,7 +87,7 @@ def search():
 		output_message = ''
 	# Option 2: Only Tags
 	elif not query and tag:
-		tag_array = tag.split(',')
+		tag_array = tag.split('|')
 		tag_indexes = []
 		for tag_input in tag_array:
 			tag_index = -1
@@ -126,7 +131,7 @@ def search():
 
 	# Option 3: Only Anime
 	elif not tag and query:
-		query_array = query.split(',')
+		query_array = query.split('|')
 		print(query_array)
 		anime_indexes = []
 		for anime_input in query_array:
@@ -177,7 +182,7 @@ def search():
 	# Option 4: Anime and Tags
 	else: # Tag and Anime Still Needs Work
 		
-		query_array = query.split(',')
+		query_array = query.split('|')
 		anime_indexes = []
 		for anime_input in query_array:
 			anime_index = -1
@@ -188,7 +193,7 @@ def search():
 			 
 		set_anime_ids = set(anime_indexes)
 
-		tag_array = tag.split(',')
+		tag_array = tag.split('|')
 		tag_indexes = []
 		for tag_input in tag_array:
 			tag_index = -1
@@ -447,4 +452,10 @@ def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
 
 def makeListsOfList(data_list):
     return [data_list[i:i+8] for i in range(0, len(data_list), 8)]
+
+def keep(x):
+	if x == None:
+		return ""
+	else:
+		return x
 
