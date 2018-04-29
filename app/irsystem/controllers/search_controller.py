@@ -41,8 +41,11 @@ u = np.load('data/u_reviewk40.npy')
 s = np.load('data/s_reviewk40.npy')
 vT = np.load('data/vT_reviewk40.npy')
 
-# dov2vec
+# doc2vec
 review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+
+# doc2vec numpy
+review_array = np.load("data/doc2vecreviewArray.npy")
 
 
 # Tags and Jaccard Similarity
@@ -130,8 +133,6 @@ def search():
 	# Option 3: Only Anime
 	elif not tag and query:
 		
-
-
 		query_array = query.split(',')
 		anime_indexes = []
 		for anime_input in query_array:
@@ -140,7 +141,6 @@ def search():
 				if element['anime_english_title'] == anime_input:
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
-		# print(anime_indexes)
 		set_anime_ids = set(anime_indexes)
 
 		if -1 in anime_indexes:
@@ -151,29 +151,35 @@ def search():
 
 			positive = []
 			for ind in anime_indexes:
-				positive.append("anime_id_" + str(ind))
+				positive.append(ind)
 
 			print('Postive', positive)
+			pos_vec=np.array(positive)
+			positive_vectors = review_array[pos_vec]
+			#for anime_id in positive:
+				#reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
+				#positive_vectors.append(reviewvector)
 
-			positive_vectors = []
-			for anime_id in positive:
-				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
-				positive_vectors.append(reviewvector)
-
-			top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=number_results) 
+			#top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=number_results) 
 			#returns most similar anime ids and similarity scores
-
+			query=np.sum(positive_vectors,axis=0)
+			scores=np.matmul((review_array),(query[:,np.newaxis]))
+			top_anime= np.argsort(-scores,axis=0)
+			top_n_animes= top_anime[:10]
+			bottom_n_animes = top_anime[-10:]
 			json_array = []
 			score_array = []
 			for result in top_n_animes:
-				get_anime_id = int(result[0].replace("anime_id_", ""))
-				score = result[1]
-				jsonfile = get_anime(get_anime_id, animelite)
+				get_anime_id = result[0]
+				score = scores[result]
+				jsonfile = get_anime(result, animelite)
 				if get_anime_id not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					json_array.append(jsonfile)
 					
 			data = json_array
+			review_array[pos_vec[0]]=rocchio(query,top_n_animes,bottom_n_animes)
+			print(review_array[pos_vec[0],0])
 
 	# Option 4: Anime and Tags
 	else: # Tag and Anime Still Needs Work
@@ -300,7 +306,7 @@ def get_anime(anime_id, jsonfile):
 	# print(anime_id)
 	for element in jsonfile:
 		# print(element['anime_id'])
-		if element['anime_id'] == anime_id:
+		if (element['anime_id']) == anime_id:
 			return element
 	return "not found"
 
@@ -419,26 +425,26 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed):
 
 def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
     q0 = query
-    if len(relevant)!=0:
+    if relevant.shape[0]!=0:
         f = lambda i: np.array(relevant)[i]
         dREL = np.fromfunction(np.vectorize(f), (len(relevant),) , dtype=int)
         dREL = np.sum(dREL,axis=0)
     else:
         dREL = 0
       
-    if len(irrelevant)!=0:
+    if irrelevant.shape[0]!=0:
         f = lambda i: np.array(irrelevant)[i]
         dNREL = np.fromfunction(np.vectorize(f), (len(irrelevant),) , dtype=int)
         dNREL = np.sum(dNREL,axis=0)
     else:
         dNREL = 0    
     
-    if len(relevant)!=0 and len(irrelevant)!=0:
-        q1 = (a*q0)+(b*(1/len(relevant))*dREL)-(c*((1/len(irrelevant))*dNREL))
+    if relevant.shape[0]!=0 and irrelevant.shape[0]!=0:
+        q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)-(c*((1/irrelevant.shape[0])*dNREL))
     elif len(relevant)==0:
-        q1 = (a*q0)-(c*((1/len(irrelevant))*dNREL))
+        q1 = (a*q0)-(c*((1/irrelevant.shape[0])*dNREL))
     elif len(irrelevant)==0:
-        q1 = (a*q0)+(b*(1/len(relevant))*dREL)
+        q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)
 
     if clip:
 		q1[q1<0] = 0
