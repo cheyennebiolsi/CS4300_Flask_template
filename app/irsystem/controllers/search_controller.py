@@ -206,16 +206,22 @@ def search():
 
 	# Option 3: Only Anime
 	elif not tag and query:
-		query_array = query.split('|')
+		anime_indexes = query.split('|')
+		print(anime_indexes)
+		# query_array = query.split('|')
 		# print(query_array)
-		anime_indexes = []
-		for anime_input in query_array:
-			anime_index = -1
-			for element in allanimelite:
-				if element['anime_english_title'] == anime_input:
-					anime_index = element['anime_id']
-			anime_indexes.append(anime_index)
+		# anime_indexes = []
+		# for anime_input in query_array:
+		# 	anime_index = -1
+		# 	for element in allanimelite:
+		# 		print('help the police',element['anime_id'])
+		# 		print('no', anime_input)
+		# 		if element['anime_id'] == anime_input:
+		# 			anime_index = element['anime_id']
+		# 	anime_indexes.append(anime_index)
 		set_anime_ids = set(anime_indexes)
+		# print(set_anime_ids)
+
 
 		if -1 in anime_indexes:
 			data = []
@@ -225,10 +231,9 @@ def search():
 
 			positive = []
 			for ind in anime_indexes:
-				positive.append(ind)
+				positive.append("anime_id_" + ind)
 
 			# print('Postive', positive)
-
 			positive_vectors = []
 			for anime_id in positive:
 				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
