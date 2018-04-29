@@ -45,7 +45,7 @@ review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 
 # Tags and Jaccard Similarity
 tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
-ty_pe = ['TV', 'movie', 'ova', 'ona', 'special']
+ty_pe = ['displayTv', 'displayMovie', 'displayOva', 'ona', 'displaySpecial']
 tags_set = set(tags_array)
 
 @irsystem.route('/', methods=['GET'])
@@ -60,15 +60,16 @@ def search():
 	# TV Filter
 	type_dictionary = {}
 	for meep in ty_pe:
+		print('meep',request.args.get(meep))
 		type_dictionary[meep] = request.args.get(meep)
 
-	tv = request.args.get('TV')
-	movie = request.args.get('movie')
-	ova = request.args.get('ova')
-	ona = request.args.get('ona')
-	special = request.args.get('special')
-	method = request.args.get('method')
-
+	tv = request.args.get('displayTv')
+	# print(tv)
+	movie = request.args.get('displayMovie')
+	ova = request.args.get('displayOva')
+	ona = request.args.get('displayOna')
+	special = request.args.get('displaySpecial')
+	
 	show = []
 	if tv:
 		show.append('TV')
@@ -90,19 +91,32 @@ def search():
 
 	activegenre = []
 	for key, value in tags_dictionary.iteritems():
-		if value == "on":
+		if value != None:
 			activegenre.append(key)
 
 	set_activegenre = set(activegenre)
 
 	# Age Rating Filter
 	guidance_dictionary = {}
-	for guidance_rating in ["gRating", "pgRating", "pg13Rating", "r17Rating"]:
-		guidance_dictionary[guidance_rating] = request.args.get(guidance_rating)
+	for guidance_rating in ["gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating"]:
+		if guidance_rating == "gRating":
+			guidance_dictionary["G - All Ages"] = request.args.get(guidance_rating)
+		elif guidance_rating == "pg13Rating":
+			guidance_dictionary["PG-13 - Teens 13 or older"] = request.args.get(guidance_rating)
+		elif guidance_rating == "pgRating":
+			guidance_dictionary["PG - Children"] = request.args.get(guidance_rating)
+		elif guidance_rating == "r17Rating":
+			guidance_dictionary["R - 17+ (violence & profanity)"] = request.args.get(guidance_rating)
+		elif guidance_rating == "rPlusRating":
+			guidance_dictionary["R+ - Mild Nudity"] = request.args.get(guidance_rating)
+		elif guidance_rating == "rxRating":
+			guidance_dictionary["Rx — hentai"] = request.args.get(guidance_rating)
+		# "R+ - Mild Nudity"
+		# Rx
 
 	active_guidance = []
 	for key, value in guidance_dictionary.iteritems():
-		if value == "on":
+		if value != None:
 			active_guidance.append(key)
 
 	set_guidance = set(active_guidance)
@@ -112,9 +126,11 @@ def search():
 	for stream in ["streamCrunchy", "streamHulu", "streamYahoo", "streamNone"]:
 		stream_dictionary[stream] = request.args.get(stream)
 
+
+	# FIX
 	activestream = []
-	for key, value in guidance_dictionary.iteritems():
-		if value == "on":
+	for key, value in stream_dictionary.iteritems():
+		if value != None:
 			activestream.append(key)
 
 	set_stream = set(activestream)  
@@ -188,7 +204,7 @@ def search():
 	# Option 3: Only Anime
 	elif not tag and query:
 		query_array = query.split('|')
-		print(query_array)
+		# print(query_array)
 		anime_indexes = []
 		for anime_input in query_array:
 			anime_index = -1
@@ -196,7 +212,7 @@ def search():
 				if element['anime_english_title'] == anime_input:
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
-		print(anime_indexes)
+		# print(anime_indexes)
 		set_anime_ids = set(anime_indexes)
 
 		if -1 in anime_indexes:
@@ -209,7 +225,7 @@ def search():
 			for ind in anime_indexes:
 				positive.append("anime_id_" + str(ind))
 
-			print('Postive', positive)
+			# print('Postive', positive)
 
 			positive_vectors = []
 			for anime_id in positive:
@@ -227,13 +243,13 @@ def search():
 				get_anime_id = int(result[0].replace("anime_id_", ""))
 				score = result[1]
 				jsonfile = get_anime(get_anime_id, allanimelite)
-				print(jsonfile)
+				# print(jsonfile)
 				if get_anime_id not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					json_array.append(jsonfile)
 					
 			data = json_array
-			print('help', data)
+			# print('help', data)
 
 	# Option 4: Anime and Tags
 	# else: # Tag and Anime Still Needs Work
@@ -340,10 +356,9 @@ def search():
 	if hide_ss and query:
 		data = hide_sameseries(anime_indexes, data, allanimelite)
 
-	if show or min_rating or time or finished or licensed:
-		data = hide_filter(data, allanimelite, set_show, min_rating, time, finished, licensed, set_guidance, set_activegenre, set_stream, sfw)
+	# if show or min_rating or time or finished or licensed or len(set_guidance) > 0 or len(set_activegenre) > 0 or len(set_stream) > 0 or sfw:
+	data = hide_filter(data, allanimelite, set_show, min_rating, time, finished, licensed, set_guidance, set_activegenre, set_stream, sfw)
 
-	
 	# print(data)
 	data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
@@ -436,6 +451,14 @@ def hide_sameseries(anime_ids, data, jsonfile):
 def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age, genre, activestream, sfw):
 	# Filters: TV, Movie, OVA, Special, OVA, Minimum Anime Rating, Time Period
 	new_data = []
+	print('show', show)
+	print('age', age)
+	print('genre', genre)
+	print('activestream', activestream)
+	# print('1',age)
+	# print('2',len(age))
+	# print('3',genre)
+	# print('4',len(genre))
 	for entry in data:
 		if entry != "not found":
 
@@ -464,7 +487,7 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age,
 
 			show_add = True
 			if show:
-				if entry['anime_type'] not in show_set:
+				if entry['anime_type'] not in show:
 					# TV, Movie, OVA, Special, OVA 
 					show_add = False
 
@@ -475,11 +498,12 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age,
 
 			# Doesn't work
 			age_add = True
+			# print('1',age)
+			# print('2',len(age))
 			if len(age) > 0:
 				if entry['anime_rating'] not in age:
 					age_add = False
 
-			# Doesn't work
 			genre_add = False #no genres no results
 			if len(genre) > 0:
 				genres = re.findall("[a-zA-z]*", entry['anime_genres'])
@@ -494,13 +518,9 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age,
 			# if len(activestream) > 0:
 			# 	if entry['ac']
 
-			# parental_add = True
-			# if len(guidance) > 0 :
-			# 	if entry['anime_rating'] in 
-
 			sfw_add = True
 			if not sfw:
-				if entry['anime_rating'] in set(["R+ - Mild Nudity", "Rx — hentai"]):
+				if entry['anime_rating'] in set(["R+ - Mild Nudity", "Rx - hentai"]):
 					sfw_add = False
 
 			if min_rating_add and time_add and finished_add and show_add and licensed_add and age_add and genre_add and stream_add and sfw_add:
