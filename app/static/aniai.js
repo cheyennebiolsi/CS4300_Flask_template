@@ -17,11 +17,18 @@ $(document).ready(function() {
     $('#animeinput').tagsinput({
         typeaheadjs: {
             name: 'anime_info',
+            image: 'anime_image_url',
             displayKey: 'anime_english_title',
             valueKey: 'anime_english_title',
+            // engine: Handlebars,
+            templates: {
+                suggestion: function (data) {
+                    return '<div><p>' + '<img style="height:50px; width:30px;" src=' + data.anime_image_url + '> ' + data.anime_english_title + '</p></div>';
+                }
+            },
+            // suggestion: ,
             source: anime.ttAdapter(),
             hint: true,
-            // highlight: true,
             minLength: 3
         },
         confirmKeys: [13, 44, 188],
@@ -29,6 +36,10 @@ $(document).ready(function() {
         freeInput: false,
         delimiter: ','
     });
+
+    $('#animeinput .typeahead').typeahead({
+
+    })
 
     $('#furtherfilters').click(function() {
     	if ($('#furtherfilters').text() == "Show Additional Filters") {
