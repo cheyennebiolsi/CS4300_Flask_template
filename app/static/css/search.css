@@ -44,8 +44,8 @@ hr {
 }
 
 .media-body .col {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 5;
+    padding-right: 5;
     padding-top: 10;
     padding-bottom: 10;
     color: white;
@@ -63,8 +63,11 @@ hr {
     color: white;
     text-align: center;
     vertical-align: middle;
-
+    line-height:300px;
+    font-size: 48;
+    font-style: normal;
     background-color: none;
+    font-family: Futura;
 }
 
 ::-webkit-scrollbar {
