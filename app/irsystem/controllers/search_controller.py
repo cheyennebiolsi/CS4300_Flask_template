@@ -34,9 +34,9 @@ alltags_nocolumn = np.delete(alltags_data, 0, 1)
 # Trucated SVD
 firstcolumn = np.load('data/firstcolumn.npy') #Deprecated with New data
 # allfirst_column = np.load('data/allfirst_column')
-u = np.load('data/u_reviewk40.npy')
-s = np.load('data/s_reviewk40.npy')
-vT = np.load('data/vT_reviewk40.npy')
+# u = np.load('data/u_reviewk40.npy')
+# s = np.load('data/s_reviewk40.npy')
+# vT = np.load('data/vT_reviewk40.npy')
 
 # dov2vec
 review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
@@ -126,10 +126,8 @@ def search():
 
 	# Option 3: Only Anime
 	elif not tag and query:
-		
-
-
 		query_array = query.split(',')
+		print(query_array)
 		anime_indexes = []
 		for anime_input in query_array:
 			anime_index = -1
@@ -137,7 +135,7 @@ def search():
 				if element['anime_english_title'] == anime_input:
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
-		# print(anime_indexes)
+		print(anime_indexes)
 		set_anime_ids = set(anime_indexes)
 
 		if -1 in anime_indexes:
@@ -157,8 +155,10 @@ def search():
 				reviewvector = review_model.docvecs[anime_id] #get vector by MAL id
 				positive_vectors.append(reviewvector)
 
+			# print('postive vectors', positive_vectors)
 			top_n_animes = review_model.docvecs.most_similar(positive=positive_vectors, negative=[], topn=number_results) 
 			#returns most similar anime ids and similarity scores
+			# print(top_n_animes)
 
 			json_array = []
 			score_array = []
@@ -166,11 +166,13 @@ def search():
 				get_anime_id = int(result[0].replace("anime_id_", ""))
 				score = result[1]
 				jsonfile = get_anime(get_anime_id, allanimelite)
+				print(jsonfile)
 				if get_anime_id not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					json_array.append(jsonfile)
 					
 			data = json_array
+			print('help', data)
 
 	# Option 4: Anime and Tags
 	else: # Tag and Anime Still Needs Work
@@ -279,8 +281,9 @@ def search():
 
 	if show or min_rating or time or finished or licensed:
 		data = hide_filter(data, allanimelite, show, min_rating, time, finished, licensed)
-
-        data = makeListsOfList(data)
+	
+	print(data)
+	data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=query, prevtags=tag, prevhide_ss=hide_ss, prevtv=tv)
 
