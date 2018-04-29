@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: flask
-        image: gg392/flask-template:latest
+        image: gg392/flask-template:v5
         env:
         - name: APP_SETTINGS
           value: config.DevelopmentConfig
