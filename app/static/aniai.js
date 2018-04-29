@@ -15,11 +15,13 @@ $(document).ready(function() {
     });
     anime.initialize();
     $('#animeinput').tagsinput({
+        itemValue: 'anime_id',
+        itemText: 'anime_english_title',
         typeaheadjs: {
-            name: 'anime_info',
-            image: 'anime_image_url',
+            // name: 'anime_search',
+            // image: 'anime_image_url',
             displayKey: 'anime_english_title',
-            valueKey: 'anime_english_title',
+            // valueKey: 'anime_english_title',
             // engine: Handlebars,
             templates: {
                 suggestion: function (data) {
@@ -28,7 +30,7 @@ $(document).ready(function() {
             },
             // suggestion: ,
             source: anime.ttAdapter(),
-            hint: true,
+            hint: false,
             minLength: 3
         },
         confirmKeys: [13, 44, 188],
