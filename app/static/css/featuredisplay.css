@@ -1,0 +1,132 @@
+
+
+.media {
+    margin: 0;
+}
+
+@font-face {
+    font-family: "Maven pro";
+    src: url('/static/fonts/maven-pro/MavenPro-Bold.ttf');
+}
+
+@font-face {
+    font-family: FuturaMedium;
+    src: url('/static/fonts/futura-md-bt/FutuMediumBt.ttf');
+}
+
+@font-face {
+    font-family: FuturaMedium;
+    font-weight: bold;
+    src: url('/static/fonts/futura-md-bt/FuturaMediumBT.ttf');
+}
+
+.media-self-center.media-left.anime-picture {
+    width: 35%;
+    height: 50%;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.media .container.anime-picture {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:row;
+    padding: 0;
+    margin: 0;
+}
+
+.media .anime-picture img {
+    flex:1;
+    object-fit: contain;
+}
+
+
+
+.media-header .genre {
+    text-align: center;
+    display: inline-block;
+    border-radius: 12px;
+    padding-left: 6px;
+    padding-right: 6px;
+    background-color: white;
+    color: #333;
+    border: 2px solid #333;
+    margin-left: 1.5px;
+    margin-right: 1.5px;
+    font-size: 13;
+    width: 140px;
+
+}
+
+.media .semantic {
+    height: 100%;
+    border-left: 2px solid white;
+}
+
+.media-header .row.title {
+    padding-top: 8px;
+    border-bottom: 2px solid black;
+    background-color: #333;
+    color: white;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+.media-header .col.title {
+    text-align: left;
+    font-size: 30;
+    font-family: "Futura";
+}
+
+.media-header .row.episodeinfo {
+   padding-top: 2px;
+   font-size: 15;
+   text-align: center;
+   font-weight: bold;
+}
+
+.media-header {
+    background-color: darkgrey;
+    margin: 0;
+    padding: 0;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+.media-header .col-auto.icon {
+    text-align: right;
+    font-size: 30;
+}
+
+.media-header .row {
+    margin: 0;
+    padding: 0;
+}
+
+.media-header .container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 2px solid gold;
+}
+
+.media-header .col.type {
+    text-align: left;
+}
+
+.media-header .row.genres {
+   text-align: center;
+   padding-top: 4px;
+   padding-bottom: 4px;
+}
+.media-header .col.episodes {
+    text-align: right;
+}
+
+.media-footer {
+    height: 20px;
+    background-color: #333;
+}

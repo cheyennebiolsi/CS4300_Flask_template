@@ -2,10 +2,92 @@ html, body {
     height: 100%;
 }
 
+
+.container.carousel-picture {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 25%;
+    flex-direction:column;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    white-space: normal;
+    position: relative;
+}
+
+.col.carousel-picture {
+    margin: 0;
+    padding: 0;
+}
+
+.col.carousel-picture:hover {
+/*    border: 2px solid white;
+    margin: -1px; */
+}
+
+.carousel-info.crop {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 20;
+    text-align: center;
+    padding: 10%
+}
+
+.container.carousel-picture:hover{
+/*    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    height: auto;
+    width: auto;
+    z-index: 5; */
+}
+
+.carousel-picture img {
+    flex: 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+.media .container.anime-picture2 {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:row;
+    padding: 0;
+    margin: 0;
+}
+
+.media .anime-picture2 img {
+    flex:1;
+    object-fit: contain;
+}
+
+
+#myform{
+    z-index: 2;
+}
+
+
+.testy2{
+    background-color: none;
+}
+
 body {
     padding-left: 15%;
     padding-right: 15%;
     background-color: black;
+}
+
+.filter-header {
+    text-align: center;
+    font-size: 18;
+    padding-top: 10px;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .media-body h2 {
@@ -23,16 +105,52 @@ body {
 .media-body .container {
     height: 100%;
     width: 100%;
+    background-color: black;
 }
 
-.media-body .col {
-    padding-left: 0;
-    padding-right: 0;
+.media-body {
+    padding-left: 5;
+    padding-right: 5;
     padding-top: 10;
     padding-bottom: 10;
     color: white;
     overflow-y: scroll;
     width: 100% + 8px;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+
+}
+
+.col {
+    padding-left: 5;
+    padding-right: 5;
+    padding-top: 10;
+    padding-bottom: 10;
+    color: white;
+    overflow-y: scroll;
+    width: 100% + 8px;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+}
+
+.media-logo {
+    color: white;
+    position: relative, fixed;
+    top:0;
+    text-align: center;
+    vertical-align: middle;
+    line-height:300px;
+    font-size: 48;
+    font-style: normal;
+    background-color: none;
+    font-family: Futura;
+    overflow-y: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -46,6 +164,25 @@ body {
     display: flex;
 }
 
+
+.fancy-checkbox {
+   font-size:14;
+}
+
+.genre-checkbox input[type="checkbox"],
+.genre-checkbox .checked {
+    display: none;
+}
+
+.genre-checkbox input[type="checkbox"]:checked ~.checked
+{
+    display: inline-block;
+}
+
+.genre-checkbox input[type="checkbox"]:checked ~.unchecked
+{
+    display: none;
+}
 
 .fancy-checkbox input[type="checkbox"],
 .fancy-checkbox .checked {
@@ -70,7 +207,7 @@ body {
     background-color: white;
     border: 1px solid #ccc;
     height: 100%;
-    width: 70px;
+    width: 100%;
 }
 
 
@@ -90,17 +227,19 @@ body {
     width: 70px !important;
 }
 .tag-button {
+    background-color: white;
     text-align: center;
     display: inline-block;
     cursor: pointer;
     border-radius: 12px;
     padding: 6px;
-    background-color: white;
-    color: #e7e7e7;
-    border: 2px solid #e7e7e7;
     margin-left: 1.5px;
     margin-right: 1.5px;
-    font-size: 13;
+    font-size: 10;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .form-check-input.tag {
@@ -112,18 +251,28 @@ body {
     color: black;
 }
 
+.tag-button.inactive {
+    border: 2px solid lightslategray;
+    color: lightslategray;
+}
+
 .sfw-button.active {
     border: 2px solid green;
     color: green;
     width: 70px !important;
-    font-size: 13;
+    font-size: 10;
 }
 
-.tag-button:hover {
+.tag-button.inactive:hover {
    background-color: lightpink;
    border-color: hotpink;
+   color: white;
 }
-   
+
+.tag-button.active:hover {
+    background-color:lightpink;
+    border-color:hotpink;
+}   
   
 .form-check.filter {
     padding-left: 1.25rem;
@@ -131,7 +280,7 @@ body {
 }
 
 .header {
-    padding: 1em;
+
     background-color: black;
     display: flex;
     justify-content: flex-end;
@@ -143,7 +292,12 @@ body {
 }
 
 .form-group {
-    width: 85%
+    width: 85%;
+    background: rgba(88, 88, 88, 0.3);
+    border-radius:10px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
 } 
 
 .bootstrap-tagsinput{
