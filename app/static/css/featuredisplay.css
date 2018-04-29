@@ -88,6 +88,14 @@
    font-weight: bold;
 }
 
+.media-header .col.rating {
+    text-align: center;
+}
+
+.media-header .col.duration {
+    text-align: center;
+}
+
 .media-header {
     background-color: darkgrey;
     margin: 0;
@@ -106,6 +114,10 @@
     padding: 0;
 }
 
+.media-header .col.genres {
+    text-align: center;
+}
+
 .media-header .container {
     width: 100%;
     margin: 0;
@@ -119,8 +131,9 @@
 
 .media-header .row.genres {
    text-align: center;
-   padding-top: 4px;
-   padding-bottom: 4px;
+   padding-top: 0px;
+   padding-bottom: 0px;
+   margin-top: -10px;
 }
 .media-header .col.episodes {
     text-align: right;

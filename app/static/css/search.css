@@ -74,8 +74,9 @@ html, body {
 }
 
 body {
-    padding-left: 15%;
-    padding-right: 15%;
+
+    padding-left: 10%;
+    padding-right: 10%; 
     background-color: black;
 }
 
@@ -294,7 +295,6 @@ hr {
 .form-group {
     width: 85%;
     background: rgba(88, 88, 88, 0.3);
-    border-radius:10px;
     position: relative;
     margin-left: auto;
     margin-right: auto;

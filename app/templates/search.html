@@ -164,7 +164,7 @@
             </div>
 
             <div class="collapse" id="collapseForm">
-                <div class="form-group row justify-content-md-around" style="color:white;margin:0">
+                <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
                             <span><i>Choose As Many Flavors As You Like:</i></span>
@@ -375,9 +375,9 @@
             </div>
             
         </form>
-
+</div>
         {% if data %}
-            <br>
+<!--            <br>
             <br>
             <br>
             <br>
@@ -394,7 +394,7 @@
             <br>
             <br>
             <br>
-            <br>
+            <br> -->
             <hr>
             <div id="tester" class="media-header">
                 <div class="row title">
@@ -427,7 +427,7 @@
                 </div>
 
                 <div class="row genres">
-                    <div class="col genres">
+                    <div class="col genres" id="media-genres">
                          {% set genrelist = data[0][0]["anime_genres"].split(' | ') %}
                          {% for tag in genrelist %}
                          <span class="genre">{{tag}}</span>
@@ -502,16 +502,16 @@
                      {% endfor %}
                 </ol>
                 <div class = "carousel-inner" style="overflow:hidden">
-                    {% for lst in data[:1] %}
+                    {% for lst in data %}
                     <div class="carousel-item {{'active' if loop.index0 == 0}}">
                         <div class = "row">
                             {% for d in lst %}
-                            <div class="col carousel-picture" scroll="no">
-                                    <div class="view overlay">
-                                <div class="container carousel-picture">
+                            <div class="col carousel-picture" scroll="no" id="suggestionCard">
+                                    <div class="view overlay" id="suggestionCard" data-index = {{d["anime_id"]}}>
+                                <div class="container carousel-picture" id="suggestionCard">
                                         <img src={{d["anime_image_url"]}} class="carousel-picture">
                                     </div>
-                                        <div class="mask flex-center rgba-blue-light">
+                                        <div class="mask flex-center rgba-black-light" id="suggestionCard">
                                             <div class ="carousel-info crop">{{d["anime_english_title"]}}</div>
                                         </div>
                                 </div>
@@ -549,19 +549,55 @@
                 </a>
             </div>
 
+        {% endif %}
+    </div>
+    <!--    <script>
+            $.getJSON("/static/data/anime_info.json", function(data) {
+                 console.log(data);
+                 document.getElementById('anime_info').innerHTML = data;
+            });
+    </script> -->
+
+    <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script> -->
+ 
             <script>
-                $(".card.expandable").unbind().click(function() {
-                    console.log("in card");
-                    var json = $(this).data('json').test;
+                $(".view").click(function() {
+                    alert("in card");
+                    var anime_id = $(this).attr('data-index');
+                    $.getJSON("/static/data/anime_info.json", function(data) {
+                        var anime = data[anime_id];
+                        $('#media-image').attr('src', anime.anime_image_url);
+                        $('#media-title span').text(anime.anime_english_title);
+                        $('#media-type span').text(anime.anime_type);
+                        $('#media-rating span').text(anime.anime_rating);
+                        $('#episode-count span').text(anime.anime_number_of_episodes);
+                        $('#media-duration').text(anime.anime_duration);
+                        var tags = anime.anime_tags.split("|");
+                        var str = "";
+                        for (var tag in tags) {
+                            str += '<span class="genre">' + tags[tag] + "</span>";
+                        };
+                        $('#media-genres').replaceWith(
+                        '<div class="col genres" id="media-genres">' + str + '</div>'
+                        );
+                        alert(tags);
+                        alert(str);
+                    });
+                 });
+</script>
+<script>
                     console.log("json is " + json);
                     var anime_id = $(this).attr('data-anime-id');
                     var anime_img = $(this).attr('data-anime-id');
                     var anime_id = $(this).attr('data-anime-id');
                     var anime_image_url = $(this).attr('data-url')
-                    var anime_title = $(this).attr('data-title')
+                    var animie_title = $(this).attr('data-title')
+                    
                         //$('#media-title span').text(anime_title);
                         var synopsis = $(this).attr("data-synposis")
-                        $('#media-image').attr('src', anime_image_url); // this is messed up because of ""
+                        $('#media-image').attr('src', anime_image_url);
+                        $('#media-type span').text('blah');
+                         // this is messed up because of ""
                         // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
                         // Seems slightly better than going through all json until thing is found
 
@@ -593,17 +629,6 @@
                         //            '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
                         //             '<h5> ' + synopsis + ' </h5></div>');
                 }); 
-            </script>
-        {% endif %}
-    </div>
-    <!--    <script>
-            $.getJSON("/static/data/anime_info.json", function(data) {
-                 console.log(data);
-                 document.getElementById('anime_info').innerHTML = data;
-            });
-    </script> -->
-
-    <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script>
-        <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
+            </script>  <!--     <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
 </body>
 </html>
