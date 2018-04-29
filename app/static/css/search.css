@@ -3,6 +3,9 @@ html, body {
 }
 
 
+#myform{
+    z-index: 2;
+}
 
 
 .testy2{
@@ -41,9 +44,10 @@ hr {
 .media-body .container {
     height: 100%;
     width: 100%;
+    background-color: black;
 }
 
-.media-body .col {
+.media-body {
     padding-left: 5;
     padding-right: 5;
     padding-top: 10;
@@ -59,8 +63,25 @@ hr {
 
 }
 
+.col {
+    padding-left: 5;
+    padding-right: 5;
+    padding-top: 10;
+    padding-bottom: 10;
+    color: white;
+    overflow-y: scroll;
+    width: 100% + 8px;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+}
+
 .media-logo {
     color: white;
+    position: relative, fixed;
+    top:0;
     text-align: center;
     vertical-align: middle;
     line-height:300px;
@@ -68,6 +89,7 @@ hr {
     font-style: normal;
     background-color: none;
     font-family: Futura;
+    overflow-y: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -209,7 +231,12 @@ hr {
 }
 
 .form-group {
-    width: 85%
+    width: 85%;
+    background: rgba(88, 88, 88, 0.3);
+    border-radius:10px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
 } 
 
 .bootstrap-tagsinput{

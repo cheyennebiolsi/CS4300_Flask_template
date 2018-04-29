@@ -17,9 +17,12 @@
     <script src="/static/aniai.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
+
+    
 </head>
 
 <body>
+
 
     <script language="JavaScript1.2">
         //https://pbs.twimg.com/profile_images/1096714485/gary_busey_400x400.jpeg
@@ -31,14 +34,19 @@
 
         Image1=new Image();
         Image1.src=grphcs[1]="/static/images/petal2.png";
+        //Image1.z-index=1;
         Image2=new Image();
         Image2.src=grphcs[2]="/static/images/petal3.png";
+        //Image2.z-index=-1;
         Image3=new Image();
         Image3.src=grphcs[3]="/static/images/petal4.png";
+        //Image3.z-index=-1;
         Image4=new Image();
         Image4.src=grphcs[4]="/static/images/petal5.png";
+        //Image4.z-index=-1;
         Image5=new Image();
         Image5.src=grphcs[5]="/static/images/petal6.png";
+        //Image5.z-index=-1;
 
         Amount=10; //Smoothness depends on image file size, the smaller the size the more you can use
         Ypos=new Array();
@@ -110,6 +118,8 @@
         //-->
     </script>
 
+    
+
     <style>
         .tree{
             position: fixed;
@@ -136,7 +146,7 @@
         <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
             <div class="form row" style="height:32px"> 
                 <!-- style:"height:30px vertical-align:bottom"> -->
-                <div class="form-group col-lg-10" style="padding-right:0">
+                <div class="col-lg-10" style="padding-right:0">
                     <div id="scrollable-dropdown-menu">
                         <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
                     </div>
@@ -363,11 +373,30 @@
 
                 </div>             
             </div>
-            <hr>
+            
         </form>
 
         {% if data %}
-            <div class="media-header">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <hr>
+            <div id="tester" class="media-header">
                 <div class="row title">
                     <div class="col title" id="media-title">
                         <span>{{data[0][0]["anime_english_title"]}}</span>
@@ -432,9 +461,10 @@
                                 <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
-                                Aniai.&#24859 
-                            </div>
+                            Aniai.&#24859 
                         </div>
+                        </div>
+
                         <!--                <div class="row"><h2> This is a header </h2>
                         </div>
                         <div class="row">
@@ -471,7 +501,7 @@
                      </li>
                      {% endfor %}
                 </ol>
-                <div class = "carousel-inner" style="overflow:visible">
+                <div class = "carousel-inner" style="overflow:hidden">
                     {% for lst in data %}
                     <div class="carousel-item {{'active' if loop.index0 == 0}}">
                         <!--        <div class="container">
