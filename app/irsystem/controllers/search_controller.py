@@ -39,8 +39,11 @@ firstcolumn = np.load('data/firstcolumn.npy') #Deprecated with New data
 # s = np.load('data/s_reviewk40.npy')
 # vT = np.load('data/vT_reviewk40.npy')
 
-# dov2vec
+# doc2vec
 review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
+
+# doc2vec numpy
+review_array = np.load("data/doc2vecreviewArray.npy")
 
 
 # Tags and Jaccard Similarity
@@ -212,7 +215,6 @@ def search():
 				if element['anime_english_title'] == anime_input:
 					anime_index = element['anime_id']
 			anime_indexes.append(anime_index)
-		# print(anime_indexes)
 		set_anime_ids = set(anime_indexes)
 
 		if -1 in anime_indexes:
@@ -223,7 +225,7 @@ def search():
 
 			positive = []
 			for ind in anime_indexes:
-				positive.append("anime_id_" + str(ind))
+				positive.append(ind)
 
 			# print('Postive', positive)
 
@@ -377,7 +379,7 @@ def get_anime(anime_id, jsonfile):
 	# print(anime_id)
 	for element in jsonfile:
 		# print(element['anime_id'])
-		if element['anime_id'] == anime_id:
+		if (element['anime_id']) == anime_id:
 			return element
 	return "not found"
 
@@ -530,26 +532,26 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age,
 
 def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
     q0 = query
-    if len(relevant)!=0:
+    if relevant.shape[0]!=0:
         f = lambda i: np.array(relevant)[i]
         dREL = np.fromfunction(np.vectorize(f), (len(relevant),) , dtype=int)
         dREL = np.sum(dREL,axis=0)
     else:
         dREL = 0
       
-    if len(irrelevant)!=0:
+    if irrelevant.shape[0]!=0:
         f = lambda i: np.array(irrelevant)[i]
         dNREL = np.fromfunction(np.vectorize(f), (len(irrelevant),) , dtype=int)
         dNREL = np.sum(dNREL,axis=0)
     else:
         dNREL = 0    
     
-    if len(relevant)!=0 and len(irrelevant)!=0:
-        q1 = (a*q0)+(b*(1/len(relevant))*dREL)-(c*((1/len(irrelevant))*dNREL))
+    if relevant.shape[0]!=0 and irrelevant.shape[0]!=0:
+        q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)-(c*((1/irrelevant.shape[0])*dNREL))
     elif len(relevant)==0:
-        q1 = (a*q0)-(c*((1/len(irrelevant))*dNREL))
+        q1 = (a*q0)-(c*((1/irrelevant.shape[0])*dNREL))
     elif len(irrelevant)==0:
-        q1 = (a*q0)+(b*(1/len(relevant))*dREL)
+        q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)
 
     if clip:
 		q1[q1<0] = 0
