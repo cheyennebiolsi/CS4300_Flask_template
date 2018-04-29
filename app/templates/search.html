@@ -502,40 +502,37 @@
                      {% endfor %}
                 </ol>
                 <div class = "carousel-inner" style="overflow:hidden">
-                    {% for lst in data %}
+                    {% for lst in data[:1] %}
                     <div class="carousel-item {{'active' if loop.index0 == 0}}">
-                        <!--        <div class="container">
-                            <div class="row">
-                                {% for d in data[:8] %}
-                                <div class="col-sm-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src={{d["anime_image_url"]}}>
+                        <div class = "row">
+                            {% for d in lst %}
+                            <div class="col carousel-picture" scroll="no">
+                                    <div class="view overlay">
+                                <div class="container carousel-picture">
+                                        <img src={{d["anime_image_url"]}} class="carousel-picture">
                                     </div>
-                                 </div>
-                                {% endfor %}
+                                        <div class="mask flex-center rgba-blue-light">
+                                            <div class ="carousel-info crop">{{d["anime_english_title"]}}</div>
+                                        </div>
+                                </div>
                             </div>
-                        </div> -->
+                            {% endfor %}
+                        </div>
 
-                        <div class="card-group">
+<!--                        <div class="card-group" hidden>
                             {% for d in lst %}
                             <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}} data-json ='{"test":"testthis", "test2":"&other"}'>
-                               <!--    <div class="view zoom"> -->
+                                   <div class="view zoom">
                                <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
                                <div class="card-body" style="background-color:black;padding-bottom:20px">
                                    <h5 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h5>
                                </div>
-                               <!--</div>-->
+                               </div
                             </div>
                            {% endfor %}
-                        </div>
+                        </div> -->
                     </div>
                    {% endfor %}
-                    <!--        <div class="carousel-item">
-                        <h1> item2 </h1>
-                    </div>
-                    <div class="carousel-item">
-                        <h1> item3 </h1>
-                    </div> -->
                 </div>
 
                 <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev" style="width:30px;margin:0">

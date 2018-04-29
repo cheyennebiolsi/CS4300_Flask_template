@@ -3,6 +3,67 @@ html, body {
 }
 
 
+.container.carousel-picture {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 25%;
+    flex-direction:column;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    white-space: normal;
+    position: relative;
+}
+
+.col.carousel-picture {
+    margin: 0;
+    padding: 0;
+}
+
+.col.carousel-picture:hover {
+/*    border: 2px solid white;
+    margin: -1px; */
+}
+
+.carousel-info.crop {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 20;
+    text-align: center;
+    padding: 10%
+}
+
+.container.carousel-picture:hover{
+/*    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
+    height: auto;
+    width: auto;
+    z-index: 5; */
+}
+
+.carousel-picture img {
+    flex: 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+.media .container.anime-picture2 {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:row;
+    padding: 0;
+    margin: 0;
+}
+
+.media .anime-picture2 img {
+    flex:1;
+    object-fit: contain;
+}
+
+
 #myform{
     z-index: 2;
 }
