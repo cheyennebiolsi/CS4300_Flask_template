@@ -23,8 +23,8 @@ allanimelite = json.load(open('app/static/data/anime_info.json'))
 for index, element in enumerate(allanimelite):
     element["anime_index"] = index
 
-tags_data = np.load('data/tags.npy')
-alltags_data = np.load('data/alltags.npy')
+#tags_data = np.load('data/tags.npy')
+#alltags_data = np.load('data/alltags.npy')
 
 tags_column = tags_data[:,0]
 tags_nocolumn = np.delete(tags_data, 0, 1)
@@ -47,6 +47,7 @@ review_array = np.load("data/doc2vecreviewArray.npy")
 filter_bools= np.load("data/filterArray.npy")
 word_array=np.load("data/wordArray.npy")
 words=np.load("data/wordList.npy")
+rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
     word_to_ind[word]=index
@@ -82,8 +83,6 @@ def search():
 		anime_indexes = query.split('|')
 		#query_words = tag.split('|')
 		if -1 in anime_indexes:
-			movie = request.args.get('displayMovie')
-			hello=asdfgh
 			data = []
 			output_message = 'Could not find your show. Please try again.'
 		else:
@@ -108,7 +107,8 @@ def search():
  			result=show_result#+word_result           
 
 			scores=np.matmul((review_array),(result[:,np.newaxis]))
-			top_shows= np.argsort(-scores,axis=0)
+			adjust=scores+rat_array
+			top_shows= np.argsort(-adjust,axis=0)
             #filter out the shows we don't want
 			mask=np.isin(top_shows,shows_removed,invert=True)
 			top_shows=top_shows[mask]   
