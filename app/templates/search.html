@@ -75,7 +75,7 @@
                 <!-- style:"height:30px vertical-align:bottom"> -->
                 <div class="col-lg-11 animesearch" style="padding:0; margin:0">
                     <div id="scrollable-dropdown-menu">
-                        <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
+                        <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..." value="{{prevsearch}}"/>
                     </div>
                     
 <!--                    <div id="scrollable-dropdown-menu">
@@ -94,7 +94,7 @@
                 <!-- style:"height:30px vertical-align:bottom"> -->
                 <div class="col-lg-11 wordsearch" style="padding:0; margin:0">
                     <div id="scrollable-dropdown-menu">
-                        <input id="wordinput" type="text" name="wordsearch" placeholder="Words..."/>
+                        <input id="wordinput" type="text" name="wordsearch" placeholder="Words..." value="{{prevwords}}"/>
                     </div>
                 </div>
                 <div class="col-md-1" style="margin: 0; padding:0">
@@ -376,7 +376,8 @@
 
                 <div class="row genres">
                     <div class="col genres" id="media-genres">
-                         {% set genrelist = data[0][0]["anime_genres"].split(' | ') %}
+                        <!-- CHANGE THIS TO GENRE -->
+                         {% set genrelist = data[0][0]["words"].split(' | ') %} 
                          {% for tag in genrelist %}
                          <span class="genre">{{tag}}</span>
                          {% endfor %}

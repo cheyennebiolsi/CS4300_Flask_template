@@ -10,12 +10,13 @@ $(document).ready(function() {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         prefetch: {
-            url: '/static/data/anime_info.json'
+            url: '/static/data/anime_info.json',
+            cache: true
         }
     });
     anime.initialize();
     $('#animeinput').tagsinput({
-        itemValue: 'anime_id',
+        itemValue: 'anime_index',
         itemText: 'anime_english_title',
         typeaheadjs: {
             // name: 'anime_search',
@@ -30,7 +31,7 @@ $(document).ready(function() {
             },
             // suggestion: ,
             source: anime.ttAdapter(),
-            hint: true,
+            hint: false,
             minLength: 3
         },
         confirmKeys: [13, 44, 188],
@@ -60,6 +61,8 @@ $(document).ready(function() {
     });
     word.initialize();
     $('#wordinput').tagsinput({
+        // itemValue: 'word',
+        // itemText: 'word',
         typeaheadjs: {
             // name: 'anime_search',
             // image: 'anime_image_url',
