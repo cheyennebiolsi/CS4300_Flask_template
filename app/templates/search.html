@@ -45,100 +45,6 @@
 <body>
 
 
-    <script language="JavaScript1.2">
-        //https://pbs.twimg.com/profile_images/1096714485/gary_busey_400x400.jpeg
-        //background: url("myPicture.jpg");
-
-        grphcs=new Array(6)
-        Image0=new Image(20,20);
-        Image0.src=grphcs[0]="/static/images/petal1.png";
-
-        Image1=new Image();
-        Image1.src=grphcs[1]="/static/images/petal2.png";
-        //Image1.z-index=1;
-        Image2=new Image();
-        Image2.src=grphcs[2]="/static/images/petal3.png";
-        //Image2.z-index=-1;
-        Image3=new Image();
-        Image3.src=grphcs[3]="/static/images/petal4.png";
-        //Image3.z-index=-1;
-        Image4=new Image();
-        Image4.src=grphcs[4]="/static/images/petal5.png";
-        //Image4.z-index=-1;
-        Image5=new Image();
-        Image5.src=grphcs[5]="/static/images/petal6.png";
-        //Image5.z-index=-1;
-
-        Amount=10; //Smoothness depends on image file size, the smaller the size the more you can use
-        Ypos=new Array();
-        Xpos=new Array();
-        Speed=new Array();
-        Step=new Array();
-        Cstep=new Array();
-        ns=(document.layers)?1:0;
-        ns6=(document.getElementById&&!document.all)?1:0;
-
-        if (ns){
-        for (i = 0; i < Amount; i++){
-        var P=Math.floor(Math.random()*grphcs.length);
-        rndPic=grphcs[P];
-        document.write("<LAYER NAME='sn"+i+"' LEFT=0 TOP=0><img src="+rndPic+"></LAYER>");
-        }
-        }
-        else{
-        document.write('<div style="position:absolute;top:0px;left:0px"><div style="position:relative">');
-        for (i = 0; i < Amount; i++){
-        var P=Math.floor(Math.random()*grphcs.length);
-        rndPic=grphcs[P];
-        document.write('<img id="si'+i+'" src="'+rndPic+'" style="position:absolute;top:0px;left:0px">');
-        }
-        document.write('</div></div>');
-        }
-        WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
-        WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
-        for (i=0; i < Amount; i++){                                                                
-         Ypos[i] = Math.round(Math.random()*WinHeight);
-         Xpos[i] = Math.round(Math.random()*WinWidth);
-         Speed[i]= Math.random()*5+3;
-         Cstep[i]=0;
-         Step[i]=Math.random()*0.1+0.05;
-        }
-        function fall(){
-        var WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
-        var WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
-        var hscrll=(ns||ns6)?window.pageYOffset:document.body.scrollTop;
-        var wscrll=(ns||ns6)?window.pageXOffset:document.body.scrollLeft;
-        for (i=0; i < Amount; i++){
-        sy = Speed[i]*Math.sin(90*Math.PI/180)*.5;
-        sx = Speed[i]*Math.cos(Cstep[i]);
-        Ypos[i]+=.2*sy;
-        Xpos[i]+=.3*sx; 
-        if (Ypos[i] > WinHeight){
-        Ypos[i]=-60;
-        Xpos[i]=Math.round(Math.random()*WinWidth);
-        Speed[i]=Math.random()*5+3;
-        }
-        if (ns){
-        document.layers['sn'+i].left=Xpos[i];
-        document.layers['sn'+i].top=Ypos[i]+hscrll;
-        }
-        else if (ns6){
-        document.getElementById("si"+i).style.left=Math.min(WinWidth,Xpos[i]);
-        document.getElementById("si"+i).style.top=Ypos[i]+hscrll;
-        }
-        else{
-        eval("document.all.si"+i).style.left=Xpos[i];
-        eval("document.all.si"+i).style.top=Ypos[i]+hscrll;
-        } 
-        Cstep[i]+=Step[i];
-        }
-        setTimeout('fall()',20);
-        }
-
-        window.onload=fall
-        //-->
-    </script>
-
     
 
     <style>
@@ -201,11 +107,11 @@
                 <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
-                            <span>Choose As Many Flavors As You Like:</span>
+                            <span>Choose As Many Flavors As You Like</span>
                         </div>
                         <hr>
                         <div class="form-check">
-                            {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'meccha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
+                            {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'mecha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
                             {% for genre in genres %}
                             <label class="genre-checkbox" style="color:white">
                                 <input type="checkbox" name={{genre}} checked/>
@@ -280,7 +186,7 @@
                             </label>
                         </div>
                         <div class="filter-header">
-                            <span>How You Want To Watch:</span>
+                            <span>How You Want To Watch</span>
                         </div>
                         <hr>
                         <div class="form-check">
