@@ -60,7 +60,8 @@ tags_set = set(tags_array)
 
 def search():
 	query = request.args.get('animesearch')
-	tag = request.args.get('tagsearch')
+	tag = request.args.get('wordsearch')
+	# word = request.args.get('wordsearch')
 
 	#hide same series filter
 	hide_ss = request.args.get('filter same series')
@@ -168,7 +169,7 @@ def search():
 	# Option 3: Only Anime
 	else:
 		anime_indexes = query.split('|')
-		#query_words = tag.split('|')
+		query_words = tag.split('|')
 
 		if -1 in anime_indexes:
 			data = []
