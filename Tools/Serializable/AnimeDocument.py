@@ -5,6 +5,7 @@ from gensim.models.doc2vec import TaggedDocument
 from nltk import RegexpTokenizer
 from nltk.tokenize import sent_tokenize
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 import re
 
 class AnimeDocumentManager:
@@ -209,8 +210,10 @@ class AnimeDocument:
             text = self.anime_synopsis.lower()
         else:
             raise ValueError("Unknown option " + option + " in AnimeDocument.toTaggedDocument")
-        tokens = [token for token in tokenizer.tokenize(text) if token not in englishStopwords]
-        return TaggedDocument(tokens, ["anime_id_{}".format(self.anime_id)])
+        lemmatizer=WordNetLemmatizer()
+        tokens = [lemmatizer.lemmatize(token) for token in tokenizer.tokenize(text) if token not in englishStopwords]
+            
+        return TaggedDocument(tokens, [self.anime_index])
 
     def getAllRelatedAnime(self, animeDocumentManager):
         """Returns a list of anime_ids that are related to this anime.
