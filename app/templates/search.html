@@ -12,24 +12,28 @@
     <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="/static/css/search.css" type="text/css">
     <link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/recommended.css" type="text/css">
     <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
     <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <script src="/static/typeahead.bundle.js"></script>
     <script src="/static/bloodhound.js"></script>
     <script src="/static/aniai.js"></script>
-    <script src"/static/recommendations.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(document).ready(function() {
-            $(".owl-carousel").owlCarousel();
+            $(".owl-carousel").owlCarousel( {
+                stagePadding: 50,
+                loop: true,
+                margin: 10,
+                nav: true
+            });
         });
         document.addEventListener("DOMContentLoaded", function(event) {
             {% if data %}
-            //    var anime_index = {{data[0][0]['anime_id']}}
-            //    potato(anime_index);
-          //  console.log("100% fully loaded");
-           // console.log(anime_index);
+            {% else %}
+                loadrecommended();
+
             {% endif %}
             
         }
@@ -573,12 +577,23 @@
 {% else %}
 <h1> THIS IS A HEADER </h1>
 
-<div class="owl-carousel owl-theme owl-loaded" style="background-color: white" hidden>
+<div class="owl-carousel owl-theme owl-loaded" style="height: 400px">
     <div class="owl-stage-outer">
-        <div class="owl-stage owl-height">
+        <div class="owl-stage" id="recommendation-stage">
             <div class="owl-item">
-                <div class="container recommended">
-                </div>
+                    <div class="flip">
+                        <div class="recommend-card">
+                            <div class="face front">
+                                <div class="well well-sm inner" style="background: url('https://myanimelist.cdn-dena.com/r/334x484/images/anime/5/47421.webp?s=90572303ecc9ea0fbc5b97431bcae432'); background-size: cover">Front</div>
+                            </div>
+                            <div class="face back">
+                                <div class="recommendation-header">
+                                    This is a test
+                                </div>
+                                <div class="well well-sm inner">Back</div>
+                            </div>
+                        </div>
+                    </div>
             </div>
             <div class="owl-item"> your content </div>
             <div class="owl-item"> Your content </div>
@@ -604,7 +619,7 @@
  
             <script>
                 var potato = function(anime_id) {
-                        $.getJSON("/static/data/anime_info.json", function(data) {
+                        $.getJSON("/static/data/anime_recommended.json", function(data) {
                         var anime = data[anime_id];
                         $('#media-image').attr('src', anime.anime_image_url);
                         $('#media-title span').text(anime.anime_english_title);
@@ -635,6 +650,64 @@
                     $('#media-title span').text(title);
                 });
                   </script>
+    <script>
+        var loadrecommended = function() {
+            $.getJSON("/static/data/anime_recommended.json", function(data) {
+                var str = "";
+                data.forEach(function(anime) {
+                    console.log(anime.anime_image_url);
+                str += '<div class="owl-item">' + 
+                            '<div class="flip">' + 
+                                '<div class="recommend-card">' + 
+                                    '<div class="face front">' + 
+                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover"></div>' + 
+                            '</div>' + 
+                            '<div class="face back">' +
+                                '<div class="recommendation-header">' + anime.anime_english_title +
+                                '</div>' + 
+                                '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                           ' </div>' + 
+                        '</div>' +
+                    '</div>' +
+            '</div>'
+                });
+              console.log(str);
+              $('#recommendation-stage').replaceWith(
+                  '<div class="owl-stage" id="recommendation-stage">' + str + '</div>');
+              $
+              $('*[id=recommendation-synopsis]:visible').each(function() {
+                   console.log("in here");
+                   var divh = $(this).parent().height();
+                   console.log(divh);
+                   console.log($(this).parent().attr('class'));
+                   console.log($(this).attr('class'));
+                   console.log($(this).text());
+                   console.log("My height: " + $(this).outerHeight());
+                   while ($(this).outerHeight(true) > divh) {
+                       $(this).text(function (index, text) {
+                           return text.replace(/\W*\s(\S)*$/, '...');
+                   });
+                   };
+                   
+                
+              });
+              $(document).on("click", ".flip", function() {
+                  alert("clicked");
+                  $(this).find('.recommend-card').toggleClass('flipped');
+              });
+                
+        });
+        };
+    </script>
+
+
+
+    <script>
+        $('.flip').click(function() {
+            alert("clicked");
+            $(this).find('.recommend-card').toggleClass('flipped');
+        });
+    </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>
 </body>
 </html>
