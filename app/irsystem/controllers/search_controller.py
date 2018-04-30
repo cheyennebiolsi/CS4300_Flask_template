@@ -203,10 +203,10 @@ def search():
 			# rocchio
 			for anim_id in enumerate(positive):
 				review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
-                                              a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive)):                
+                                              a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
 			for word_id in enumerate(positive_words):               
 				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
-                                              a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive)):               
+                                              a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
 			json_array = []
             #returns most similar anime ids and similarity scores
 			for array_ind, anim_ind in enumerate(top_n_animes):
