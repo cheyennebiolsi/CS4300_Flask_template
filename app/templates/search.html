@@ -413,51 +413,84 @@
                                 <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
-                            <canvas class="data-visualization"></canvas>
+                            <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                             <script>
-                                var data = {
-                                    labels: ["Overall"],
-                                    datasets: [{
-                                       // label: "anime.anime_rating",
-                                       // backgroundColor: "rgba(255,99,132,0.2)",
-                                       // borderColor: "rgba(255,99,132,1)",
-                                       // pointBackgroundColor: "rgba(255,99,132,1)",
-                                       // pointBorderColor: "#fff",
-                                       // pointHoverBackgroundColor: "#fff",
-                                       // pointHoverBorderColor: "rgba(255,99,132,1)",
-                                       data: [data[0][0]["anime_review_overall_average"]]
-                                    // }, {
-                                    //    label: currentGameTitle,
-                                    //    backgroundColor: "rgba(90, 179, 206, 0.2)",
-                                    //    borderColor: "rgba(90, 179, 206, 1)",
-                                    //    pointBackgroundColor: "rgba(90, 179, 206, 1)",
-                                    //    pointBorderColor: "#fff",
-                                    //    pointHoverBackgroundColor: "#fff",
-                                    //    pointHoverBorderColor: "rgba(90, 179, 206, 1)",
-                                    //    data: currentGameFeatures
-                                    // }]
-                                    }]
+                                console.log({{data[0][0]["anime_review_overall_average"]}})
+                                var data_chart = {
+                                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                                    datasets: [
+                                        {
+                                            label: "{{data[0][0]['anime_english_title']}}",
+                                            fill: true,
+                                            backgroundColor: "rgba(255,99,132,0.2)",
+                                            borderColor: "rgba(255,99,132,1)",
+                                            pointBorderColor: "#fff",
+                                            pointBackgroundColor: "rgba(255,99,132,1)",
+                                            pointBorderColor: "#fff",
+                                            // backgroundColor: "rgba(255,99,132,0.2)",
+                                            // borderColor: "rgba(255,99,132,1)",
+                                            // pointBackgroundColor: "rgba(255,99,132,1)",
+                                            // pointBorderColor: "#fff",
+                                            // pointHoverBackgroundColor: "#fff",
+                                            // pointHoverBorderColor: "rgba(255,99,132,1)",
+                                            data: [
+                                                {{data[0][0]["anime_review_overall_average"]}}, 
+                                                {{data[0][0]["anime_review_story_average"]}},
+                                                {{data[0][0]["anime_review_enjoyment_average"]}},
+                                                {{data[0][0]["anime_review_character_average"]}},
+                                                {{data[0][0]["anime_review_sound_average"]}},
+                                                {{data[0][0]["anime_review_animation_average"]}}
+                                            ]
+
+
+
+                                            // }, {
+                                            //    label: currentGameTitle,
+                                            //    backgroundColor: "rgba(90, 179, 206, 0.2)",
+                                            //    borderColor: "rgba(90, 179, 206, 1)",
+                                            //    pointBackgroundColor: "rgba(90, 179, 206, 1)",
+                                            //    pointBorderColor: "#fff",
+                                            //    pointHoverBackgroundColor: "#fff",
+                                            //    pointHoverBorderColor: "rgba(90, 179, 206, 1)",
+                                            //    data: currentGameFeatures
+                                            // }]
+                                        }
+                                    ]
                                 };
+                                // console.log(data_chart)
 
-
-                                detailsRadarChart = new Chart(vis, {
+                                detailsRadarChart = new Chart(document.getElementById("vis"), {
                                     type: 'radar',
-                                    data: data,
+                                    data: data_chart,
                                     draggable: true,
                                     options: {
+                                        title: {
+                                            display: true,
+                                            text: 'Anime Statistics',
+                                            fontColor: "#FFFFFF"
+                                        },
                                         legend: {
                                             position: 'bottom'
                                         },
                                         scale: {
                                             ticks: {
-                                                display: false
+                                                maxTicksLimit: 5,
+                                                backdropColor: 'black',
+                                                max: 10,
+                                                min: 0, 
+                                                fontSize: 6,
+                                                color: '#FFFFFF'
+                                            },
+                                            gridLines: {
+                                                color: "#FFFFFF"
                                             }
                                         },
                                         tooltips: {
-                                            enabled: false
-                                        }
+                                            enabled: true
+                                        },
                                     }
                                 });
+
                             </script>
                         </div>
                         </div>
