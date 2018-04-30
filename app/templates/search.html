@@ -335,7 +335,7 @@
             <div id="tester" class="media-header">
                 <div class="row title">
                     <div class="col title" id="media-title">
-                        <span>random title</span>
+                        <span>{{data[0][0]["anime_english_title"]}}</span>
                     </div>
                     <div class="col-auto icon" style="font-style:normal">
                         <img src="/static/images/yahoo-view.png" hidden>
@@ -394,7 +394,7 @@
                 <div class="media-body" style="height:50%">
                     <div class="container">
                         <div class="row">
-                            <div class="col">
+                            <div class="col" id="media-synopsis">
                                 <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
@@ -448,7 +448,8 @@
                             <div class="col carousel-picture" scroll="no" id="suggestionCard">
                                     <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                      data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
-                                     data-episodes="{{d['anime_number_of_episodes']}}" data-genres="{{d['anime_genres']}}" data-synopsis="{{d['anime_synopsis']}}">
+                                     data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
+                                     data-rating"{{d['anime_rating']}}">
                                 <div class="container carousel-picture" id="suggestionCard">
                                         <img src={{d["anime_image_url"]}} class="carousel-picture">
                                     </div>
@@ -540,11 +541,27 @@
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
                     var title = $(this).data("title");
+                    var type = $(this).data("type");
                     var synopsis = $(this).data("synopsis");
-
-                    
+                    var tags = $(this).data("tags");
+                    var episode_count = $(this).data("episodes");
+                    var duration = $(this).data("duration");
+                    var rating = $(this).data("rating");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
+                    $('#media-type span').text(type);
+                    $('#media-rating span').text(rating);
+                    $('#media-count span').text(episode_count);
+                    $('#media-duration span').text(duration);
+                    $('#media-synopsis span').text("Synopsis: " + synopsis);
+                    var tags = tags.split("|");
+                    var str = "";
+                    for (var tag in tags) {
+                        str += '<span class="genre">' + tags[tag] + "</span>";
+                    };
+                    $('#media-genres').replaceWith(
+                        '<div class="col genres" id="media-genres">' + str + '</div>'
+                        );
                 });
                   </script>
     <script>
