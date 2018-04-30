@@ -338,13 +338,18 @@
                         <span>{{data[0][0]["anime_english_title"]}}</span>
                     </div>
                     <div class="col-auto icon" style="font-style:normal">
-                        <img src="/static/images/yahoo-view.png" hidden>
-                        <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" hidden>hulu</span>
-                        <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0">
-                        <div style="display:inline-block; vertical-align: top">
+                        <img src="/static/images/yahoo-view.png" id="yahoo-provider" 
+                        {% if not 'yahoo' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
+                        <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
+                        {% if not 'hulu' in data[0][0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
+                        <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0" id="crunchyroll-provider-image"
+                        {% if not 'crunchyroll' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
+                        <div style="display:inline-block; vertical-align: top" id="crunchyroll-provider"
+                        {% if not 'crunchyroll' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
                             <span style="font-family:Maven pro; font-size:24; display:inline-block" >crunchyroll </span>
                         </div>
-                        <a href="https:www.crunchyroll.com" role="button" id="video-link" target="_blank"><i class="fa fa-external-link"></i></a>
+                        <a href="{{data[0][0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
+                        {% if 'none' == data[0][0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
                     </div>
                 </div>
                 <div class="row episodeinfo">
@@ -449,7 +454,7 @@
                                     <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                      data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
                                      data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
-                                     data-rating"{{d['anime_rating']}}">
+                                     data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}">
                                 <div class="container carousel-picture" id="suggestionCard">
                                         <img src={{d["anime_image_url"]}} class="carousel-picture">
                                     </div>
@@ -562,6 +567,38 @@
                     $('#media-genres').replaceWith(
                         '<div class="col genres" id="media-genres">' + str + '</div>'
                         );
+                    var anime_video_url = $(this).data("video");
+                    alert(anime_video_url);
+                    if (anime_video_url.includes('crunchyroll')) {
+                        alert("found crunchy");
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#crunchyroll-provider-image').attr("hidden", false);
+                        $('#crunchyroll-provider').attr("hidden", false);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#yahoo-provider').attr("hidden", true);
+                    } else if (anime_video_url.includes('yahoo')) {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#yahoo-provider').attr("hidden", false);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                    } else if (anime_video_url.includes('hulu')) {
+                        $('#hulu-provider').attr("hidden", false);
+                        $('#yahoo-provider').attr("hidden", true);
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                    } else {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", true);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#yahoo-provider').attr("hidden", true);
+                    };
                 });
                   </script>
     <script>
