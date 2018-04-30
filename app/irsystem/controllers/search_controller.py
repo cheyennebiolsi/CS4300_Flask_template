@@ -19,7 +19,7 @@ number_results_final = 100
 weight_tags = 1
 weight_title = 6
 
-allanimelite = json.load(open('data/app/static/data/anime_search.json'))
+allanimelite = json.load(open('app/static/data/anime_search.json'))
 for index, element in enumerate(allanimelite):
     element["anime_index"] = index
 
@@ -48,7 +48,7 @@ word_array=np.load("data/wordArray.npy")
 words=np.load("data/wordList.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
-    word_to_ind[word]=ind
+    word_to_ind[word]=index
 
 
 # Tags and Jaccard Similarity
