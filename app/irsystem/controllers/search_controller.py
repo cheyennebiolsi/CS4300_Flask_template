@@ -55,7 +55,7 @@ for index,word in enumerate(words):
 
 # Tags and Jaccard Similarity
 filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super','vampire','yaoi','yuri','harem','slice',
-'supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter+same+series']
+'supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
 
 @irsystem.route('/', methods=['GET'])
 
@@ -68,9 +68,9 @@ def search():
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
 		switchlist.append(switch)
-		if(not (switch == 'on') and not (filters=='filter+same+series')):
+		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
-		if((switch == 'on') and (filters=='filter+same+series')):
+		if((switch == 'on') and (filters=='filter same series')):
 			filter_out[index]=True       
 	rel_filters=filter_bools[:, filter_out]   
 	shows_removed=np.where(rel_filters.any(axis=1))[0]
@@ -145,6 +145,7 @@ def search():
 		data = json_array
             
 	# print(data)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
