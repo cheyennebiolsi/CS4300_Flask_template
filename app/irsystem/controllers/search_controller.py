@@ -65,15 +65,8 @@ def search():
 	
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
 	switchlist=list()
-	filter_dictionary = {}
-	filter_dictionary2 = {}
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
-		if switch == None:
-			filter_dictionary[filters] = 'off'
-		else:
-			filter_dictionary[filters] = None
-		filter_dictionary2[filters] = switch
 		switchlist.append(switch)
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
@@ -87,12 +80,14 @@ def search():
 		output_message = ''
 	# Option 3: Only Anime
 	else:
-		anime_indexes = query.split(',')
+		anime_names = query.split('|')
+		anime_set=set(anime_names)
+		id_set=get_anime(anime_set,allanimelite)        
 		query_words = words.split(',')
 		output_message = 'Your search: ' + query
 		if(not query=='None'):
-			positive = np.zeros((len(anime_indexes)),dtype=int)
-			for index,anim_ind in enumerate(anime_indexes):
+			positive = np.zeros((len(id_set)),dtype=int)
+			for index,anim_ind in enumerate(id_set):
 				positive[index]=int(anim_ind)
 			set_anime_ids=set(positive)
 		else:
@@ -127,7 +122,8 @@ def search():
 		top_shows=top_shows[mask]   
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
-
+		score=score/np.max(score[top_shows[1]])
+        
 		# rocchio
 		for value in enumerate(positive):
 			anim_id=value[1]
@@ -152,7 +148,7 @@ def search():
             
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters=filter_dictionary, prevfilters2=filter_dictionary2)
+		prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
@@ -168,13 +164,17 @@ def get_top_words(anime_index,howmany=10):
 	return top_n_words.flatten(order="F")
 
 
-def get_anime(anime_index, jsonfile):
+def get_anime(anime_set, jsonfile):
 	# print(anime_id)
+	id_set=set()    
 	for element in jsonfile:
 		# print(element['anime_id'])
-		if (element['anime_index']) == anime_index:
-			return element
-	return "not found"
+		if (element['anime_english_title'] in anime_set):
+			id_set.add(int(element['anime_index']))
+			anime_set.remove(element['anime_english_title'])
+            if(len(anime_set)==0):
+                break
+	return id_set
 
 def get_cossim(queryvector, ind2, tfidf):
 	"""Returns a float giving the cosine similarity of 
