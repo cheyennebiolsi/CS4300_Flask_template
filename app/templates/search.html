@@ -22,12 +22,21 @@
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(document).ready(function() {
-            $(".owl-carousel").owlCarousel( {
+            $("#recommended-carousel").owlCarousel( {
                 items: 5,
-                stagePadding: 50,
+                stagePadding: 100,
                 loop: true,
                 margin: 30,
-                nav: true
+                autoWidth: false,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
+            });
+            $("#suggestion-carousel").owlCarousel( {
+                items: 6,
+                loop: true,
+                margin: 0,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
             });
         });
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -432,83 +441,43 @@
                     </div>
                 </div>
             </div>
-            
-            <div id="cardCarousel" class="carousel slide" date-ride="carousel">
-                <ol class="carousel-indicators">
-                     {% for lst in data %}
-                     <li data-target="#cardCarousel" data-slide-to"{{ loop.index0}}"
-                     {% if loop.index0 == 0 %}
-                     class="active"
-                     {% endif %}>
-                     </li>
-
-                     
-                     {% endfor %}
-                </ol>
-                <div class = "carousel-inner" style="overflow:hidden">
-                    {% for lst in data %}
-                    <div class="carousel-item {{'active' if loop.index0 == 0}}">
-                        <div class = "row">
-                            {% for d in lst %}
-                            <div class="col carousel-picture" scroll="no" id="suggestionCard">
-                                    <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
-                                     data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
-                                     data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
-                                     data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}">
-                                <div class="container carousel-picture" id="suggestionCard">
-                                        <img src={{d["anime_image_url"]}} class="carousel-picture">
-                                    </div>
-                                        <div class="mask flex-center rgba-black-light" id="suggestionCard">
-                                            <div class ="carousel-info crop">{{d["anime_english_title"]}}</div>
-                                        </div>
-                                </div>
+ 
+            <div class="owl-carousel owl-theme owl-loaded" style="height: 25%" id="suggestion-carousel">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        {% for d in data[0]%}
+                        {% set image_url = d['anime_image_url'] %}
+                        <div class="owl-item" style="height:100%">
+                            <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
+                                 data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
+                                 data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
+                                 data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" style="height:100%">
+                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background: url("{{image_url}}")'></div>
+                                <div class="mask flex-center rgba-red-strong">
+                                    <p class="white-text"> {{d["anime_english_title"]}} </p>
+                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
-
-<!--                        <div class="card-group" hidden>
-                            {% for d in lst %}
-                            <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}} data-json ='{"test":"testthis", "test2":"&other"}'>
-                                   <div class="view zoom">
-                               <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
-                               <div class="card-body" style="background-color:black;padding-bottom:20px">
-                                   <h5 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h5>
-                               </div>
-                               </div
-                            </div>
-                           {% endfor %}
-                        </div> -->
+                         </div>
+                         {% endfor %}
                     </div>
-                   {% endfor %}
-                </div>
-
-                <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev" style="width:30px;margin:0">
-                    <!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span> -->
-                    <i class="fa fa-chevron-left fa-2x"></i>
-                    <span class="sr-only">
-                        Previous
-                    </span>
-                </a>
-                <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next" style="width:30px;margin:0">
-                    <!--<span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-                    <i class="fa fa-chevron-right fa-2x"></i>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-
+                 </div>
+           </div>
 
 {% else %}
 <h1 style="color: white"> Recommended Anime </h1>
 
-<div class="owl-carousel owl-theme owl-loaded" style="height: 400px">
+<div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
     <div class="owl-stage-outer">
         <div class="owl-stage" id="recommendation-stage">
             <div class="owl-item">
             </div>
         </div>
     </div>
+<!--    <div class="owl-nav">
+        <div class="owl-prev">prev</div>
+        <div class="owl-next">next</div>
+    </div> -->
 </div>
-
         {% endif %}
     </div>
     <!--    <script>
@@ -543,6 +512,7 @@
                     };
 
                 $(".view").click(function() {
+                    alert("clicked");
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
                     var title = $(this).data("title");
