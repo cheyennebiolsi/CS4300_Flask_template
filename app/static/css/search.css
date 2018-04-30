@@ -2,6 +2,19 @@ html, body {
     height: 100%;
 }
 
+.suggestion-text {
+    color: white;
+    padding: 20px;
+    font-size: 20;
+    text-align: center;
+}
+
+.well.suggestion {
+    border-radius: 0 !important;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
 
 .container.carousel-picture {
     width: 100%;

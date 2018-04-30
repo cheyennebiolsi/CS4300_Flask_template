@@ -55,7 +55,7 @@ for document in data:
     dictionary["anime_review_sound_average"] = document.getReviewSoundAverage()
     dictionary["anime_review_character_average"] = document.getReviewCharacterAverage()
     dictionary["anime_review_enjoyment_average"] = document.getReviewEnjoymentAverage()
-    dictionary["anime_tags"] = "|".join(document.getAllTags())
+    dictionary["anime_tags"] = "|".join(document.getAllTags()).replace("_", " ")
  #   result[int(anime_id)] = dictionary
     result.append(dictionary)
 #    print(anime_id)

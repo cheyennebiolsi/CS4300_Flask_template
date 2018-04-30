@@ -1,3 +1,25 @@
+.owl-prev {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 35%;
+    right: 100% !important;
+    margin-left: -20px;
+    display: block!IMPORTANT;
+    border:0px solid black;
+}
+
+.owl-next {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 35%;
+    right: -25px;
+    display: block!IMPORTANT;
+    border:0px solid black;
+}
+.owl-prev i, .owl-next i {transform : scale(1,6); color: #ccc;}
+
 .owl-carousel .container.recommended {
     background-color: green;
     border: 2px solid gold;

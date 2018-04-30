@@ -17,17 +17,27 @@
     <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <script src="/static/typeahead.bundle.js"></script>
     <script src="/static/bloodhound.js"></script>
+    <script src="/static/js/Chart.bundle.min.js"></script>
     <script src="/static/aniai.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(document).ready(function() {
-            $(".owl-carousel").owlCarousel( {
+            $("#recommended-carousel").owlCarousel( {
                 items: 5,
-                stagePadding: 50,
+                stagePadding: 100,
                 loop: true,
                 margin: 30,
-                nav: true
+                autoWidth: false,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
+            });
+            $("#suggestion-carousel").owlCarousel( {
+                items: 6,
+                loop: true,
+                margin: 0,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
             });
         });
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -400,10 +410,70 @@
                     <div class="container">
                         <div class="row">
                             <div class="col" id="media-synopsis">
+                                <div style="color: white; text-align: center; font-size: 14" class="synopsis-header"> Synopsis </div>
                                 <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
-                            Aniai.&#24859 
+                            <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
+                            Top 10 Words:
+                            <script>
+                                var data_chart = {
+                                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                                    datasets: [
+                                        {
+                                            // label: "{{data[0][0]['anime_english_title']}}",
+                                            fill: true,
+                                            backgroundColor: "rgba(255,99,132,0.2)",
+                                            borderColor: "rgba(255,99,132,1)",
+                                            pointBorderColor: "#fff",
+                                            pointBackgroundColor: "rgba(255,99,132,1)",
+                                            pointBorderColor: "#fff",
+                                            data: [
+                                                Math.round({{data[0][0]["anime_review_overall_average"]}}*100)/100, 
+                                                Math.round({{data[0][0]["anime_review_story_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_enjoyment_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_character_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_sound_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_animation_average"]}}*100)/100
+                                            ]
+                                        }
+                                    ]
+                                };
+
+                                anime_scores = new Chart(document.getElementById("vis"), {
+                                    type: 'radar',
+                                    data: data_chart,
+                                    draggable: true,
+                                    options: {
+                                        title: {
+                                            display: true,
+                                            text: 'Anime Statistics',
+                                            fontColor: "#FFFFFF",
+                                            fontSize: 14
+                                        },
+                                        legend: {
+                                            display: false
+                                        },
+                                        scale: {
+                                            ticks: {
+                                                maxTicksLimit: 5,
+                                                backdropColor: 'black',
+                                                max: 10,
+                                                min: 0, 
+                                                fontSize: 6,
+                                                color: '#FFFFFF'
+                                            },
+                                            gridLines: {
+                                                color: "#FFFFFF"
+                                            }
+                                        },
+                                        tooltips: {
+                                            enabled: true
+                                        },
+                                    }
+                                });
+
+                            </script>
                         </div>
                         </div>
 
@@ -432,83 +502,49 @@
                     </div>
                 </div>
             </div>
-            
-            <div id="cardCarousel" class="carousel slide" date-ride="carousel">
-                <ol class="carousel-indicators">
-                     {% for lst in data %}
-                     <li data-target="#cardCarousel" data-slide-to"{{ loop.index0}}"
-                     {% if loop.index0 == 0 %}
-                     class="active"
-                     {% endif %}>
-                     </li>
-
-                     
-                     {% endfor %}
-                </ol>
-                <div class = "carousel-inner" style="overflow:hidden">
-                    {% for lst in data %}
-                    <div class="carousel-item {{'active' if loop.index0 == 0}}">
-                        <div class = "row">
-                            {% for d in lst %}
-                            <div class="col carousel-picture" scroll="no" id="suggestionCard">
-                                    <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
-                                     data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
-                                     data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
-                                     data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}">
-                                <div class="container carousel-picture" id="suggestionCard">
-                                        <img src={{d["anime_image_url"]}} class="carousel-picture">
-                                    </div>
-                                        <div class="mask flex-center rgba-black-light" id="suggestionCard">
-                                            <div class ="carousel-info crop">{{d["anime_english_title"]}}</div>
-                                        </div>
-                                </div>
+ 
+            <div class="owl-carousel owl-theme owl-loaded" style="height: 25%" id="suggestion-carousel">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        {% for d in data[0]%}
+                        {% set image_url = d['anime_image_url'] %}
+                        <div class="owl-item" style="height:100%">
+                            <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
+                                 data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
+                                 data-overallreview = '{{d["anime_review_overall_average"]}}' 
+                                 data-storyreview = '{{d["anime_review_story_average"]}}'
+                                 data-enjoyment = '{{d["anime_review_enjoyment_average"]}}'
+                                 data-character = '{{d["anime_review_character_average"]}}'
+                                 data-sound= '{{d["anime_review_sound_average"]}}'
+                                 data-animation= '{{d["anime_review_animation_average"]}}'
+                                 data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
+                                 data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" style="height:100%">
+                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
+                                <div class="mask flex-center rgba-stylish-strong">
+                                    <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
+                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
-
-<!--                        <div class="card-group" hidden>
-                            {% for d in lst %}
-                            <div class="card expandable" id="suggestionCard" style="cursor:pointer" data-anime-id={{d["anime_id"]}} data-title={{d["anime_english_title"]}} data-anime-index={{d["anime_index"]}} data-synposis='{{d["anime_synopsis"]}}' data-url={{d["anime_image_url"]}} data-json ='{"test":"testthis", "test2":"&other"}'>
-                                   <div class="view zoom">
-                               <img class="card-img-top img-fluid" src="{{d["anime_image_url"]}}">
-                               <div class="card-body" style="background-color:black;padding-bottom:20px">
-                                   <h5 class="card-title" style="color:white;text-align:center">{{d["anime_english_title"]}}</h5>
-                               </div>
-                               </div
-                            </div>
-                           {% endfor %}
-                        </div> -->
+                         </div>
+                         {% endfor %}
                     </div>
-                   {% endfor %}
-                </div>
-
-                <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev" style="width:30px;margin:0">
-                    <!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span> -->
-                    <i class="fa fa-chevron-left fa-2x"></i>
-                    <span class="sr-only">
-                        Previous
-                    </span>
-                </a>
-                <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next" style="width:30px;margin:0">
-                    <!--<span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-                    <i class="fa fa-chevron-right fa-2x"></i>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-
+                 </div>
+           </div>
 
 {% else %}
 <h1 style="color: white"> Recommended Anime </h1>
 
-<div class="owl-carousel owl-theme owl-loaded" style="height: 400px">
+<div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
     <div class="owl-stage-outer">
         <div class="owl-stage" id="recommendation-stage">
             <div class="owl-item">
             </div>
         </div>
     </div>
+<!--    <div class="owl-nav">
+        <div class="owl-prev">prev</div>
+        <div class="owl-next">next</div>
+    </div> -->
 </div>
-
         {% endif %}
     </div>
     <!--    <script>
@@ -542,7 +578,7 @@
                         });
                     };
 
-                $(".view").click(function() {
+                $("#suggestion-carousel").on('click', '.view', function() {
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
                     var title = $(this).data("title");
@@ -552,6 +588,12 @@
                     var episode_count = $(this).data("episodes");
                     var duration = $(this).data("duration");
                     var rating = $(this).data("rating");
+                    var overall = $(this).data("overallreview");  
+                    var story = $(this).data("storyreview");  
+                    var enjoyment = $(this).data("enjoyment");  
+                    var character = $(this).data("sound");  
+                    var sound = $(this).data("overallreview");  
+                    var animation = $(this).data("animation");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -568,9 +610,7 @@
                         '<div class="col genres" id="media-genres">' + str + '</div>'
                         );
                     var anime_video_url = $(this).data("video");
-                    alert(anime_video_url);
                     if (anime_video_url.includes('crunchyroll')) {
-                        alert("found crunchy");
                         $('#video-link').attr("href", anime_video_url);
                         $('#video-link').attr("hidden", false);
                         $('#crunchyroll-provider-image').attr("hidden", false);
@@ -599,6 +639,67 @@
                         $('#hulu-provider').attr("hidden", true);
                         $('#yahoo-provider').attr("hidden", true);
                     };
+
+                    anime_scores.destroy(); //delete charts
+                    // var oldchart = document.getElementById("vis")
+                    // if (oldchart !== undefined)
+                    //     oldchart.destroy(); //delete charts
+
+                    var data_chart = {
+                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                    datasets: [
+                        {
+                            label: title,
+                            fill: true,
+                            backgroundColor: "rgba(255,99,132,0.2)",
+                            borderColor: "rgba(255,99,132,1)",
+                            pointBorderColor: "#fff",
+                            pointBackgroundColor: "rgba(255,99,132,1)",
+                            pointBorderColor: "#fff",
+                            data: [
+                                Math.round(overall*100)/100, 
+                                Math.round(story*100)/100, 
+                                Math.round(enjoyment*100)/100,
+                                Math.round(character*100)/100, 
+                                Math.round(sound*100)/100,
+                                Math.round(animation*100)/100
+                            ]
+                        }
+                    ]
+                    };
+
+                    anime_scores = new Chart(document.getElementById("vis"), {
+                        type: 'radar',
+                        data: data_chart,
+                        draggable: true,
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Anime Statistics',
+                                fontColor: "#FFFFFF"
+                            },
+                            legend: {
+                                display: false
+                            },
+                            scale: {
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    backdropColor: 'black',
+                                    max: 10,
+                                    min: 0, 
+                                    fontSize: 6,
+                                    color: '#FFFFFF'
+                                },
+                                gridLines: {
+                                    color: "#FFFFFF"
+                                }
+                            },
+                            tooltips: {
+                                enabled: true
+                            },
+                        }
+                    });
+
                 });
                   </script>
     <script>
@@ -611,7 +712,7 @@
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 
                                     '<div class="face front">' + 
-                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
+                                        '<div class="well well-sm inner" style="background-image: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
                             '</div>' + 
                             '<div class="face back">' +
                                 '<div class="well well-sm inner">' + 

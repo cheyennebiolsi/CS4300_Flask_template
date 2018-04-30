@@ -79,6 +79,63 @@ def search():
 		data = []
 		output_message = ''
 	# Option 3: Only Anime
+	elif query and not tag:
+		anime_indexes = query.split('|')
+		if -1 in anime_indexes:
+			movie = request.args.get('displayMovie')
+			hello=asdfgh
+			data = []
+			output_message = 'Could not find your show. Please try again.'
+		else:
+			output_message = 'Your search: ' + query
+            
+			positive = np.zeros((len(anime_indexes)),dtype=int)
+			for index,anim_ind in enumerate(anime_indexes):
+				positive[index]=int(anim_ind)
+			set_anime_ids=set(positive)
+            
+# 			positive_words=np.zeros((len(query_words)))
+# 			for index,word in enumerate(quer_words):
+# 				positive_words[index]=word_to_ind.get(word,-1)
+# 			positive_words=positivewords[positive_words>=0]             
+
+			positive_show_vectors = review_array[positive,:]
+			show_result=np.sum(positive_show_vectors,axis=0)
+            
+           
+# 			positive_word_vectors = review_array[positive_words,:]
+# 			word_result=np.sum(positive_word_vectors,axis=0)
+ 			result=show_result#+word_result           
+
+			scores=np.matmul((review_array),(result[:,np.newaxis]))
+			top_shows= np.argsort(-scores,axis=0)
+            #filter out the shows we don't want
+			mask=np.isin(top_shows,shows_removed,invert=True)
+			top_shows=top_shows[mask]   
+			top_n_shows= top_shows[:20]
+			bottom_n_shows= top_shows[-20:]
+
+			# rocchio
+			for value in enumerate(positive):
+				anim_id=value[1]
+				review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
+                                              a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
+# 			for word_id in enumerate(positive_words):               
+# 				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
+#                                               a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
+			json_array = []
+            #returns most similar anime ids and similarity scores
+			for array_ind, anim_ind in enumerate(top_n_shows):
+				score = scores[array_ind]
+				jsonfile = get_anime(anim_ind, allanimelite)
+				wordvec = get_top_words(anim_ind)   
+				concat="|".join(wordvec)                
+				if anim_ind not in set_anime_ids and jsonfile != "not found":
+					jsonfile['score'] = score
+					jsonfile['words'] = concat                    
+					json_array.append(jsonfile)
+			data = json_array
+
 	else:
 		anime_indexes = query.split('|')
 		#query_words = tag.split('|')

@@ -14,14 +14,14 @@ animeDocumentManager = AnimeDocumentManager(animeDocuments)
 #for r in res:
 #    print(animeDocumentManager.getAnimeById(r).anime_english_title)
 
-header = ["anime_id", "related_anime_id", "related_anime_title"]
+header = ["anime_index", "related_anime_indices", "related_anime_title"]
 with open("../../data/related_anime_documents.csv", "wb+") as csvFile:
     writer = csv.writer(csvFile)
     writer.writerow(header)
     for animeDocument in animeDocuments:
         relatedIds = animeDocument.getAllRelatedAnime(animeDocumentManager)
-        relatedTitles = [animeDocumentManager.getAnimeById(anime_id).anime_english_title for anime_id in relatedIds \
+        relatedTitles = [animeDocumentManager.getAnimeByIndex(anime_id).anime_english_title for anime_id in relatedIds \
                          if isinstance(animeDocumentManager.getAnimeById(anime_id), AnimeDocument)]
         relatedTitles = [unicode(s).encode("utf-8") for s in relatedTitles]
-        row = [animeDocument.anime_id] + [" | ".join([str(i) for i in relatedIds])] + [" | ".join(relatedTitles)]
+        row = [animeDocument.anime_index] + ["|".join([str(i) for i in relatedIds])] + [" | ".join(relatedTitles)]
         writer.writerow(row)
