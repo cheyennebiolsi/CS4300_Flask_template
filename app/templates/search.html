@@ -23,9 +23,10 @@
     <script>
         $(document).ready(function() {
             $(".owl-carousel").owlCarousel( {
+                items: 5,
                 stagePadding: 50,
                 loop: true,
-                margin: 10,
+                margin: 30,
                 nav: true
             });
         });
@@ -580,33 +581,13 @@
 
 
 {% else %}
-<h1> THIS IS A HEADER </h1>
+<h1 style="color: white"> Recommended Anime </h1>
 
 <div class="owl-carousel owl-theme owl-loaded" style="height: 400px">
     <div class="owl-stage-outer">
         <div class="owl-stage" id="recommendation-stage">
             <div class="owl-item">
-                    <div class="flip">
-                        <div class="recommend-card">
-                            <div class="face front">
-                                <div class="well well-sm inner" style="background: url('https://myanimelist.cdn-dena.com/r/334x484/images/anime/5/47421.webp?s=90572303ecc9ea0fbc5b97431bcae432'); background-size: cover">Front</div>
-                            </div>
-                            <div class="face back">
-                                <div class="recommendation-header">
-                                    This is a test
-                                </div>
-                                <div class="well well-sm inner">Back</div>
-                            </div>
-                        </div>
-                    </div>
             </div>
-            <div class="owl-item"> your content </div>
-            <div class="owl-item"> Your content </div>
-            <div class="owl-item"> your content </div>
-            <div class="owl-item"> Your content </div>
-            <div class="owl-item"> your content </div>
-            <div class="owl-item"> Your content </div>
-            <div class="owl-item"> your content </div>
         </div>
     </div>
 </div>
@@ -665,12 +646,14 @@
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 
                                     '<div class="face front">' + 
-                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover"></div>' + 
+                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
                             '</div>' + 
                             '<div class="face back">' +
-                                '<div class="recommendation-header">' + anime.anime_english_title +
-                                '</div>' + 
-                                '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                                '<div class="well well-sm inner">' + 
+                                    '<div class="recommendation-header">' + anime.anime_english_title +
+                                    '</div>' + 
+                                    '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                                '</div>' +
                            ' </div>' + 
                         '</div>' +
                     '</div>' +
@@ -697,7 +680,6 @@
                 
               });
               $(document).on("click", ".flip", function() {
-                  alert("clicked");
                   $(this).find('.recommend-card').toggleClass('flipped');
               });
                 
@@ -709,7 +691,6 @@
 
     <script>
         $('.flip').click(function() {
-            alert("clicked");
             $(this).find('.recommend-card').toggleClass('flipped');
         });
     </script>
