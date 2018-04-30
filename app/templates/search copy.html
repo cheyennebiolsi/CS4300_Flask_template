@@ -17,7 +17,6 @@
     <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <script src="/static/typeahead.bundle.js"></script>
     <script src="/static/bloodhound.js"></script>
-    <script src="/static/js/Chart.bundle.min.js"></script>
     <script src="/static/aniai.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
@@ -44,6 +43,8 @@
 </head>
 
 <body>
+
+<!-- <span class="tag label label-info">{{title}} <span data-role="remove"></span></span> -->
 
 
     
@@ -336,21 +337,16 @@
             <div id="tester" class="media-header">
                 <div class="row title">
                     <div class="col title" id="media-title">
-                        <span>{{data[0][0]["anime_english_title"]}}</span>
+                        <span>random title</span>
                     </div>
                     <div class="col-auto icon" style="font-style:normal">
-                        <img src="/static/images/yahoo-view.png" id="yahoo-provider" 
-                        {% if not 'yahoo' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
-                        <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
-                        {% if not 'hulu' in data[0][0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
-                        <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0" id="crunchyroll-provider-image"
-                        {% if not 'crunchyroll' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
-                        <div style="display:inline-block; vertical-align: top" id="crunchyroll-provider"
-                        {% if not 'crunchyroll' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
+                        <img src="/static/images/yahoo-view.png" hidden>
+                        <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" hidden>hulu</span>
+                        <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0">
+                        <div style="display:inline-block; vertical-align: top">
                             <span style="font-family:Maven pro; font-size:24; display:inline-block" >crunchyroll </span>
                         </div>
-                        <a href="{{data[0][0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
-                        {% if 'none' == data[0][0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                        <a href="https:www.crunchyroll.com" role="button" id="video-link" target="_blank"><i class="fa fa-external-link"></i></a>
                     </div>
                 </div>
                 <div class="row episodeinfo">
@@ -400,56 +396,11 @@
                 <div class="media-body" style="height:50%">
                     <div class="container">
                         <div class="row">
-                            <div class="col" id="media-synopsis">
+                            <div class="col">
                                 <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
-                            <canvas class="data-visualization"></canvas>
-                            <script>
-                                var data = {
-                                    labels: ["Overall"],
-                                    datasets: [{
-                                       // label: "anime.anime_rating",
-                                       // backgroundColor: "rgba(255,99,132,0.2)",
-                                       // borderColor: "rgba(255,99,132,1)",
-                                       // pointBackgroundColor: "rgba(255,99,132,1)",
-                                       // pointBorderColor: "#fff",
-                                       // pointHoverBackgroundColor: "#fff",
-                                       // pointHoverBorderColor: "rgba(255,99,132,1)",
-                                       data: [data[0][0]["anime_review_overall_average"]]
-                                    // }, {
-                                    //    label: currentGameTitle,
-                                    //    backgroundColor: "rgba(90, 179, 206, 0.2)",
-                                    //    borderColor: "rgba(90, 179, 206, 1)",
-                                    //    pointBackgroundColor: "rgba(90, 179, 206, 1)",
-                                    //    pointBorderColor: "#fff",
-                                    //    pointHoverBackgroundColor: "#fff",
-                                    //    pointHoverBorderColor: "rgba(90, 179, 206, 1)",
-                                    //    data: currentGameFeatures
-                                    // }]
-                                    }]
-                                };
-
-
-                                detailsRadarChart = new Chart(vis, {
-                                    type: 'radar',
-                                    data: data,
-                                    draggable: true,
-                                    options: {
-                                        legend: {
-                                            position: 'bottom'
-                                        },
-                                        scale: {
-                                            ticks: {
-                                                display: false
-                                            }
-                                        },
-                                        tooltips: {
-                                            enabled: false
-                                        }
-                                    }
-                                });
-                            </script>
+                            Aniai.&#24859 
                         </div>
                         </div>
 
@@ -499,8 +450,7 @@
                             <div class="col carousel-picture" scroll="no" id="suggestionCard">
                                     <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                      data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
-                                     data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
-                                     data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}">
+                                     data-episodes="{{d['anime_number_of_episodes']}}" data-genres="{{d['anime_genres']}}" data-synopsis="{{d['anime_synopsis']}}">
                                 <div class="container carousel-picture" id="suggestionCard">
                                         <img src={{d["anime_image_url"]}} class="carousel-picture">
                                     </div>
@@ -592,57 +542,11 @@
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
                     var title = $(this).data("title");
-                    var type = $(this).data("type");
                     var synopsis = $(this).data("synopsis");
-                    var tags = $(this).data("tags");
-                    var episode_count = $(this).data("episodes");
-                    var duration = $(this).data("duration");
-                    var rating = $(this).data("rating");
+
+                    
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
-                    $('#media-type span').text(type);
-                    $('#media-rating span').text(rating);
-                    $('#media-count span').text(episode_count);
-                    $('#media-duration span').text(duration);
-                    $('#media-synopsis span').text("Synopsis: " + synopsis);
-                    var tags = tags.split("|");
-                    var str = "";
-                    for (var tag in tags) {
-                        str += '<span class="genre">' + tags[tag] + "</span>";
-                    };
-                    $('#media-genres').replaceWith(
-                        '<div class="col genres" id="media-genres">' + str + '</div>'
-                        );
-                    var anime_video_url = $(this).data("video");
-                    if (anime_video_url.includes('crunchyroll')) {
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", false);
-                        $('#crunchyroll-provider-image').attr("hidden", false);
-                        $('#crunchyroll-provider').attr("hidden", false);
-                        $('#hulu-provider').attr("hidden", true);
-                        $('#yahoo-provider').attr("hidden", true);
-                    } else if (anime_video_url.includes('yahoo')) {
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", false);
-                        $('#yahoo-provider').attr("hidden", false);
-                        $('#hulu-provider').attr("hidden", true);
-                        $('#crunchyroll-provider-image').attr("hidden", true);
-                        $('#crunchyroll-provider').attr("hidden", true);
-                    } else if (anime_video_url.includes('hulu')) {
-                        $('#hulu-provider').attr("hidden", false);
-                        $('#yahoo-provider').attr("hidden", true);
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", false);
-                        $('#crunchyroll-provider-image').attr("hidden", true);
-                        $('#crunchyroll-provider').attr("hidden", true);
-                    } else {
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", true);
-                        $('#crunchyroll-provider-image').attr("hidden", true);
-                        $('#crunchyroll-provider').attr("hidden", true);
-                        $('#hulu-provider').attr("hidden", true);
-                        $('#yahoo-provider').attr("hidden", true);
-                    };
                 });
                   </script>
     <script>
