@@ -405,10 +405,11 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="media-body" style="height:50%">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col semantic media-logo">
+                <div class= "media-self-center media-left anime-statistics">
+                    <div class="container anime-score">
+                        <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"][0]}}</span></div>
+                    </div>
+                    <div class="container anime-statistics">
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                                 <script>
                                     var data_chart = {
@@ -467,6 +468,12 @@
                                     });
 
                                 </script>
+                    </div>
+                </div>
+                <div class="media-body" style="height:50%">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col semantic media-logo">
                         </div>
                         </div>
 
@@ -512,6 +519,7 @@
                                  data-animation= '{{d["anime_review_animation_average"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}"
+                                 data-similarity="{{d['score'][0]}}" 
                                  data-words="{{d['words']}}" style="height:100%">
                                 <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
                                 <div class="mask flex-center rgba-stylish-strong">
@@ -586,9 +594,10 @@
                     var overall = $(this).data("overallreview");  
                     var story = $(this).data("storyreview");  
                     var enjoyment = $(this).data("enjoyment");  
-                    var character = $(this).data("sound");  
-                    var sound = $(this).data("overallreview");  
+                    var character = $(this).data("character");  
+                    var sound = $(this).data("sound");  
                     var animation = $(this).data("animation");
+                    var similarity = $(this).data("similarity");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -597,6 +606,7 @@
                     $('#media-duration span').text(duration);
                     $('#media-synopsis span').text(synopsis);
                     $('#episode-count span').text(episode_count);
+                    $('#similarity-score span').text("Similarity Score: " + similarity);
                     var tags = tags.split("|");
                     var str = "";
                     for (var tag in tags) {
