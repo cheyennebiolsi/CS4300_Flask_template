@@ -44,6 +44,7 @@ alltags_nocolumn = np.delete(alltags_data, 0, 1)
 
 # doc2vec numpy
 review_array = np.load("data/doc2vecreviewArray.npy")
+filter_bools= np.load("data/filterArray.npy")
 word_array=np.load("data/wordArray.npy")
 words=np.load("data/wordList.npy")
 word_to_ind=dict()
@@ -52,115 +53,23 @@ for index,word in enumerate(words):
 
 
 # Tags and Jaccard Similarity
-tags_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei']
-ty_pe = ['displayTv', 'displayMovie', 'displayOva', 'ona', 'displaySpecial']
-tags_set = set(tags_array)
+filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo_ai','shounen','shounen_ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'ona', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
 
 @irsystem.route('/', methods=['GET'])
 
 def search():
 	query = request.args.get('animesearch')
 	tag = request.args.get('tagsearch')
-
-	#hide same series filter
-	hide_ss = request.args.get('filter same series')
 	
-	# TV Filter
-	type_dictionary = {}
-	for meep in ty_pe:
-		print('meep',request.args.get(meep))
-		type_dictionary[meep] = request.args.get(meep)
-
-	tv = request.args.get('displayTv')
-	# print(tv)
-	movie = request.args.get('displayMovie')
-	ova = request.args.get('displayOva')
-	ona = request.args.get('displayOna')
-	special = request.args.get('displaySpecial')
+	filter_out=np.empty((len(filter_array)),dtype=bool)  
+	for index, filters in enumerate(filter_array):
+		switch=request.args.get(filters)        
+		if(not (switch == 'on')):
+			filter_out[index]=True           
 	
-	show = []
-	if tv:
-		show.append('TV')
-	if movie:
-		show.append('Movie')
-	if ova:
-		show.append('OVA')
-	if ona:
-		show.append('ONA')
-	if special:
-		show.append('Special')
-
-	set_show = set(show)
-
-	# Genre Filter
-	tags_dictionary = {}
-	for tagz in tags_array:
-		tags_dictionary[tagz] = request.args.get(tagz)
-
-	activegenre = []
-	for key, value in tags_dictionary.iteritems():
-		if value != None:
-			activegenre.append(key)
-
-	set_activegenre = set(activegenre)
-
-	# Age Rating Filter
-	guidance_dictionary = {}
-	for guidance_rating in ["gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating"]:
-		if guidance_rating == "gRating":
-			guidance_dictionary["G - All Ages"] = request.args.get(guidance_rating)
-		elif guidance_rating == "pg13Rating":
-			guidance_dictionary["PG-13 - Teens 13 or older"] = request.args.get(guidance_rating)
-		elif guidance_rating == "pgRating":
-			guidance_dictionary["PG - Children"] = request.args.get(guidance_rating)
-		elif guidance_rating == "r17Rating":
-			guidance_dictionary["R - 17+ (violence & profanity)"] = request.args.get(guidance_rating)
-		elif guidance_rating == "rPlusRating":
-			guidance_dictionary["R+ - Mild Nudity"] = request.args.get(guidance_rating)
-		elif guidance_rating == "rxRating":
-			guidance_dictionary["Rx — hentai"] = request.args.get(guidance_rating)
-		# "R+ - Mild Nudity"
-		# Rx
-
-	active_guidance = []
-	for key, value in guidance_dictionary.iteritems():
-		if value != None:
-			active_guidance.append(key)
-
-	set_guidance = set(active_guidance)
-
-	# Stream Filter
-	stream_dictionary = {}
-	for stream in ["streamCrunchy", "streamHulu", "streamYahoo", "streamNone"]:
-		stream_dictionary[stream] = request.args.get(stream)
-
-
-	# FIX
-	activestream = []
-	for key, value in stream_dictionary.iteritems():
-		if value != None:
-			activestream.append(key)
-
-	set_stream = set(activestream)  
-
-	#NSFW fitler
-	sfw = request.args.get('sfw')
-
-	# Min Rating Filter
-	min_rating = request.args.get('min_rating')
-
-	# Time Filter
-	time = request.args.get('time')
-
-	# Finished Filter
-	finished = request.args.get('finished')
-
-	# Licensed Filter
-	licensed = request.args.get('licensed')
-
-
-
-
+	rel_filters=filter_bools[:, filter_out]   
+	shows_removed=np.where(rel_filters.any(axis=1))[0]
+	
 	# Option 1: No Anime or Tags
 	if not query and not tag:
 		data = []
@@ -169,8 +78,9 @@ def search():
 	else:
 		anime_indexes = query.split('|')
 		#query_words = tag.split('|')
-
 		if -1 in anime_indexes:
+			movie = request.args.get('displayMovie')
+			hello=asdfgh
 			data = []
 			output_message = 'Could not find your show. Please try again.'
 		else:
@@ -197,6 +107,9 @@ def search():
 
 			scores=np.matmul((review_array),(result[:,np.newaxis]))
 			top_shows= np.argsort(-scores,axis=0)
+            #filter out the shows we don't want
+			mask=np.isin(top_shows,shows_removed,invert=True)
+			top_shows=top_shows[mask]   
 			top_n_shows= top_shows[:20]
 			bottom_n_shows= top_shows[-20:]
 
@@ -214,29 +127,20 @@ def search():
 				jsonfile = get_anime(anim_ind, allanimelite)
 				wordvec = get_top_words(anim_ind)   
 				concat="|".join(wordvec)                
-				if anim_ind[0] not in set_anime_ids and jsonfile != "not found":
+				if anim_ind not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					jsonfile['words'] = concat                    
 					json_array.append(jsonfile)
 			data = json_array
-	# if Further Filters are chosen
-	if hide_ss and query:
-		data = hide_sameseries(anime_indexes, data, allanimelite)
-
-	# if show or min_rating or time or finished or licensed or len(set_guidance) > 0 or len(set_activegenre) > 0 or len(set_stream) > 0 or sfw:
-	data = hide_filter(data, allanimelite, set_show, min_rating, time, finished, licensed, set_guidance, set_activegenre, set_stream, sfw)
-
+            
 	# print(data)
 	data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=query, prevtags=tag, prevhide_ss=hide_ss, prevtv=tv)
+		prevsearch=query, prevtags=tag, prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
 
-# 		get_cossim()
-
-	
 # }
 
 def get_top_words(anime_index,howmany=10):
