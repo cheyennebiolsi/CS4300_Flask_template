@@ -415,7 +415,6 @@
                             <div class="col-6 semantic media-logo">
                             <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                             <script>
-                                console.log({{data[0][0]["anime_review_overall_average"]}})
                                 var data_chart = {
                                     labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
                                     datasets: [
@@ -427,12 +426,6 @@
                                             pointBorderColor: "#fff",
                                             pointBackgroundColor: "rgba(255,99,132,1)",
                                             pointBorderColor: "#fff",
-                                            // backgroundColor: "rgba(255,99,132,0.2)",
-                                            // borderColor: "rgba(255,99,132,1)",
-                                            // pointBackgroundColor: "rgba(255,99,132,1)",
-                                            // pointBorderColor: "#fff",
-                                            // pointHoverBackgroundColor: "#fff",
-                                            // pointHoverBorderColor: "rgba(255,99,132,1)",
                                             data: [
                                                 {{data[0][0]["anime_review_overall_average"]}}, 
                                                 {{data[0][0]["anime_review_story_average"]}},
@@ -441,25 +434,11 @@
                                                 {{data[0][0]["anime_review_sound_average"]}},
                                                 {{data[0][0]["anime_review_animation_average"]}}
                                             ]
-
-
-
-                                            // }, {
-                                            //    label: currentGameTitle,
-                                            //    backgroundColor: "rgba(90, 179, 206, 0.2)",
-                                            //    borderColor: "rgba(90, 179, 206, 1)",
-                                            //    pointBackgroundColor: "rgba(90, 179, 206, 1)",
-                                            //    pointBorderColor: "#fff",
-                                            //    pointHoverBackgroundColor: "#fff",
-                                            //    pointHoverBorderColor: "rgba(90, 179, 206, 1)",
-                                            //    data: currentGameFeatures
-                                            // }]
                                         }
                                     ]
                                 };
-                                // console.log(data_chart)
 
-                                detailsRadarChart = new Chart(document.getElementById("vis"), {
+                                anime_scores = new Chart(document.getElementById("vis"), {
                                     type: 'radar',
                                     data: data_chart,
                                     draggable: true,
@@ -529,6 +508,12 @@
                         <div class="owl-item" style="height:100%">
                             <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
+                                 data-overallreview = '{{d["anime_review_overall_average"]}}' 
+                                 data-storyreview = '{{d["anime_review_story_average"]}}'
+                                 data-enjoyment = '{{d["anime_review_enjoyment_average"]}}'
+                                 data-character = '{{d["anime_review_character_average"]}}'
+                                 data-sound= '{{d["anime_review_sound_average"]}}'
+                                 data-animation= '{{d["anime_review_animation_average"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" style="height:100%">
                                 <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background: url("{{image_url}}")'></div>
@@ -600,6 +585,12 @@
                     var episode_count = $(this).data("episodes");
                     var duration = $(this).data("duration");
                     var rating = $(this).data("rating");
+                    var overall = $(this).data("overallreview");  
+                    var story = $(this).data("storyreview");  
+                    var enjoyment = $(this).data("enjoyment");  
+                    var character = $(this).data("sound");  
+                    var sound = $(this).data("overallreview");  
+                    var animation = $(this).data("animation");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -645,6 +636,67 @@
                         $('#hulu-provider').attr("hidden", true);
                         $('#yahoo-provider').attr("hidden", true);
                     };
+
+                    anime_scores.destroy(); //delete charts
+                    // var oldchart = document.getElementById("vis")
+                    // if (oldchart !== undefined)
+                    //     oldchart.destroy(); //delete charts
+
+                    var data_chart = {
+                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                    datasets: [
+                        {
+                            label: title,
+                            fill: true,
+                            backgroundColor: "rgba(255,99,132,0.2)",
+                            borderColor: "rgba(255,99,132,1)",
+                            pointBorderColor: "#fff",
+                            pointBackgroundColor: "rgba(255,99,132,1)",
+                            pointBorderColor: "#fff",
+                            data: [
+                                overall, 
+                                story, 
+                                enjoyment, 
+                                character, 
+                                sound, 
+                                animation
+                            ]
+                        }
+                    ]
+                    };
+
+                    anime_scores = new Chart(document.getElementById("vis"), {
+                        type: 'radar',
+                        data: data_chart,
+                        draggable: true,
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Anime Statistics',
+                                fontColor: "#FFFFFF"
+                            },
+                            legend: {
+                                position: 'bottom'
+                            },
+                            scale: {
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    backdropColor: 'black',
+                                    max: 10,
+                                    min: 0, 
+                                    fontSize: 6,
+                                    color: '#FFFFFF'
+                                },
+                                gridLines: {
+                                    color: "#FFFFFF"
+                                }
+                            },
+                            tooltips: {
+                                enabled: true
+                            },
+                        }
+                    });
+
                 });
                   </script>
     <script>
