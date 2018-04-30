@@ -145,8 +145,6 @@ def search():
 		data = json_array
             
 	# print(data)
-	data = makeListsOfList(data)
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
