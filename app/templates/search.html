@@ -330,18 +330,6 @@
             <br>
             <br>
             <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-
-            <br>
-            <br>
-            <br>
-            <br>
             <br> -->
             <hr>
             <div id="tester" class="media-header">
@@ -377,7 +365,7 @@
                 <div class="row genres">
                     <div class="col genres" id="media-genres">
                         <!-- CHANGE THIS TO GENRE -->
-                         {% set genrelist = data[0][0]["words"].split(' | ') %} 
+                         {% set genrelist = data[0][0]["anime_tags"].split('|') %} 
                          {% for tag in genrelist %}
                          <span class="genre">{{tag}}</span>
                          {% endfor %}

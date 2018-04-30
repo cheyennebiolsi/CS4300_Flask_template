@@ -10,7 +10,7 @@ $(document).ready(function() {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         prefetch: {
-            url: '/static/data/anime_info.json',
+            url: '/static/data/anime_search.json',
             cache: true
         }
     });

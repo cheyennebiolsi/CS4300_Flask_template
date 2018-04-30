@@ -19,7 +19,7 @@ number_results_final = 100
 weight_tags = 1
 weight_title = 6
 
-allanimelite = json.load(open('app/static/data/anime_search.json'))
+allanimelite = json.load(open('app/static/data/anime_info.json'))
 for index, element in enumerate(allanimelite):
     element["anime_index"] = index
 
@@ -137,77 +137,9 @@ def search():
             
 	# print(data)
 	data = makeListsOfList(data)
-	# if not query and not tag:
-	# 	data = []
-	# 	output_message = ''
-	# 	meeperZ = ""
-	# # Option 3: Only Anime
-	# else:
-	# 	anime_indexes = query.split('|')
-	# 	#query_words = tag.split('|')
-	# 	meeperZ = ""
-	# 	for elementz in anime_indexes:
-	# # 		print('wtf', elementz)
-	# 		meeperZ = str(get_anime(int(elementz), allanimelite)['anime_english_title']) + '|'
-	# 	meeperZ = meeperZ[:-1]
-	# 	print('meeperZ',meeperZ)
-
-	# 	if -1 in anime_indexes:
-	# 		data = []
-	# 		output_message = 'Could not find your show. Please try again.'
-	# 	else:
-	# 		output_message = 'Your search: ' + query
-	        
-	# 		positive = np.zeros((len(anime_indexes)),dtype=int)
-	# 		for index,anim_ind in enumerate(anime_indexes):
-	# 			positive[index]=int(anim_ind)
-	# 		set_anime_ids=set(positive)
-	# 		print(positive)
-	        
-	# # 			positive_words=np.zeros((len(query_words)))
-	# # 			for index,word in enumerate(quer_words):
-	# # 				positive_words[index]=word_to_ind.get(word,-1)
-	# # 			positive_words=positivewords[positive_words>=0]             
-
-	# 		positive_show_vectors = review_array[positive,:]
-	# 		show_result=np.sum(positive_show_vectors,axis=0)
-	        
-	       
-	# # 			positive_word_vectors = review_array[positive_words,:]
-	# # 			word_result=np.sum(positive_word_vectors,axis=0)
-	# 		result=show_result#+word_result           
-
-	# 		scores=np.matmul((review_array),(result[:,np.newaxis]))
-	# 		top_shows= np.argsort(-scores,axis=0)
-	# 		top_n_shows= top_shows[:20]
-	# 		bottom_n_shows= top_shows[-20:]
-
-	# 		# rocchio
-	# 		for anim_id in enumerate(positive):
-	# 			review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
-	#                                           a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
-	# # 			for word_id in enumerate(positive_words):               
-	# # 				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
-	# #                                               a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
-	# 		json_array = []
-	#         #returns most similar anime ids and similarity scores
-	# 		for array_ind, anim_ind in enumerate(top_n_shows):
-	# 			score = scores[array_ind]
-	# 			jsonfile = get_anime(anim_ind, allanimelite)
-	# 			wordvec = get_top_words(anim_ind)   
-	# 			concat="|".join(wordvec)                
-	# 			if anim_ind[0] not in set_anime_ids and jsonfile != "not found":
-	# 				jsonfile['score'] = score
-	# 				jsonfile['words'] = concat                    
-	# 				json_array.append(jsonfile)
-	# 		data = json_array
-
-	# 	# print(data)
-	# 	data = makeListsOfList(data)
-	# 	print(data)
 
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=meeperZ, prevwords=keep(tag))#, prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
+		prevsearch=meeperZ, prevwords=keep(tag), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
