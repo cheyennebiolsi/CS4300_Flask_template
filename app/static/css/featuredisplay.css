@@ -20,12 +20,38 @@
     src: url('/static/fonts/futura-md-bt/FuturaMediumBT.ttf');
 }
 
+
+.media-body {
+    padding: 0;
+    color: white;
+    overflow-y: scroll;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+
+}
+
+.col.synopsis {
+    overflow-y: scroll;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.row.feature {
+   margin: 0;
+   padding: 0;
+   border-right: 2px solid white;
+}
+
 .synopsis-header {
     color: white;
     font-size: 14;
     text-align: center;
     font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
     font-weight: bold;
+    padding-bottom: 3px;
 }
 
 .media-self-center.media-left.anime-picture {

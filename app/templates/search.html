@@ -407,11 +407,10 @@
                 </a> -->
 
                 <div class="media-body" style="height:50%">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col" id="media-synopsis">
-                                <div style="color: white; text-align: center; font-size: 14" class="synopsis-header"> Synopsis </div>
-                                <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
+                        <div class="row feature">
+                            <div class="col synopsis" id="media-synopsis">
+                                <div class="synopsis-header"> Synopsis </div>
+                                <span>{{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
                             <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
@@ -474,7 +473,6 @@
                                 });
 
                             </script>
-                        </div>
                         </div>
 
                         <!--                <div class="row"><h2> This is a header </h2>
@@ -600,7 +598,7 @@
                     $('#media-rating span').text(rating);
                     $('#media-count span').text(episode_count);
                     $('#media-duration span').text(duration);
-                    $('#media-synopsis span').text("Synopsis: " + synopsis);
+                    $('#media-synopsis span').text(synopsis);
                     var tags = tags.split("|");
                     var str = "";
                     for (var tag in tags) {
