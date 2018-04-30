@@ -275,6 +275,7 @@ class AnimeDocument:
                              "anime_parent_story", "anime_sequel", "anime_prequel", "anime_alternative_setting", \
                              "anime_spinoff"] #, "anime_other"]
         seenIds = set()
+        seenAnime = []
         while len(stack) > 0:
             document = stack.pop()
             if document == None:
@@ -283,6 +284,7 @@ class AnimeDocument:
             if document_id in seenIds:
                 continue
             seenIds.add(document_id)
+            seenAnime.append(document)
             for attribute in relatedAttributes:
                 vals = getattr(document, attribute)                
                 ids = [int(anime_id) for anime_id in re.findall('(?<=\(anime )\d+(?=\))', vals) \
@@ -295,7 +297,12 @@ class AnimeDocument:
         ids = [int(anime_id) for anime_id in re.findall('(?<=\(anime )\d+(?=\))', otherVals)]
         for other_id in ids:
             seenIds.add(other_id)
-        return sorted(list(seenIds))
+            val = (animeDocumentManager.getAnimeById(other_id))
+            if val != None:
+                seenAnime.append(val)
+#        print("returning")    
+        return sorted(list(set([int(anime.anime_index) for anime in seenAnime])))
+#        return sorted(list(seenIds))
       
 
     def toJSON(self):
