@@ -345,42 +345,42 @@
             <div id="tester" class="media-header">
                 <div class="row title">
                     <div class="col title" id="media-title">
-                        <span>{{data[0][0]["anime_english_title"]}}</span>
+                        <span>{{data[0]["anime_english_title"]}}</span>
                     </div>
                     <div class="col-auto icon" style="font-style:normal">
                         <img src="/static/images/yahoo-view.png" id="yahoo-provider" 
-                        {% if not 'yahoo' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
+                        {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
                         <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
-                        {% if not 'hulu' in data[0][0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
+                        {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
                         <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0" id="crunchyroll-provider-image"
-                        {% if not 'crunchyroll' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
+                        {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
                         <div style="display:inline-block; vertical-align: top" id="crunchyroll-provider"
-                        {% if not 'crunchyroll' in data[0][0]['anime_video_url'] %} hidden {% endif %}>
+                        {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
                             <span style="font-family:Maven pro; font-size:24; display:inline-block" >crunchyroll </span>
                         </div>
-                        <a href="{{data[0][0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
-                        {% if 'none' == data[0][0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                        <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
+                        {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
                     </div>
                 </div>
                 <div class="row episodeinfo">
                     <div class="col type" id="media-type">
-                       <span> {{data[0][0]["anime_type"]}}</span>
+                       <span> {{data[0]["anime_type"]}}</span>
                     </div>
                    <div class="col rating" id="media-rating">
-                    <span> {{data[0][0]["anime_rating"]}}</span>               
+                    <span> {{data[0]["anime_rating"]}}</span>               
                     </div>
                     <div class="col duration" id="media-duration">
-                        <span> {{data[0][0]["anime_duration"]}}</span>
+                        <span> {{data[0]["anime_duration"]}}</span>
                     </div>
                     <div class="col episodes" id="episode-count">
-                        <span> {{data[0][0]["anime_number_of_episodes"]}} episodes</span>
+                        <span> {{data[0]["anime_number_of_episodes"]}} episodes</span>
                     </div>
                 </div>
 
                 <div class="row genres">
                     <div class="col genres" id="media-genres">
                         <!-- CHANGE THIS TO GENRE -->
-                         {% set genrelist = data[0][0]["anime_tags"].split('|') %} 
+                         {% set genrelist = data[0]["anime_tags"].split('|') %} 
                          {% for tag in genrelist %}
                          <span class="genre">{{tag}}</span>
                          {% endfor %}
@@ -391,28 +391,19 @@
             <div class="media">
                 <div class = "media-self-center media-left anime-picture">
                    <div class="container anime-picture">
-                        <img src={{data[0][0]["anime_image_url"]}} class="anime-picture" id="media-image">
+                        <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
-                <!--        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
-                <div class="view overlay" style="cursor:pointer">
-                    <img src={{data[0][0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
-                    <div class="mask flex-center rgba-black-light">
-                        <ul class="fa-ul" style="margin-left:0">
-                          <li><p class="white-text" style="font-size: 20px">watch on <img src="/static/images/Crunchyroll_24x24.png" style="display:inline"><span style="font-family:Maven pro">crunchyroll </span><i class="fa fa-external-link"></i></p></li>
-                        <li><i class="fa fa-play"  style="font-size:60px; color:white"></i></li>
-                        </ul>
-                    </div>
+                <div class = "media-self-center media-left anime-synopsis">	
+                    <div class="container anime-synopsis" id="media-synopsis">	
+                                <div class="synopsis-header"> Synopsis </div>	
+                                <span>{{data[0]["anime_synopsis"]}}</span>	
+                    </div>	
                 </div>
-                </a> -->
-
                 <div class="media-body" style="height:50%">
                     <div class="container">
                         <div class="row">
-                            <div class="col" id="media-synopsis">
-                                <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
-                            </div>
-                            <div class="col-6 semantic media-logo">
+                            <div class="col semantic media-logo">
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                                 Top 10 Words:
                                 <script>
@@ -420,7 +411,6 @@
                                         labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
                                         datasets: [
                                             {
-                                                // label: "{{data[0][0]['anime_english_title']}}",
                                                 fill: true,
                                                 backgroundColor: "rgba(255,99,132,0.2)",
                                                 borderColor: "rgba(255,99,132,1)",
@@ -428,12 +418,12 @@
                                                 pointBackgroundColor: "rgba(255,99,132,1)",
                                                 pointBorderColor: "#fff",
                                                 data: [
-                                                    Math.round({{data[0][0]["anime_review_overall_average"]}}*100)/100, 
-                                                    Math.round({{data[0][0]["anime_review_story_average"]}}*100)/100,
-                                                    Math.round({{data[0][0]["anime_review_enjoyment_average"]}}*100)/100,
-                                                    Math.round({{data[0][0]["anime_review_character_average"]}}*100)/100,
-                                                    Math.round({{data[0][0]["anime_review_sound_average"]}}*100)/100,
-                                                    Math.round({{data[0][0]["anime_review_animation_average"]}}*100)/100
+                                                    Math.round({{data[0]["anime_review_overall_average"]}}*100)/100, 
+                                                    Math.round({{data[0]["anime_review_story_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_enjoyment_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_character_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_sound_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_animation_average"]}}*100)/100
                                                 ]
                                             }
                                         ]
@@ -447,7 +437,8 @@
                                             title: {
                                                 display: true,
                                                 text: 'Anime Statistics',
-                                                fontColor: "#FFFFFF"
+                                                fontColor: "#FFFFFF",
+                                                fontSize: 14
                                             },
                                             legend: {
                                                 display: false
@@ -504,7 +495,7 @@
             <div class="owl-carousel owl-theme owl-loaded" style="height: 25%" id="suggestion-carousel">
                 <div class="owl-stage-outer">
                     <div class="owl-stage">
-                        {% for d in data[0]%}
+                        {% for d in data%}
                         {% set image_url = d['anime_image_url'] %}
                         <div class="owl-item" style="height:100%">
                             <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
@@ -674,7 +665,8 @@
                             title: {
                                 display: true,
                                 text: 'Anime Statistics',
-                                fontColor: "#FFFFFF"
+                                fontColor: "#FFFFFF",
+                                fontSize: 14
                             },
                             legend: {
                                 display: false
