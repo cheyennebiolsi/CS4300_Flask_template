@@ -68,8 +68,10 @@ def search():
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
 		switchlist.append(switch)
-		if(not (switch == 'on')):
-			filter_out[index]=True           
+		if(not (switch == 'on') and not (filters=='filter+same+series')):
+			filter_out[index]=True  
+		if((switch == 'on') and (filters=='filter+same+series')):
+			filter_out[index]=True       
             
 	rel_filters=filter_bools[:, filter_out]   
 	shows_removed=np.where(rel_filters.any(axis=1))[0]
@@ -80,7 +82,7 @@ def search():
 		output_message = ''
 	# Option 3: Only Anime
 	else:
-		anime_indexes = query.split('|')
+		anime_indexes = query.split(',')
 		query_words = words.split(',')
 		if -1 in anime_indexes:
 			data = []
@@ -88,7 +90,7 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
             
-			if(query):
+			if(not query=='None'):
 				positive = np.zeros((len(anime_indexes)),dtype=int)
 				for index,anim_ind in enumerate(anime_indexes):
 					positive[index]=int(anim_ind)
@@ -97,7 +99,7 @@ def search():
 				positive= np.zeros((0))
 				set_anime_ids=set()
             
-			if(words):
+			if(not words=='None'):
 				positive_words=np.zeros((len(query_words)),dtype=int)
 				for index,word in enumerate(query_words):
 					positive_words[index]=word_to_ind.get(word,-1)
@@ -148,7 +150,7 @@ def search():
 			data = json_array
             
 	# print(data)
-	data = makeListsOfList(data)
+	#data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=query, prevtags=words, prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
