@@ -16,13 +16,13 @@ $(document).ready(function() {
     });
     anime.initialize();
     $('#animeinput').tagsinput({
-        itemValue: 'anime_index',
-        itemText: 'anime_english_title',
+        // itemValue: 'anime_index',
+        // itemText: 'anime_english_title',
         typeaheadjs: {
             // name: 'anime_search',
             // image: 'anime_image_url',
             displayKey: 'anime_english_title',
-            // valueKey: 'anime_english_title',
+            valueKey: 'anime_english_title',
             // engine: Handlebars,
             templates: {
                 suggestion: function (data) {
@@ -37,7 +37,7 @@ $(document).ready(function() {
         confirmKeys: [13, 44, 188],
         maxTags: 5,
         freeInput: false,
-        delimiter: ','
+        delimiter: '|',
     });
 
     var word = new Bloodhound({
