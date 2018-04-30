@@ -40,23 +40,12 @@ $(document).ready(function() {
         delimiter: ','
     });
 
-    // $('#animeinput .typeahead').typeahead({
-
-    // })
-
-    // $('#furtherfilters').click(function() {
-    // 	if ($('#furtherfilters').text() == "Show Additional Filters") {
-    // 		$('#furtherfilters').text("Hide Additional Filters");
-    // 	} else {
-    // 		$('#furtherfilters').text("Show Additional Filters");
-    // 	};
-    // });
-
     var word = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('word'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         prefetch: {
-            url: '/static/data/words.json'
+            url: '/static/data/words.json',
+            cache: false
         }
     });
     word.initialize();
