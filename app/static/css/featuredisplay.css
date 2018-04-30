@@ -93,6 +93,34 @@
     border-bottom: 12px solid black;
 }
 
+.media .container.anime-synopsis span {
+    display: inline-block;
+    text-align: justify;
+}
+
+.media-self-center.media-left.anime-statistics {
+    width: 35%;
+    height: 50%;
+    padding: 12px;
+    margin: 0;
+    border-right: 2px solid white;
+    border-left: 2px solid white;
+
+}
+
+.media .container.anime-score {
+    width: 100%;
+    height: 10%;
+    border-bottom:2px solid white;
+}
+
+.media .container.anime-statistics {
+    width: 100%;
+    height: 90%;
+    overflow-y: scroll;
+    color: white;
+}
+
 .media .container.anime-words {
     width:100%;
     height: 25%;
