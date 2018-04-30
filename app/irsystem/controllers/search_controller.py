@@ -168,7 +168,7 @@ def search():
 	# Option 3: Only Anime
 	else:
 		anime_indexes = query.split('|')
-		query_words = tag.split('|')
+		#query_words = tag.split('|')
 
 		if -1 in anime_indexes:
 			data = []
@@ -176,26 +176,26 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
             
-            #Fix this
-			positive = np.zeros((len(anime_indexes)))
-			for index,word in enumerate(anime_indexes):
-				positive[index]=int(anime_indexes)
-			set_anime_ids=set(postive)
-
-			positive_words=np.zeros((len(query_words)))
-			for index,word in enumerate(quer_words):
-				positive_words[index]=word_to_ind.get(word,-1)
-			positive_words=positivewords[positive_words>=0]             
+			positive = np.zeros((len(anime_indexes)),dtype=int)
+			for index,anim_ind in enumerate(anime_indexes):
+				positive[index]=int(anim_ind)
+			set_anime_ids=set(positive)
+			print(positive)
+            
+# 			positive_words=np.zeros((len(query_words)))
+# 			for index,word in enumerate(quer_words):
+# 				positive_words[index]=word_to_ind.get(word,-1)
+# 			positive_words=positivewords[positive_words>=0]             
 
 			positive_show_vectors = review_array[positive,:]
-			show_result=np.sum(positive_vectors,axis=0)
+			show_result=np.sum(positive_show_vectors,axis=0)
             
            
-			positive_word_vectors = review_array[positive_words,:]
-			word_result=np.sum(positive_vectors,axis=0)
-			result=word_result+show_result            
-            
-			scores=np.matmul((array),(result[:,np.newaxis]))
+# 			positive_word_vectors = review_array[positive_words,:]
+# 			word_result=np.sum(positive_word_vectors,axis=0)
+ 			result=show_result#+word_result           
+
+			scores=np.matmul((review_array),(result[:,np.newaxis]))
 			top_shows= np.argsort(-scores,axis=0)
 			top_n_shows= top_shows[:20]
 			bottom_n_shows= top_shows[-20:]
@@ -204,17 +204,17 @@ def search():
 			for anim_id in enumerate(positive):
 				review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
                                               a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
-			for word_id in enumerate(positive_words):               
-				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
-                                              a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
+# 			for word_id in enumerate(positive_words):               
+# 				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
+#                                               a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
 			json_array = []
             #returns most similar anime ids and similarity scores
-			for array_ind, anim_ind in enumerate(top_n_animes):
+			for array_ind, anim_ind in enumerate(top_n_shows):
 				score = scores[array_ind]
 				jsonfile = get_anime(anim_ind, allanimelite)
 				wordvec = get_top_words(anim_ind)   
 				concat="|".join(wordvec)                
-				if anim_ind not in set_anime_ids and jsonfile != "not found":
+				if anim_ind[0] not in set_anime_ids and jsonfile != "not found":
 					jsonfile['score'] = score
 					jsonfile['words'] = concat                    
 					json_array.append(jsonfile)
@@ -241,16 +241,18 @@ def search():
 
 def get_top_words(anime_index,howmany=10):
     query=review_array[anime_index]
-    scores=np.matmul((word_array),(query[:,np.newaxis]))
-    top_words= np.argsort(-scores,axis=0)
-    top_n_words = top_shows1[:howmany]
+    scores=np.matmul((word_array),(query.T))
+    top_words_ind= np.argsort(-scores,axis=0)
+    top_n_words_ind = top_words_ind[:howmany]
+    top_n_words=words[top_n_words_ind]
+    return top_n_words.flatten(order="F")
 
 
 def get_anime(anime_index, jsonfile):
 	# print(anime_id)
 	for element in jsonfile:
 		# print(element['anime_id'])
-		if (element['anime_index']) == anime_id:
+		if (element['anime_index']) == anime_index:
 			return element
 	return "not found"
 

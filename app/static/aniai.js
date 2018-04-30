@@ -30,7 +30,7 @@ $(document).ready(function() {
             },
             // suggestion: ,
             source: anime.ttAdapter(),
-            hint: false,
+            hint: true,
             minLength: 3
         },
         confirmKeys: [13, 44, 188],
@@ -39,16 +39,42 @@ $(document).ready(function() {
         delimiter: '|'
     });
 
-    $('#animeinput .typeahead').typeahead({
+    // $('#animeinput .typeahead').typeahead({
 
-    })
+    // })
 
-    $('#furtherfilters').click(function() {
-    	if ($('#furtherfilters').text() == "Show Additional Filters") {
-    		$('#furtherfilters').text("Hide Additional Filters");
-    	} else {
-    		$('#furtherfilters').text("Show Additional Filters");
-    	};
+    // $('#furtherfilters').click(function() {
+    // 	if ($('#furtherfilters').text() == "Show Additional Filters") {
+    // 		$('#furtherfilters').text("Hide Additional Filters");
+    // 	} else {
+    // 		$('#furtherfilters').text("Show Additional Filters");
+    // 	};
+    // });
+
+    var word = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('word'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: '/static/data/words.json'
+        }
+    });
+    word.initialize();
+    $('#wordinput').tagsinput({
+        typeaheadjs: {
+            // name: 'anime_search',
+            // image: 'anime_image_url',
+            displayKey: 'word',
+            valueKey: 'word',
+            // engine: Handlebars,
+            // suggestion: ,
+            source: word.ttAdapter(),
+            hint: false,
+            minLength: 3
+        },
+        confirmKeys: [13, 44, 188],
+        maxTags: 5,
+        freeInput: false,
+        delimiter: '|'
     });
     // var genre = new Bloodhound({
     //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
