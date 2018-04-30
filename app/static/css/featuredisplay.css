@@ -93,6 +93,11 @@
     border-bottom: 12px solid black;
 }
 
+.media .container.anime-synopsis span {
+    display: inline-block;
+    text-align: justify;
+}
+
 .media-self-center.media-left.anime-statistics {
     width: 35%;
     height: 50%;
