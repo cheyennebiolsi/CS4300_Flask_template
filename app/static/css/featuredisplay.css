@@ -126,6 +126,7 @@
     text-align: left;
     font-size: 30;
     font-family: "Futura";
+    padding-left: 20px;
 }
 
 .media-header .row.episodeinfo {
@@ -146,7 +147,7 @@
 .media-header {
     background-color: darkgrey;
     margin: 0;
-    padding: 0;
+    padding-top: 0;
     border-top-right-radius: 7px;
     border-top-left-radius: 7px;
 }
@@ -174,6 +175,7 @@
 
 .media-header .col.type {
     text-align: left;
+    padding-left: 20px;
 }
 
 .media-header .row.genres {
@@ -184,6 +186,7 @@
 }
 .media-header .col.episodes {
     text-align: right;
+    padding-right: 20px;
 }
 
 .media-footer {

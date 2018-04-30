@@ -589,7 +589,8 @@
                     $('#media-rating span').text(rating);
                     $('#media-count span').text(episode_count);
                     $('#media-duration span').text(duration);
-                    $('#media-synopsis span').text("Synopsis: " + synopsis);
+                    $('#media-synopsis span').text(synopsis);
+                    $('#episode-count span').text(episode_count);
                     var tags = tags.split("|");
                     var str = "";
                     for (var tag in tags) {
@@ -715,26 +716,9 @@
                     '</div>' +
             '</div>'
                 });
-              console.log(str);
               $('#recommendation-stage').replaceWith(
                   '<div class="owl-stage" id="recommendation-stage">' + str + '</div>');
-              $
-              $('*[id=recommendation-synopsis]:visible').each(function() {
-                   console.log("in here");
-                   var divh = $(this).parent().height();
-                   console.log(divh);
-                   console.log($(this).parent().attr('class'));
-                   console.log($(this).attr('class'));
-                   console.log($(this).text());
-                   console.log("My height: " + $(this).outerHeight());
-                   while ($(this).outerHeight(true) > divh) {
-                       $(this).text(function (index, text) {
-                           return text.replace(/\W*\s(\S)*$/, '...');
-                   });
-                   };
-                   
-                
-              });
+              
               $(document).on("click", ".flip", function() {
                   $(this).find('.recommend-card').toggleClass('flipped');
               });

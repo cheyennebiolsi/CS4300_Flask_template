@@ -33,6 +33,7 @@
 
 .face.back .well {
     padding: 1px;
+    overflow-y: scroll;
 }
 
 .recommendation-header {
