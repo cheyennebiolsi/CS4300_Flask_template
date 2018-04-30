@@ -71,10 +71,9 @@ def search():
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
-			filter_out[index]=True       
+			filter_out[index]=True
 	rel_filters=filter_bools[:, filter_out]   
 	shows_removed=np.where(rel_filters.any(axis=1))[0]
-	
 	# Option 1: No Anime or Tags
 	if not query and not words:
 		data = []
