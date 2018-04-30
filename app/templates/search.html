@@ -427,12 +427,12 @@
                                             pointBackgroundColor: "rgba(255,99,132,1)",
                                             pointBorderColor: "#fff",
                                             data: [
-                                                {{data[0][0]["anime_review_overall_average"]}}, 
-                                                {{data[0][0]["anime_review_story_average"]}},
-                                                {{data[0][0]["anime_review_enjoyment_average"]}},
-                                                {{data[0][0]["anime_review_character_average"]}},
-                                                {{data[0][0]["anime_review_sound_average"]}},
-                                                {{data[0][0]["anime_review_animation_average"]}}
+                                                Math.round({{data[0][0]["anime_review_overall_average"]}}*100)/100, 
+                                                Math.round({{data[0][0]["anime_review_story_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_enjoyment_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_character_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_sound_average"]}}*100)/100,
+                                                Math.round({{data[0][0]["anime_review_animation_average"]}}*100)/100
                                             ]
                                         }
                                     ]
@@ -654,12 +654,12 @@
                             pointBackgroundColor: "rgba(255,99,132,1)",
                             pointBorderColor: "#fff",
                             data: [
-                                overall, 
-                                story, 
-                                enjoyment, 
-                                character, 
-                                sound, 
-                                animation
+                                Math.round(overall*100)/100, 
+                                Math.round(story*100)/100, 
+                                Math.round(enjoyment*100)/100,
+                                Math.round(character*100)/100, 
+                                Math.round(sound*100)/100,
+                                Math.round(animation*100)/100
                             ]
                         }
                     ]
