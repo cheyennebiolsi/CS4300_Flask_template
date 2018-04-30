@@ -410,6 +410,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col" id="media-synopsis">
+                                <div style="color: white; text-align: center; font-size: 14" class="synopsis-header"> Synopsis </div>
                                 <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
                             </div>
                             <div class="col-6 semantic media-logo">
@@ -446,7 +447,8 @@
                                         title: {
                                             display: true,
                                             text: 'Anime Statistics',
-                                            fontColor: "#FFFFFF"
+                                            fontColor: "#FFFFFF",
+                                            fontSize: 14
                                         },
                                         legend: {
                                             position: 'bottom'
@@ -516,7 +518,7 @@
                                  data-animation= '{{d["anime_review_animation_average"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" style="height:100%">
-                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background: url("{{image_url}}")'></div>
+                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
                                 <div class="mask flex-center rgba-stylish-strong">
                                     <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
                                  </div>
@@ -709,7 +711,7 @@
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 
                                     '<div class="face front">' + 
-                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
+                                        '<div class="well well-sm inner" style="background-image: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
                             '</div>' + 
                             '<div class="face back">' +
                                 '<div class="well well-sm inner">' + 
