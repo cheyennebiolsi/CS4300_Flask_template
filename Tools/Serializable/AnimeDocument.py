@@ -103,6 +103,54 @@ class AnimeDocument:
             anime_reviews = []
         self.anime_reviews = anime_reviews
 
+    def getReviewOverallAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_overall)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewStoryAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_story)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewAnimationAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_animation)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewSoundAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_sound)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewCharacterAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_character)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewEnjoymentAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_enjoyment)
+        return float(count) / len(self.anime_reviews)
+
     def addReview(self, review):
         """Adds a Review object to self.anime_reviews"""
         if isinstance(review, Review):
@@ -131,6 +179,9 @@ class AnimeDocument:
     def getAllReviewText(self):
         """Returns all review text concatenated with a space"""
         return " ".join([review.review_text for review in self.anime_reviews])
+
+    def getAllTags(self):
+        return [genre.genre_name for genre in sorted(self.anime_genres, key= lambda x: x.genre_name)]
 
     def getGenreVector(self):
         """

@@ -1,6 +1,8 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/static/owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/owlcarousel/owl.theme.default.min.css">
     <link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -15,10 +17,24 @@
     <script src="/static/typeahead.bundle.js"></script>
     <script src="/static/bloodhound.js"></script>
     <script src="/static/aniai.js"></script>
+    <script src"/static/recommendations.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
-
-    
+    <script>
+        $(document).ready(function() {
+            $(".owl-carousel").owlCarousel();
+        });
+        document.addEventListener("DOMContentLoaded", function(event) {
+            {% if data %}
+            //    var anime_index = {{data[0][0]['anime_id']}}
+            //    potato(anime_index);
+          //  console.log("100% fully loaded");
+           // console.log(anime_index);
+            {% endif %}
+            
+        }
+        );
+    </script>    
 </head>
 
 <body>
@@ -144,9 +160,9 @@
         <!--tag line-->
         <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
         <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
-            <div class="form row" style="height:32px"> 
+            <div class="form row" style="height:32px; padding:0; margin:0; width:100%"> 
                 <!-- style:"height:30px vertical-align:bottom"> -->
-                <div class="col-lg-10" style="padding-right:0">
+                <div class="col-lg-10" style="padding:0; margin:0">
                     <div id="scrollable-dropdown-menu">
                         <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
                     </div>
@@ -164,7 +180,7 @@
             </div>
 
             <div class="collapse" id="collapseForm">
-                <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
                             <span><i>Choose As Many Flavors As You Like:</i></span>
@@ -399,9 +415,9 @@
             <div id="tester" class="media-header">
                 <div class="row title">
                     <div class="col title" id="media-title">
-                        <span>{{data[0][0]["anime_english_title"]}}</span>
+                        <span>random title</span>
                     </div>
-                    <div class="col-auto icon">
+                    <div class="col-auto icon" style="font-style:normal">
                         <img src="/static/images/yahoo-view.png" hidden>
                         <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" hidden>hulu</span>
                         <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0">
@@ -499,6 +515,8 @@
                      class="active"
                      {% endif %}>
                      </li>
+
+                     
                      {% endfor %}
                 </ol>
                 <div class = "carousel-inner" style="overflow:hidden">
@@ -507,7 +525,9 @@
                         <div class = "row">
                             {% for d in lst %}
                             <div class="col carousel-picture" scroll="no" id="suggestionCard">
-                                    <div class="view overlay" id="suggestionCard" data-index = {{d["anime_id"]}}>
+                                    <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
+                                     data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
+                                     data-episodes="{{d['anime_number_of_episodes']}}" data-genres="{{d['anime_genres']}}" data-synopsis="{{d['anime_synopsis']}}">
                                 <div class="container carousel-picture" id="suggestionCard">
                                         <img src={{d["anime_image_url"]}} class="carousel-picture">
                                     </div>
@@ -549,6 +569,28 @@
                 </a>
             </div>
 
+
+{% else %}
+<h1> THIS IS A HEADER </h1>
+
+<div class="owl-carousel owl-theme owl-loaded" style="background-color: white" hidden>
+    <div class="owl-stage-outer">
+        <div class="owl-stage owl-height">
+            <div class="owl-item">
+                <div class="container recommended">
+                </div>
+            </div>
+            <div class="owl-item"> your content </div>
+            <div class="owl-item"> Your content </div>
+            <div class="owl-item"> your content </div>
+            <div class="owl-item"> Your content </div>
+            <div class="owl-item"> your content </div>
+            <div class="owl-item"> Your content </div>
+            <div class="owl-item"> your content </div>
+        </div>
+    </div>
+</div>
+
         {% endif %}
     </div>
     <!--    <script>
@@ -561,10 +603,8 @@
     <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script> -->
  
             <script>
-                $(".view").click(function() {
-                    alert("in card");
-                    var anime_id = $(this).attr('data-index');
-                    $.getJSON("/static/data/anime_info.json", function(data) {
+                var potato = function(anime_id) {
+                        $.getJSON("/static/data/anime_info.json", function(data) {
                         var anime = data[anime_id];
                         $('#media-image').attr('src', anime.anime_image_url);
                         $('#media-title span').text(anime.anime_english_title);
@@ -580,55 +620,21 @@
                         $('#media-genres').replaceWith(
                         '<div class="col genres" id="media-genres">' + str + '</div>'
                         );
-                        alert(tags);
-                        alert(str);
-                    });
-                 });
-</script>
-<script>
-                    console.log("json is " + json);
-                    var anime_id = $(this).attr('data-anime-id');
-                    var anime_img = $(this).attr('data-anime-id');
-                    var anime_id = $(this).attr('data-anime-id');
-                    var anime_image_url = $(this).attr('data-url')
-                    var animie_title = $(this).attr('data-title')
+                        console.log("Finished potato");
+                        });
+                    };
+
+                $(".view").click(function() {
+                    var anime_index = $(this).attr('data-index');
+                    var anime_image_url = $(this).data("image");
+                    var title = $(this).data("title");
+                    var synopsis = $(this).data("synopsis");
+
                     
-                        //$('#media-title span').text(anime_title);
-                        var synopsis = $(this).attr("data-synposis")
-                        $('#media-image').attr('src', anime_image_url);
-                        $('#media-type span').text('blah');
-                         // this is messed up because of ""
-                        // Gary: Hey Cheyenne, we can store the data into the divs and jquery should be able to pick up on it
-                        // Seems slightly better than going through all json until thing is found
-
-                        // but either way works I guess since overhead into putting it into html data tag doesn't seem to be that bad. 
-                        //alert('clicked'); 
-
-                        $.getJSON("/static/data/anime_info.json", function(data) {
-                          data.forEach(function(anime) {
-                              if (anime.anime_id == anime_id) {
-                                  var anime_title = anime.anime_english_title;
-                                  var anime_video_url = anime.anime_video_url;
-                                  console.log(anime_video_url);
-                                  if (anime_video_url !== "none") {
-                                      $('#video-link').attr('href', anime_video_url);
-                                  };
-                                  $('#media-title span').text(anime_title);
-                              };
-                          });
-                      });
-
-                        //      var anime_image_url = anime.anime_image_url;
-                        //      $(".media").replaceWith(
-                        //         '<div class="media">' +
-                        //             '<a class = "media-left media-bottom">' +
-                        //                 '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
-                        //              '<h5> ' + anime_title + ' </h5></div>');  };     }); });
-                        // $(".media").replaceWith(
-                        //        '<div class="media">' +
-                        //            '<a class = "media-left media-bottom">' + '<img src = ' + anime_image_url + " alt = 'Anime Image' style = 'height:50%'></a>" +
-                        //             '<h5> ' + synopsis + ' </h5></div>');
-                }); 
-            </script>  <!--     <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script> -->
+                    $('#media-image').attr('src', anime_image_url);
+                    $('#media-title span').text(title);
+                });
+                  </script>
+    <script src="/static/owlcarousel/owl.carousel.min.js"></script>
 </body>
 </html>

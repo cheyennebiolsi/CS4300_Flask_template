@@ -9,7 +9,8 @@ converter = SerializableToModelConverter()
 fileName = sys.argv[1]
 videoUrlsCsv = sys.argv[2]
 data = converter.convertFromFile(fileName)
-attributes = ["anime_id", "anime_index", "anime_english_title", "anime_image_url", "anime_synopsis"]
+attributes = ["anime_id", "anime_index", "anime_english_title", "anime_image_url", "anime_synopsis", "anime_type", "anime_rating",
+              "anime_rating_count", "anime_ranked", "anime_popularity", "anime_favorites", "anime_number_of_episodes", "anime_aired", "anime_status", "anime_aired", "anime_studios", "anime_japanese_title", "anime_duration"]
 result = []
 videoUrlDict = {}
 with open(videoUrlsCsv, "rb") as videocsv:
@@ -25,14 +26,37 @@ with open(videoUrlsCsv, "rb") as videocsv:
                 videoUrlDict[anime_id] = "none"
             else:
                 videoUrlDict[anime_id] = anime_video_url
+#result = {}
 for document in data:
     dictionary = {attribute:getattr(document, attribute) for attribute in attributes}
     anime_id = int(dictionary["anime_id"])
+    dictionary["anime_id"] = int(anime_id)
+    if dictionary["anime_english_title"] == "":
+        dictionary["anime_english_title"] = document.anime_title
     if anime_id in videoUrlDict:
         dictionary["anime_video_url"] = videoUrlDict[anime_id]
     else:
         dictionary["anime_video_url"] = "none"
+    try:
+        dictionary["anime_ranked"] = int(dictionary["anime_ranked"][1:])
+    except:
+        pass
+    try:
+        dictionary["anime_popularity"] = int(dictionary["anime_popularity"][1:])
+    except:
+        pass
+    dictionary["anime_review_overall_average"] = document.getReviewOverallAverage()
+    dictionary["anime_review_story_average"] = document.getReviewStoryAverage()
+    dictionary["anime_review_animation_average"] = document.getReviewAnimationAverage()
+    dictionary["anime_review_sound_average"] = document.getReviewSoundAverage()
+    dictionary["anime_review_character_average"] = document.getReviewCharacterAverage()
+    dictionary["anime_review_enjoyment_average"] = document.getReviewEnjoymentAverage()
+    dictionary["anime_tags"] = "|".join(document.getAllTags())
+ #   result[int(anime_id)] = dictionary
     result.append(dictionary)
+#    print(anime_id)
+print("Found {} anime".format(len(result)))
 with open("../../app/static/data/anime_info.json", "w+") as jsonFile:
-    json.dump(result, jsonFile)
-  
+    #for resultDict in result:
+    json.dump(result, jsonFile, indent=4)
+    #    outfile.write('\n')

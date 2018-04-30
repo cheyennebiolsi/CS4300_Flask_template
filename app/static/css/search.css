@@ -74,7 +74,7 @@ html, body {
 }
 
 body {
-
+    font-style: normal;
     padding-left: 10%;
     padding-right: 10%; 
     background-color: black;
@@ -84,6 +84,7 @@ body {
     text-align: center;
     font-size: 18;
     padding-top: 10px;
+    font-style: normal;
 }
 
 hr {
@@ -183,6 +184,10 @@ hr {
 .genre-checkbox input[type="checkbox"]:checked ~.unchecked
 {
     display: none;
+}
+
+.fancy-checkbox {
+    font-style: normal;
 }
 
 .fancy-checkbox input[type="checkbox"],
