@@ -394,6 +394,12 @@
                         <img src={{data[0][0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
+                <div class = "media-self-center media-left anime-synopsis">
+                   <div class="container anime-synopsis" id="media-synopsis">
+                                <div class="synopsis-header"> Synopsis </div>
+                                <span>{{data[0][0]["anime_synopsis"]}}</span>
+                    </div>
+                </div>
                 <!--        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
                 <div class="view overlay" style="cursor:pointer">
                     <img src={{data[0][0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
@@ -408,11 +414,7 @@
 
                 <div class="media-body" style="height:50%">
                         <div class="row feature">
-                            <div class="col synopsis" id="media-synopsis">
-                                <div class="synopsis-header"> Synopsis </div>
-                                <span>{{data[0][0]["anime_synopsis"]}}</span>
-                            </div>
-                            <div class="col-6 semantic media-logo">
+                            <div class="col semantic media-logo">
                             <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                             Top 10 Words:
                             <script>

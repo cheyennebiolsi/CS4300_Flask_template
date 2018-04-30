@@ -77,7 +77,19 @@
     object-fit: contain;
 }
 
+.media-self-center.media-left.anime-synopsis {
+    width: 30%;
+    height: 50%;
+    padding: 12px;
+    margin: 0;
+}
 
+.media .container.anime-synopsis {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    color: white;
+}
 
 .media-header .genre {
     text-align: center;
