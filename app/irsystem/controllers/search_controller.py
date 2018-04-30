@@ -168,7 +168,7 @@ def search():
 	# Option 3: Only Anime
 	else:
 		anime_indexes = query.split('|')
-		query_words = tag.split('|')
+		#query_words = tag.split('|')
 
 		if -1 in anime_indexes:
 			data = []
@@ -176,24 +176,23 @@ def search():
 		else:
 			output_message = 'Your search: ' + query
             
-            #Fix this
 			positive = np.zeros((len(anime_indexes)))
 			for index,word in enumerate(anime_indexes):
 				positive[index]=int(anime_indexes)
 			set_anime_ids=set(postive)
 
-			positive_words=np.zeros((len(query_words)))
-			for index,word in enumerate(quer_words):
-				positive_words[index]=word_to_ind.get(word,-1)
-			positive_words=positivewords[positive_words>=0]             
+# 			positive_words=np.zeros((len(query_words)))
+# 			for index,word in enumerate(quer_words):
+# 				positive_words[index]=word_to_ind.get(word,-1)
+# 			positive_words=positivewords[positive_words>=0]             
 
 			positive_show_vectors = review_array[positive,:]
 			show_result=np.sum(positive_vectors,axis=0)
             
            
-			positive_word_vectors = review_array[positive_words,:]
-			word_result=np.sum(positive_vectors,axis=0)
-			result=word_result+show_result            
+# 			positive_word_vectors = review_array[positive_words,:]
+# 			word_result=np.sum(positive_vectors,axis=0)
+# 			result=word_result+show_result            
             
 			scores=np.matmul((array),(result[:,np.newaxis]))
 			top_shows= np.argsort(-scores,axis=0)
@@ -204,9 +203,9 @@ def search():
 			for anim_id in enumerate(positive):
 				review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
                                               a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
-			for word_id in enumerate(positive_words):               
-				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
-                                              a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
+# 			for word_id in enumerate(positive_words):               
+# 				review_array[anim_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
+#                                               a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
 			json_array = []
             #returns most similar anime ids and similarity scores
 			for array_ind, anim_ind in enumerate(top_n_animes):
