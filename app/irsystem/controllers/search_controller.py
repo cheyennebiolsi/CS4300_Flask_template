@@ -180,7 +180,7 @@ def search():
 			positive = np.zeros((len(anime_indexes)))
 			for index,anim_ind in enumerate(anime_indexes):
 				positive[index]=int(anim_ind)
-			set_anime_ids=set(postive)
+			set_anime_ids=set(positive)
 
 # 			positive_words=np.zeros((len(query_words)))
 # 			for index,word in enumerate(quer_words):

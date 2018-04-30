@@ -30,7 +30,7 @@ $(document).ready(function() {
             },
             // suggestion: ,
             source: anime.ttAdapter(),
-            hint: false,
+            hint: true,
             minLength: 3
         },
         confirmKeys: [13, 44, 188],
