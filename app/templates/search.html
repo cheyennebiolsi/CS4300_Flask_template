@@ -394,12 +394,6 @@
                         <img src={{data[0][0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
-                <div class = "media-self-center media-left anime-synopsis">
-                   <div class="container anime-synopsis" id="media-synopsis">
-                                <div class="synopsis-header"> Synopsis </div>
-                                <span>{{data[0][0]["anime_synopsis"]}}</span>
-                    </div>
-                </div>
                 <!--        <a class = "media-left media-bottom" style="padding-bottom: 0px" href = "https://www.google.com" target="_blank">
                 <div class="view overlay" style="cursor:pointer">
                     <img src={{data[0][0]["anime_image_url"]}} class="img-fluid" alt = "Anime Image" style = "height:50%">
@@ -413,68 +407,72 @@
                 </a> -->
 
                 <div class="media-body" style="height:50%">
-                        <div class="row feature">
-                            <div class="col semantic media-logo">
-                            <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
-                            Top 10 Words:
-                            <script>
-                                var data_chart = {
-                                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
-                                    datasets: [
-                                        {
-                                            // label: "{{data[0][0]['anime_english_title']}}",
-                                            fill: true,
-                                            backgroundColor: "rgba(255,99,132,0.2)",
-                                            borderColor: "rgba(255,99,132,1)",
-                                            pointBorderColor: "#fff",
-                                            pointBackgroundColor: "rgba(255,99,132,1)",
-                                            pointBorderColor: "#fff",
-                                            data: [
-                                                Math.round({{data[0][0]["anime_review_overall_average"]}}*100)/100, 
-                                                Math.round({{data[0][0]["anime_review_story_average"]}}*100)/100,
-                                                Math.round({{data[0][0]["anime_review_enjoyment_average"]}}*100)/100,
-                                                Math.round({{data[0][0]["anime_review_character_average"]}}*100)/100,
-                                                Math.round({{data[0][0]["anime_review_sound_average"]}}*100)/100,
-                                                Math.round({{data[0][0]["anime_review_animation_average"]}}*100)/100
-                                            ]
-                                        }
-                                    ]
-                                };
-
-                                anime_scores = new Chart(document.getElementById("vis"), {
-                                    type: 'radar',
-                                    data: data_chart,
-                                    draggable: true,
-                                    options: {
-                                        title: {
-                                            display: true,
-                                            text: 'Anime Statistics',
-                                            fontColor: "#FFFFFF",
-                                            fontSize: 14
-                                        },
-                                        legend: {
-                                            display: false
-                                        },
-                                        scale: {
-                                            ticks: {
-                                                maxTicksLimit: 5,
-                                                backdropColor: 'black',
-                                                max: 10,
-                                                min: 0, 
-                                                fontSize: 6,
-                                                color: '#FFFFFF'
-                                            },
-                                            gridLines: {
-                                                color: "#FFFFFF"
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" id="media-synopsis">
+                                <span>Synopsis: {{data[0][0]["anime_synopsis"]}}</span>
+                            </div>
+                            <div class="col-6 semantic media-logo">
+                                <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
+                                Top 10 Words:
+                                <script>
+                                    var data_chart = {
+                                        labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                                        datasets: [
+                                            {
+                                                // label: "{{data[0][0]['anime_english_title']}}",
+                                                fill: true,
+                                                backgroundColor: "rgba(255,99,132,0.2)",
+                                                borderColor: "rgba(255,99,132,1)",
+                                                pointBorderColor: "#fff",
+                                                pointBackgroundColor: "rgba(255,99,132,1)",
+                                                pointBorderColor: "#fff",
+                                                data: [
+                                                    Math.round({{data[0][0]["anime_review_overall_average"]}}*100)/100, 
+                                                    Math.round({{data[0][0]["anime_review_story_average"]}}*100)/100,
+                                                    Math.round({{data[0][0]["anime_review_enjoyment_average"]}}*100)/100,
+                                                    Math.round({{data[0][0]["anime_review_character_average"]}}*100)/100,
+                                                    Math.round({{data[0][0]["anime_review_sound_average"]}}*100)/100,
+                                                    Math.round({{data[0][0]["anime_review_animation_average"]}}*100)/100
+                                                ]
                                             }
-                                        },
-                                        tooltips: {
-                                            enabled: true
-                                        },
-                                    }
-                                });
+                                        ]
+                                    };
 
-                            </script>
+                                    anime_scores = new Chart(document.getElementById("vis"), {
+                                        type: 'radar',
+                                        data: data_chart,
+                                        draggable: true,
+                                        options: {
+                                            title: {
+                                                display: true,
+                                                text: 'Anime Statistics',
+                                                fontColor: "#FFFFFF"
+                                            },
+                                            legend: {
+                                                display: false
+                                            },
+                                            scale: {
+                                                ticks: {
+                                                    maxTicksLimit: 5,
+                                                    backdropColor: 'black',
+                                                    max: 10,
+                                                    min: 0, 
+                                                    fontSize: 6,
+                                                    color: '#FFFFFF'
+                                                },
+                                                gridLines: {
+                                                    color: "#FFFFFF"
+                                                }
+                                            },
+                                            tooltips: {
+                                                enabled: true
+                                            },
+                                        }
+                                    });
+
+                                </script>
+                        </div>
                         </div>
 
                         <!--                <div class="row"><h2> This is a header </h2>
@@ -519,7 +517,7 @@
                                  data-animation= '{{d["anime_review_animation_average"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" style="height:100%">
-                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
+                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background: url("{{image_url}}")'></div>
                                 <div class="mask flex-center rgba-stylish-strong">
                                     <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
                                  </div>
@@ -600,7 +598,7 @@
                     $('#media-rating span').text(rating);
                     $('#media-count span').text(episode_count);
                     $('#media-duration span').text(duration);
-                    $('#media-synopsis span').text(synopsis);
+                    $('#media-synopsis span').text("Synopsis: " + synopsis);
                     var tags = tags.split("|");
                     var str = "";
                     for (var tag in tags) {
@@ -676,8 +674,7 @@
                             title: {
                                 display: true,
                                 text: 'Anime Statistics',
-                                fontColor: "#FFFFFF",
-                                fontSize: 14
+                                fontColor: "#FFFFFF"
                             },
                             legend: {
                                 display: false
@@ -713,7 +710,7 @@
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 
                                     '<div class="face front">' + 
-                                        '<div class="well well-sm inner" style="background-image: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
+                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
                             '</div>' + 
                             '<div class="face back">' +
                                 '<div class="well well-sm inner">' + 

@@ -21,7 +21,7 @@ weight_title = 6
 
 allanimelite = json.load(open('app/static/data/anime_info.json'))
 for index, element in enumerate(allanimelite):
-    element["anime_index"] = index
+	element["anime_index"] = index
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')
@@ -50,7 +50,7 @@ words=np.load("data/wordList.npy")
 #rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
-    word_to_ind[word]=index
+	word_to_ind[word]=index
 
 
 # Tags and Jaccard Similarity
@@ -70,7 +70,7 @@ def search():
 		switchlist.append(switch)
 		if(not (switch == 'on')):
 			filter_out[index]=True           
-            
+			
 	rel_filters=filter_bools[:, filter_out]   
 	shows_removed=np.where(rel_filters.any(axis=1))[0]
 	
@@ -79,74 +79,109 @@ def search():
 		data = []
 		output_message = ''
 	# Option 3: Only Anime
+	elif query and not words:
+		anime_indexes = query.split(',')
+		output_message = 'Your search: ' + query
+		
+		positive = np.zeros((len(anime_indexes)),dtype=int)
+		for index,anim_ind in enumerate(anime_indexes):
+			positive[index]=int(anim_ind)
+		set_anime_ids=set(positive)
+		
+		positive_show_vectors = review_array[positive,:]
+		show_result=np.sum(positive_show_vectors,axis=0)
+		result=show_result#+word_result           
+
+		scores=np.matmul((review_array),(result[:,np.newaxis]))
+		top_shows= np.argsort(-scores,axis=0)
+		#filter out the shows we don't want
+		mask=np.isin(top_shows,shows_removed,invert=True)
+		top_shows=top_shows[mask]   
+		top_n_shows= top_shows[:20]
+		bottom_n_shows= top_shows[-20:]
+
+		# rocchio
+		for value in enumerate(positive):
+			anim_id=value[1]
+			review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
+										  a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
+
+		json_array = []
+		#returns most similar anime ids and similarity scores
+		for array_ind, anim_ind in enumerate(top_n_shows):
+			score = scores[array_ind]
+			jsonfile = get_anime(anim_ind, allanimelite)
+			wordvec = get_top_words(anim_ind)   
+			concat="|".join(wordvec)                
+			if anim_ind not in set_anime_ids and jsonfile != "not found":
+				jsonfile['score'] = score
+				jsonfile['words'] = concat                    
+				json_array.append(jsonfile)
+		data = json_array
 	else:
-		anime_indexes = query.split('|')
+		anime_indexes = query.split(',')
 		query_words = words.split(',')
-		if -1 in anime_indexes:
-			data = []
-			output_message = 'Could not find your show. Please try again.'
+		output_message = 'Your search: ' + query
+		
+		if(query):
+			positive = np.zeros((len(anime_indexes)),dtype=int)
+			for index,anim_ind in enumerate(anime_indexes):
+				positive[index]=int(anim_ind)
+			set_anime_ids=set(positive)
 		else:
-			output_message = 'Your search: ' + query
-            
-			if(query):
-				positive = np.zeros((len(anime_indexes)),dtype=int)
-				for index,anim_ind in enumerate(anime_indexes):
-					positive[index]=int(anim_ind)
-				set_anime_ids=set(positive)
-			else:
-				positive= np.zeros((0))
-				set_anime_ids=set()
-            
-			if(words):
-				positive_words=np.zeros((len(query_words)),dtype=int)
-				for index,word in enumerate(query_words):
-					positive_words[index]=word_to_ind.get(word,-1)
-				positive_words=positive_words[positive_words>=0]     
-			else:
-				positive_words= np.zeros((0))
- 
-			show_result=np.zeros((review_array.shape[1]))
-			if(len(positive)>0):
-				positive_show_vectors = review_array[positive,:]
-				show_result=np.sum(positive_show_vectors,axis=0)
+			positive= np.zeros((0))
+			set_anime_ids=set()
+		
+		if(words):
+			positive_words=np.zeros((len(query_words)),dtype=int)
+			for index,word in enumerate(query_words):
+				positive_words[index]=word_to_ind.get(word,-1)
+			positive_words=positive_words[positive_words>=0]     
+		else:
+			positive_words= np.zeros((0))
 
-			word_result=np.zeros((review_array.shape[1]))
-			if(len(positive_words)>0):           
-				positive_word_vectors = word_array[positive_words,:]
-				word_result=np.sum(positive_word_vectors,axis=0)
-                
-			result=show_result+word_result           
-			scores=np.matmul((review_array),(result[:,np.newaxis]))
-			adjust=scores#+rat_array
-			top_shows= np.argsort(-adjust,axis=0)
-            #filter out the shows we don't want
-			mask=np.isin(top_shows,shows_removed,invert=True)
-			top_shows=top_shows[mask]   
-			top_n_shows= top_shows[:20]
-			bottom_n_shows= top_shows[-20:]
+		show_result=np.zeros((review_array.shape[1]))
+		if(len(positive)>0):
+			positive_show_vectors = review_array[positive,:]
+			show_result=np.sum(positive_show_vectors,axis=0)
 
-			# rocchio
-			for value in enumerate(positive):
-				anim_id=value[1]
-				review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
-                                              a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
- 			for value in enumerate(positive_words):
- 				word_id=value[1]
- 				review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
-                                               a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
-			json_array = []
-            #returns most similar anime ids and similarity scores
-			for array_ind, anim_ind in enumerate(top_n_shows):
-				score = scores[array_ind]
-				jsonfile = get_anime(anim_ind, allanimelite)
-				wordvec = get_top_words(anim_ind)   
-				concat="|".join(wordvec)                
-				if anim_ind not in set_anime_ids and jsonfile != "not found":
-					jsonfile['score'] = score
-					jsonfile['words'] = concat                    
-					json_array.append(jsonfile)
-			data = json_array
-            
+		word_result=np.zeros((review_array.shape[1]))
+		if(len(positive_words)>0):           
+			positive_word_vectors = word_array[positive_words,:]
+			word_result=np.sum(positive_word_vectors,axis=0)
+			
+		result=show_result+word_result           
+		scores=np.matmul((review_array),(result[:,np.newaxis]))
+		adjust=scores#+rat_array
+		top_shows= np.argsort(-adjust,axis=0)
+		#filter out the shows we don't want
+		mask=np.isin(top_shows,shows_removed,invert=True)
+		top_shows=top_shows[mask]   
+		top_n_shows= top_shows[:20]
+		bottom_n_shows= top_shows[-20:]
+
+		# rocchio
+		for value in enumerate(positive):
+			anim_id=value[1]
+			review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
+										  a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
+			for value in enumerate(positive_words):
+				word_id=value[1]
+				review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
+										   a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
+		json_array = []
+		#returns most similar anime ids and similarity scores
+		for array_ind, anim_ind in enumerate(top_n_shows):
+			score = scores[array_ind]
+			jsonfile = get_anime(anim_ind, allanimelite)
+			wordvec = get_top_words(anim_ind)   
+			concat="|".join(wordvec)                
+			if anim_ind not in set_anime_ids and jsonfile != "not found":
+				jsonfile['score'] = score
+				jsonfile['words'] = concat                    
+				json_array.append(jsonfile)
+		data = json_array
+			
 	# print(data)
 	data = makeListsOfList(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
@@ -158,12 +193,12 @@ def search():
 # }
 
 def get_top_words(anime_index,howmany=10):
-    query=review_array[anime_index]
-    scores=np.matmul((word_array),(query.T))
-    top_words_ind= np.argsort(-scores,axis=0)
-    top_n_words_ind = top_words_ind[:howmany]
-    top_n_words=words[top_n_words_ind]
-    return top_n_words.flatten(order="F")
+	query=review_array[anime_index]
+	scores=np.matmul((word_array),(query.T))
+	top_words_ind= np.argsort(-scores,axis=0)
+	top_n_words_ind = top_words_ind[:howmany]
+	top_n_words=words[top_n_words_ind]
+	return top_n_words.flatten(order="F")
 
 
 def get_anime(anime_index, jsonfile):
@@ -175,21 +210,21 @@ def get_anime(anime_index, jsonfile):
 	return "not found"
 
 def get_cossim(queryvector, ind2, tfidf):
-    """Returns a float giving the cosine similarity of 
-       the two anime's npy (either based on reviews/reviews and synopsis/synopsis.
-    
-    Params: {mov1: String,
-             mov2: String,
-             input_doc_mat: Numpy Array,
-             movie_name_to_index: Dict}
-    Returns: Float (Cosine similarity of the two movie transcripts.)
-    """
-    # YOUR CODE HERE
-    # numpy matrix whose shape is the number of documents by the number of words you're considering max 5000
-    othervector = tfidf[ind2,:]
-    numerator = np.dot(queryvector, othervector)
-    denominator = (np.dot(np.linalg.norm(queryvector), np.linalg.norm(othervector)))
-    return numerator/denominator
+	"""Returns a float giving the cosine similarity of 
+	   the two anime's npy (either based on reviews/reviews and synopsis/synopsis.
+	
+	Params: {mov1: String,
+			 mov2: String,
+			 input_doc_mat: Numpy Array,
+			 movie_name_to_index: Dict}
+	Returns: Float (Cosine similarity of the two movie transcripts.)
+	"""
+	# YOUR CODE HERE
+	# numpy matrix whose shape is the number of documents by the number of words you're considering max 5000
+	othervector = tfidf[ind2,:]
+	numerator = np.dot(queryvector, othervector)
+	denominator = (np.dot(np.linalg.norm(queryvector), np.linalg.norm(othervector)))
+	return numerator/denominator
 
 def get_jaccard(setA, setB):
 	if len(setB) != 0:
@@ -322,35 +357,35 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age,
 	return new_data
 
 def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
-    q0 = query
-    if relevant.shape[0]!=0:
-        f = lambda i: np.array(relevant)[i]
-        dREL = np.fromfunction(np.vectorize(f), (len(relevant),) , dtype=int)
-        dREL = np.sum(dREL,axis=0)
-    else:
-        dREL = 0
-      
-    if irrelevant.shape[0]!=0:
-        f = lambda i: np.array(irrelevant)[i]
-        dNREL = np.fromfunction(np.vectorize(f), (len(irrelevant),) , dtype=int)
-        dNREL = np.sum(dNREL,axis=0)
-    else:
-        dNREL = 0    
-    
-    if relevant.shape[0]!=0 and irrelevant.shape[0]!=0:
-        q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)-(c*((1/irrelevant.shape[0])*dNREL))
-    elif len(relevant)==0:
-        q1 = (a*q0)-(c*((1/irrelevant.shape[0])*dNREL))
-    elif len(irrelevant)==0:
-        q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)
+	q0 = query
+	if relevant.shape[0]!=0:
+		f = lambda i: np.array(relevant)[i]
+		dREL = np.fromfunction(np.vectorize(f), (len(relevant),) , dtype=int)
+		dREL = np.sum(dREL,axis=0)
+	else:
+		dREL = 0
+	  
+	if irrelevant.shape[0]!=0:
+		f = lambda i: np.array(irrelevant)[i]
+		dNREL = np.fromfunction(np.vectorize(f), (len(irrelevant),) , dtype=int)
+		dNREL = np.sum(dNREL,axis=0)
+	else:
+		dNREL = 0    
+	
+	if relevant.shape[0]!=0 and irrelevant.shape[0]!=0:
+		q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)-(c*((1/irrelevant.shape[0])*dNREL))
+	elif len(relevant)==0:
+		q1 = (a*q0)-(c*((1/irrelevant.shape[0])*dNREL))
+	elif len(irrelevant)==0:
+		q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)
 
-    if clip:
+	if clip:
 		q1[q1<0] = 0
 
-    return q1
+	return q1
 
 def makeListsOfList(data_list):
-    return [data_list[i:i+8] for i in range(0, len(data_list), 8)]
+	return [data_list[i:i+8] for i in range(0, len(data_list), 8)]
 
 def keep(x):
 	if x == None:
