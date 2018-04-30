@@ -37,7 +37,7 @@ $(document).ready(function() {
         confirmKeys: [13, 44, 188],
         maxTags: 5,
         freeInput: false,
-        delimiter: '|'
+        delimiter: ','
     });
 
     // $('#animeinput .typeahead').typeahead({
