@@ -10,7 +10,11 @@ fileName = sys.argv[1]
 videoUrlsCsv = sys.argv[2]
 data = converter.convertFromFile(fileName)
 attributes = ["anime_id", "anime_index", "anime_english_title", "anime_image_url", "anime_synopsis", "anime_type", "anime_rating",
-              "anime_rating_count", "anime_ranked", "anime_popularity", "anime_favorites", "anime_number_of_episodes", "anime_aired", "anime_status", "anime_aired", "anime_studios", "anime_japanese_title", "anime_duration"]
+              "anime_rating_count", "anime_ranked", "anime_popularity", "anime_favorites", "anime_number_of_episodes", "anime_aired",
+               "anime_status", "anime_aired", "anime_studios", "anime_japanese_title", "anime_duration", "anime_other",
+              "anime_alternative_setting", "anime_prequel", "anime_sequel", "anime_parent_story", "anime_summary", "anime_adaptation",
+              "anime_side_story", "anime_spinoff", "anime_licensors", "anime_producers", "anime_broadcast", "anime_status",
+              "anime_premiered", "anime_background", "anime_source", "anime_rating_value"]
 result = []
 videoUrlDict = {}
 with open(videoUrlsCsv, "rb") as videocsv:

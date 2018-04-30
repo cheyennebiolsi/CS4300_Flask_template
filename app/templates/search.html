@@ -23,9 +23,10 @@
     <script>
         $(document).ready(function() {
             $(".owl-carousel").owlCarousel( {
+                items: 5,
                 stagePadding: 50,
                 loop: true,
-                margin: 10,
+                margin: 30,
                 nav: true
             });
         });
@@ -43,100 +44,6 @@
 
 <body>
 
-
-    <script language="JavaScript1.2">
-        //https://pbs.twimg.com/profile_images/1096714485/gary_busey_400x400.jpeg
-        //background: url("myPicture.jpg");
-
-        grphcs=new Array(6)
-        Image0=new Image(20,20);
-        Image0.src=grphcs[0]="/static/images/petal1.png";
-
-        Image1=new Image();
-        Image1.src=grphcs[1]="/static/images/petal2.png";
-        //Image1.z-index=1;
-        Image2=new Image();
-        Image2.src=grphcs[2]="/static/images/petal3.png";
-        //Image2.z-index=-1;
-        Image3=new Image();
-        Image3.src=grphcs[3]="/static/images/petal4.png";
-        //Image3.z-index=-1;
-        Image4=new Image();
-        Image4.src=grphcs[4]="/static/images/petal5.png";
-        //Image4.z-index=-1;
-        Image5=new Image();
-        Image5.src=grphcs[5]="/static/images/petal6.png";
-        //Image5.z-index=-1;
-
-        Amount=10; //Smoothness depends on image file size, the smaller the size the more you can use
-        Ypos=new Array();
-        Xpos=new Array();
-        Speed=new Array();
-        Step=new Array();
-        Cstep=new Array();
-        ns=(document.layers)?1:0;
-        ns6=(document.getElementById&&!document.all)?1:0;
-
-        if (ns){
-        for (i = 0; i < Amount; i++){
-        var P=Math.floor(Math.random()*grphcs.length);
-        rndPic=grphcs[P];
-        document.write("<LAYER NAME='sn"+i+"' LEFT=0 TOP=0><img src="+rndPic+"></LAYER>");
-        }
-        }
-        else{
-        document.write('<div style="position:absolute;top:0px;left:0px"><div style="position:relative">');
-        for (i = 0; i < Amount; i++){
-        var P=Math.floor(Math.random()*grphcs.length);
-        rndPic=grphcs[P];
-        document.write('<img id="si'+i+'" src="'+rndPic+'" style="position:absolute;top:0px;left:0px">');
-        }
-        document.write('</div></div>');
-        }
-        WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
-        WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
-        for (i=0; i < Amount; i++){                                                                
-         Ypos[i] = Math.round(Math.random()*WinHeight);
-         Xpos[i] = Math.round(Math.random()*WinWidth);
-         Speed[i]= Math.random()*5+3;
-         Cstep[i]=0;
-         Step[i]=Math.random()*0.1+0.05;
-        }
-        function fall(){
-        var WinHeight=(ns||ns6)?window.innerHeight:window.document.body.clientHeight;
-        var WinWidth=(ns||ns6)?window.innerWidth-70:window.document.body.clientWidth;
-        var hscrll=(ns||ns6)?window.pageYOffset:document.body.scrollTop;
-        var wscrll=(ns||ns6)?window.pageXOffset:document.body.scrollLeft;
-        for (i=0; i < Amount; i++){
-        sy = Speed[i]*Math.sin(90*Math.PI/180)*.5;
-        sx = Speed[i]*Math.cos(Cstep[i]);
-        Ypos[i]+=.2*sy;
-        Xpos[i]+=.3*sx; 
-        if (Ypos[i] > WinHeight){
-        Ypos[i]=-60;
-        Xpos[i]=Math.round(Math.random()*WinWidth);
-        Speed[i]=Math.random()*5+3;
-        }
-        if (ns){
-        document.layers['sn'+i].left=Xpos[i];
-        document.layers['sn'+i].top=Ypos[i]+hscrll;
-        }
-        else if (ns6){
-        document.getElementById("si"+i).style.left=Math.min(WinWidth,Xpos[i]);
-        document.getElementById("si"+i).style.top=Ypos[i]+hscrll;
-        }
-        else{
-        eval("document.all.si"+i).style.left=Xpos[i];
-        eval("document.all.si"+i).style.top=Ypos[i]+hscrll;
-        } 
-        Cstep[i]+=Step[i];
-        }
-        setTimeout('fall()',20);
-        }
-
-        window.onload=fall
-        //-->
-    </script>
 
     
 
@@ -166,37 +73,45 @@
         <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
             <div class="form row" style="height:32px; padding:0; margin:0; width:100%"> 
                 <!-- style:"height:30px vertical-align:bottom"> -->
-                <div class="col-lg-10" style="padding:0; margin:0">
+                <div class="col-lg-11 animesearch" style="padding:0; margin:0">
                     <div id="scrollable-dropdown-menu">
                         <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..."/>
                     </div>
                     
-                    <div id="scrollable-dropdown-menu">
+<!--                    <div id="scrollable-dropdown-menu">
                         <input id="wordinput" type="text" name="wordsearch" placeholder="Words..."/>
-                    </div>
+                    </div> -->
                     
                 </div>
-                <div class="col-md-1" style="margin: 0; padding:0">
-                    <!-- <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
-                    <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white"><i class="fa fa-filter"></i>Filter</button>
-                </div>
                 <div class="col-md-1" style="margin: 0; padding: 0">
-                    <button class="search-button" type="submit" style="border-top-right-radius:4px;border-bottom-right-radius:4px"><i class="fa fa-search"></i></button>
+                    <button class="search-button" type="submit" style="border-top-right-radius:4px"><i class="fa fa-search"></i></button>
                 </div>
                 <!--<div class="form-group col-md-4">
                                 <input type="submit" value="Submit">
                             </div> -->
-            </div>
+            </div> <!--class = "form-inline global-search" id="myform"> -->
+            <div class="form row" style="height:32px; padding:0; margin:0; width:100%"> 
+                <!-- style:"height:30px vertical-align:bottom"> -->
+                <div class="col-lg-11 wordsearch" style="padding:0; margin:0">
+                    <div id="scrollable-dropdown-menu">
+                        <input id="wordinput" type="text" name="wordsearch" placeholder="Words..."/>
+                    </div>
+                </div>
+                <div class="col-md-1" style="margin: 0; padding:0">
+                    <!-- <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
+                    <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white;border-bottom-right-radius:4px"><i class="fa fa-filter"></i>Filter</button>
+                </div>
+             </div>
 
             <div class="collapse" id="collapseForm">
                 <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
-                            <span><i>Choose As Many Flavors As You Like:</i></span>
+                            <span>Choose As Many Flavors As You Like</span>
                         </div>
                         <hr>
                         <div class="form-check">
-                            {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'meccha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
+                            {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'mecha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
                             {% for genre in genres %}
                             <label class="genre-checkbox" style="color:white">
                                 <input type="checkbox" name={{genre}} checked/>
@@ -227,7 +142,7 @@
 
                     <div class="col-md-auto">
                         <div class="filter-header">
-                            <span><i>Type</i></span>
+                            <span>Type</span>
                         </div>
                         <hr>
                         <div class="form-check">
@@ -262,8 +177,16 @@
                                 OVA
                             </label>
                         </div>
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white;">
+                                <input type="checkbox" name="displayOna" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                ONA
+                            </label>
+                        </div>
                         <div class="filter-header">
-                            <span><i>How You Want To Watch:<i></span>
+                            <span>How You Want To Watch</span>
                         </div>
                         <hr>
                         <div class="form-check">
@@ -580,33 +503,13 @@
 
 
 {% else %}
-<h1> THIS IS A HEADER </h1>
+<h1 style="color: white"> Recommended Anime </h1>
 
 <div class="owl-carousel owl-theme owl-loaded" style="height: 400px">
     <div class="owl-stage-outer">
         <div class="owl-stage" id="recommendation-stage">
             <div class="owl-item">
-                    <div class="flip">
-                        <div class="recommend-card">
-                            <div class="face front">
-                                <div class="well well-sm inner" style="background: url('https://myanimelist.cdn-dena.com/r/334x484/images/anime/5/47421.webp?s=90572303ecc9ea0fbc5b97431bcae432'); background-size: cover">Front</div>
-                            </div>
-                            <div class="face back">
-                                <div class="recommendation-header">
-                                    This is a test
-                                </div>
-                                <div class="well well-sm inner">Back</div>
-                            </div>
-                        </div>
-                    </div>
             </div>
-            <div class="owl-item"> your content </div>
-            <div class="owl-item"> Your content </div>
-            <div class="owl-item"> your content </div>
-            <div class="owl-item"> Your content </div>
-            <div class="owl-item"> your content </div>
-            <div class="owl-item"> Your content </div>
-            <div class="owl-item"> your content </div>
         </div>
     </div>
 </div>
@@ -665,12 +568,14 @@
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 
                                     '<div class="face front">' + 
-                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover"></div>' + 
+                                        '<div class="well well-sm inner" style="background: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
                             '</div>' + 
                             '<div class="face back">' +
-                                '<div class="recommendation-header">' + anime.anime_english_title +
-                                '</div>' + 
-                                '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                                '<div class="well well-sm inner">' + 
+                                    '<div class="recommendation-header">' + anime.anime_english_title +
+                                    '</div>' + 
+                                    '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                                '</div>' +
                            ' </div>' + 
                         '</div>' +
                     '</div>' +
@@ -697,7 +602,6 @@
                 
               });
               $(document).on("click", ".flip", function() {
-                  alert("clicked");
                   $(this).find('.recommend-card').toggleClass('flipped');
               });
                 
@@ -709,7 +613,6 @@
 
     <script>
         $('.flip').click(function() {
-            alert("clicked");
             $(this).find('.recommend-card').toggleClass('flipped');
         });
     </script>
