@@ -61,7 +61,10 @@ filter_array = ['action','adventure','cars','comedy','dementia','demons','myster
 def search():
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
-	
+	filtered_true = False
+	if query or words: 
+		filtered_true = True
+
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
 	filter_dictionary2=dict()
 	for index, filters in enumerate(filter_array):
