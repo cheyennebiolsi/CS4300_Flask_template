@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
     <link rel="stylesheet" href="/static/css/recommended.css" type="text/css">
     <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
-    <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <script src="/static/typeahead.bundle.js"></script>
     <script src="/static/bloodhound.js"></script>
     <script src="/static/js/Chart.bundle.min.js"></script>
@@ -615,9 +614,19 @@
                 </div>
                 <div class= "media-self-center media-left anime-statistics">
                     <div class="container anime-score">
-                        <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"][0]}}</span></div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="synopsis-header" id="rating-value"><span>Rating: {{data[0]["anime_rating_value"]}}</span></div>
+                                <div class="synopsis-header" id="rater-number"><span>Number of Raters: {{data[0]["anime_rating_count"]}}</span></div>
+                            </div>
+                            <div class="col=6">
+                                <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"]}}</span></div>
+                                <div class="synopsis-header" id="reviewer-number"><span>Number of Reviewers: {{data[0]["anime_review_number"]}}</span></div>
+                            </div>
+                       </div>
                     </div>
                     <div class="container anime-statistics">
+                        <div class="container" style="width: 90%; height: 100%">
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                                 <script>
                                     var data_chart = {
@@ -649,7 +658,7 @@
                                         options: {
                                             title: {
                                                 display: true,
-                                                text: 'Anime Statistics',
+                                                text: 'Review Score',
                                                 fontColor: "#FFFFFF",
                                                 fontSize: 14
                                             },
@@ -676,6 +685,7 @@
                                     });
 
                                 </script>
+                          </div>
                     </div>
                 </div>
                 <div class="media-body" style="height:50%">
@@ -725,9 +735,9 @@
                                  data-character = '{{d["anime_review_character_average"]}}'
                                  data-sound= '{{d["anime_review_sound_average"]}}'
                                  data-animation= '{{d["anime_review_animation_average"]}}'
-                                 data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
-                                 data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}"
-                                 data-similarity="{{d['score'][0]}}" 
+                                 data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}"  
+                                 data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
+                                 data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
                                  data-words="{{d['words']}}" style="height:100%">
                                 <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
                                 <div class="mask flex-center rgba-stylish-strong">
@@ -767,27 +777,6 @@
     <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script> -->
  
             <script>
-                var potato = function(anime_id) {
-                        $.getJSON("/static/data/anime_recommended.json", function(data) {
-                        var anime = data[anime_id];
-                        $('#media-image').attr('src', anime.anime_image_url);
-                        $('#media-title span').text(anime.anime_english_title);
-                        $('#media-type span').text(anime.anime_type);
-                        $('#media-rating span').text(anime.anime_rating);
-                        $('#episode-count span').text(anime.anime_number_of_episodes);
-                        $('#media-duration').text(anime.anime_duration);
-                        var tags = anime.anime_tags.split("|");
-                        var str = "";
-                        for (var tag in tags) {
-                            str += '<span class="genre">' + tags[tag] + "</span>";
-                        };
-                        $('#media-genres').replaceWith(
-                        '<div class="col genres" id="media-genres">' + str + '</div>'
-                        );
-                        console.log("Finished potato");
-                        });
-                    };
-
                 $("#suggestion-carousel").on('click', '.view', function() {
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
@@ -806,6 +795,9 @@
                     var sound = $(this).data("sound");  
                     var animation = $(this).data("animation");
                     var similarity = $(this).data("similarity");
+                    var reviewernumber = $(this).data("reviewernumber");
+                    var raternumber = $(this).data("raternumber");
+                    var ratingvalue = $(this).data("ratingvalue");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -815,6 +807,9 @@
                     $('#media-synopsis span').text(synopsis);
                     $('#episode-count span').text(episode_count + " episodes");
                     $('#similarity-score span').text("Similarity Score: " + similarity);
+                    $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
+                    $('#rater-number span').text("Number of Raters: " + raternumber);
+                    $('#rating-value span').text("Rating: " + ratingvalue);
                     var tags = tags.split("|");
                     var str = "";
                     for (var tag in tags) {
@@ -899,7 +894,7 @@
                         options: {
                             title: {
                                 display: true,
-                                text: 'Anime Statistics',
+                                text: 'Review Score',
                                 fontColor: "#FFFFFF",
                                 fontSize: 14
                             },
@@ -932,7 +927,6 @@
             $.getJSON("/static/data/anime_recommended.json", function(data) {
                 var str = "";
                 data.forEach(function(anime) {
-                    console.log(anime.anime_image_url);
                 str += '<div class="owl-item">' + 
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 

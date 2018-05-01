@@ -63,10 +63,14 @@ def search():
 	words = request.args.get('wordsearch')
 	
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
-	switchlist=list()
+	filter_dictionary2=dict()
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
-		switchlist.append(switch)
+		# if switch == None:
+		# 	filter_dictionary[filters] = 'off'
+		# else:
+		# 	filter_dictionary[filters] = None
+		filter_dictionary2[filters] = switch
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
