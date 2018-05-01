@@ -63,11 +63,20 @@ def search():
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
 	
+	filtered_true = False
+	if query or words: 
+		filtered_true = True
+
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
 	switchlist=list()
+	filter_dictionary2 = {}
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
-		switchlist.append(switch)
+		# if switch == None:
+		# 	filter_dictionary[filters] = 'off'
+		# else:
+		# 	filter_dictionary[filters] = None
+		filter_dictionary2[filters] = switch
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
@@ -150,7 +159,7 @@ def search():
             
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
+		prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
