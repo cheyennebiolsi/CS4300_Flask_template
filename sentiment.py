@@ -13,6 +13,11 @@ from bs4 import BeautifulSoup
 
 tokenizer = TweetTokenizer()
 
+
+poop = np.genfromtxt('idToIndex.csv', delimiter=",")
+poop2 = np.delete(poop, 0, 0)
+anime_id_column = poop2[:,0]
+
 with codecs.open("AnimeReviews.csv") as f:
     df = pd.read_csv(f)
 
@@ -200,9 +205,9 @@ english_plus = [
 english_plus2 = english_plus + ["episodes", "art", "character", "anime", "series", "watched", "watch", "num", "num0", "NUM", "NUM0"]
 
 # Create Count Vectorizer 
-for 
+for anime_idx in anime_id_column
 	cvect = CountVectorizer(stop_words=english_plus2, min_df=20, max_df = 0.95, max_features =200, ngram_range=(1,2))
-	X = cvect.fit_transform(df[df.anime_english_title == "Naruto"]["review_text"])
+	X = cvect.fit_transform(df[df.anime_id == anime_idx]["review_text"])
 	terms = cvect.get_feature_names()
 	pmi_matrix = getcollocations_matrix(X)
 	reviews_pos_tagged=[pos_tag(tokenizer.tokenize(m)) for m in df[df.anime_english_title == "Naruto"]["review_text"]]
@@ -223,7 +228,7 @@ for
 	bottom5 = meep[:5]
 	top5 = meep[-5:]
 	
-
+    
 
 
 def getcollocations_matrix(X):
