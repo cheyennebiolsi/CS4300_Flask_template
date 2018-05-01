@@ -53,7 +53,7 @@ for index,word in enumerate(words):
 
 
 # Tags and Jaccard Similarity
-filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life',
+filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super','vampire','yaoi','yuri','harem','slice',
 'supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
 
 @irsystem.route('/', methods=['GET'])
@@ -62,20 +62,11 @@ def search():
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
 	
-	filtered_true = False
-	if query or words: 
-		filtered_true = True
-
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
 	switchlist=list()
-	filter_dictionary2 = {}
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
-		# if switch == None:
-		# 	filter_dictionary[filters] = 'off'
-		# else:
-		# 	filter_dictionary[filters] = None
-		filter_dictionary2[filters] = switch
+		switchlist.append(switch)
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
@@ -130,8 +121,9 @@ def search():
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
 		if(len(top_n_shows)<=0):
-			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
+			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], 								prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+
 
             
 		norm=scores[top_shows[0]]
@@ -156,7 +148,7 @@ def search():
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
-				jsonfile['score'] = str(round(score*100, 2))
+				jsonfile['score'] =str(round(score*100, 2))
 				jsonfile['words'] = concat                    
 				json_array.append(jsonfile)
 		data = json_array
@@ -383,3 +375,4 @@ def keep(x):
 		return ""
 	else:
 		return x
+
