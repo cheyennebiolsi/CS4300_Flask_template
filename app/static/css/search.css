@@ -346,10 +346,13 @@ span.twitter-typeahead .tt-suggestion:hover {
   overflow-y: auto;
 }
 
-.header-left {
-    float: left;
-    position: absolute;
-    top : 10px;
+.footer {
+    margin-top: 5%;
+    width: 100%;
+    padding: 10px;
+    color: white;
+    font-size: 12;
+    background: rgba(88, 88, 88, 0.3);
 }
 
 .meta-info {
