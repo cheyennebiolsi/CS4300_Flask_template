@@ -2,6 +2,19 @@ html, body {
     height: 100%;
 }
 
+.suggestion-text {
+    color: white;
+    padding: 20px;
+    font-size: 20;
+    text-align: center;
+}
+
+.well.suggestion {
+    border-radius: 0 !important;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
 
 .container.carousel-picture {
     width: 100%;
@@ -74,8 +87,9 @@ html, body {
 }
 
 body {
-    padding-left: 15%;
-    padding-right: 15%;
+    font-style: normal;
+    padding-left: 10%;
+    padding-right: 10%; 
     background-color: black;
 }
 
@@ -83,6 +97,7 @@ body {
     text-align: center;
     font-size: 18;
     padding-top: 10px;
+    font-style: normal;
 }
 
 hr {
@@ -106,22 +121,6 @@ hr {
     height: 100%;
     width: 100%;
     background-color: black;
-}
-
-.media-body {
-    padding-left: 5;
-    padding-right: 5;
-    padding-top: 10;
-    padding-bottom: 10;
-    color: white;
-    overflow-y: scroll;
-    width: 100% + 8px;
-    text-align: justify;
-    text-justify: inter-word;
-    font-style: normal;
-    font-family: "Helvetica Neue", Helvetica;
-    font-weight: lighter;
-
 }
 
 .col {
@@ -182,6 +181,10 @@ hr {
 .genre-checkbox input[type="checkbox"]:checked ~.unchecked
 {
     display: none;
+}
+
+.fancy-checkbox {
+    font-style: normal;
 }
 
 .fancy-checkbox input[type="checkbox"],
@@ -294,7 +297,6 @@ hr {
 .form-group {
     width: 85%;
     background: rgba(88, 88, 88, 0.3);
-    border-radius:10px;
     position: relative;
     margin-left: auto;
     margin-right: auto;
@@ -303,10 +305,16 @@ hr {
 .bootstrap-tagsinput{
     width: 100%;
     height: 100%;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 4px;
-    border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.animesearch .bootstrap-tagsinput {
+    border-bottom-left-radius: 0px;
+}
+
+.wordsearch .bootstrap-tagsinput {
+    border-top-left-radius: 0px;
 }
 
 .twitter-typeahead {

@@ -2,6 +2,7 @@
 
 .media {
     margin: 0;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 @font-face {
@@ -18,6 +19,41 @@
     font-family: FuturaMedium;
     font-weight: bold;
     src: url('/static/fonts/futura-md-bt/FuturaMediumBT.ttf');
+}
+
+
+.media-body {
+    padding: 0;
+    color: white;
+    overflow-y: scroll;
+    text-align: justify;
+    text-justify: inter-word;
+    font-style: normal;
+    font-family: "Helvetica Neue", Helvetica;
+    font-weight: lighter;
+
+}
+
+.col.synopsis {
+    overflow-y: scroll;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.row.feature {
+   margin: 0;
+   padding: 0;
+   border-right: 2px solid white;
+}
+
+.synopsis-header {
+    color: white;
+    font-size: 14;
+    text-align: center;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-weight: bold;
+    padding-bottom: 3px;
+    padding-top: 3px;
 }
 
 .media-self-center.media-left.anime-picture {
@@ -43,7 +79,67 @@
     object-fit: contain;
 }
 
+.media-self-center.media-left.anime-synopsis {
+    width: 30%;
+    height: 50%;
+    padding: 12px;
+    margin: 0;
+}
 
+.media .container.anime-synopsis {
+    width: 100%;
+    height: 75%;
+    overflow-y: scroll;
+    color: white;
+    border-bottom: 12px solid black;
+}
+
+.media .container.anime-synopsis span {
+    display: inline-block;
+    text-align: justify;
+}
+
+.media-self-center.media-left.anime-statistics {
+    width: 35%;
+    height: 50%;
+    padding: 12px;
+    margin: 0;
+    border-right: 2px solid white;
+    border-left: 2px solid white;
+
+}
+
+.media .container.anime-score {
+    width: 100%;
+    height: 10%;
+    border-bottom:2px solid white;
+}
+
+.media .container.anime-statistics {
+    width: 100%;
+    height: 90%;
+    overflow-y: scroll;
+    color: white;
+}
+
+.media .container.anime-words {
+    width:100%;
+    height: 25%;
+    color: white;
+    border-top: 2px solid white;
+    text-align: center;
+    overflow-y: scroll;
+}
+
+.media .container.anime-words .synopsis-header {
+    margin-top: 12px;
+}
+
+.media .container.anime-words span {
+    margin-right: 5px;
+    margin-left: 5px;
+    display: inline-block;
+}
 
 .media-header .genre {
     text-align: center;
@@ -79,6 +175,7 @@
     text-align: left;
     font-size: 30;
     font-family: "Futura";
+    padding-left: 20px;
 }
 
 .media-header .row.episodeinfo {
@@ -88,10 +185,18 @@
    font-weight: bold;
 }
 
+.media-header .col.rating {
+    text-align: center;
+}
+
+.media-header .col.duration {
+    text-align: center;
+}
+
 .media-header {
-    background-color: darkgrey;
+    background-color: rgba(225, 225, 225, 0.3);
     margin: 0;
-    padding: 0;
+    padding-top: 0;
     border-top-right-radius: 7px;
     border-top-left-radius: 7px;
 }
@@ -106,6 +211,10 @@
     padding: 0;
 }
 
+.media-header .col.genres {
+    text-align: center;
+}
+
 .media-header .container {
     width: 100%;
     margin: 0;
@@ -115,15 +224,18 @@
 
 .media-header .col.type {
     text-align: left;
+    padding-left: 20px;
 }
 
 .media-header .row.genres {
    text-align: center;
-   padding-top: 4px;
-   padding-bottom: 4px;
+   padding-top: 0px;
+   padding-bottom: 0px;
+   margin-top: -10px;
 }
 .media-header .col.episodes {
     text-align: right;
+    padding-right: 20px;
 }
 
 .media-footer {

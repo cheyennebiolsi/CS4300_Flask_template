@@ -5,6 +5,7 @@ from gensim.models.doc2vec import TaggedDocument
 from nltk import RegexpTokenizer
 from nltk.tokenize import sent_tokenize
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 import re
 
 class AnimeDocumentManager:
@@ -103,6 +104,54 @@ class AnimeDocument:
             anime_reviews = []
         self.anime_reviews = anime_reviews
 
+    def getReviewOverallAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_overall)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewStoryAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_story)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewAnimationAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_animation)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewSoundAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_sound)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewCharacterAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_character)
+        return float(count) / len(self.anime_reviews)
+
+    def getReviewEnjoymentAverage(self):
+        if len(self.anime_reviews) == 0:
+            return 0
+        count = 0
+        for review in self.anime_reviews:
+            count += int(review.review_enjoyment)
+        return float(count) / len(self.anime_reviews)
+
     def addReview(self, review):
         """Adds a Review object to self.anime_reviews"""
         if isinstance(review, Review):
@@ -131,6 +180,9 @@ class AnimeDocument:
     def getAllReviewText(self):
         """Returns all review text concatenated with a space"""
         return " ".join([review.review_text for review in self.anime_reviews])
+
+    def getAllTags(self):
+        return [genre.genre_name for genre in sorted(self.anime_genres, key= lambda x: x.genre_name)]
 
     def getGenreVector(self):
         """
@@ -209,8 +261,10 @@ class AnimeDocument:
             text = self.anime_synopsis.lower()
         else:
             raise ValueError("Unknown option " + option + " in AnimeDocument.toTaggedDocument")
-        tokens = [token for token in tokenizer.tokenize(text) if token not in englishStopwords]
-        return TaggedDocument(tokens, ["anime_id_{}".format(self.anime_id)])
+        lemmatizer=WordNetLemmatizer()
+        tokens = [lemmatizer.lemmatize(token) for token in tokenizer.tokenize(text) if token not in englishStopwords]
+            
+        return TaggedDocument(tokens, [self.anime_index])
 
     def getAllRelatedAnime(self, animeDocumentManager):
         """Returns a list of anime_ids that are related to this anime.
@@ -221,6 +275,7 @@ class AnimeDocument:
                              "anime_parent_story", "anime_sequel", "anime_prequel", "anime_alternative_setting", \
                              "anime_spinoff"] #, "anime_other"]
         seenIds = set()
+        seenAnime = []
         while len(stack) > 0:
             document = stack.pop()
             if document == None:
@@ -229,6 +284,7 @@ class AnimeDocument:
             if document_id in seenIds:
                 continue
             seenIds.add(document_id)
+            seenAnime.append(document)
             for attribute in relatedAttributes:
                 vals = getattr(document, attribute)                
                 ids = [int(anime_id) for anime_id in re.findall('(?<=\(anime )\d+(?=\))', vals) \
@@ -241,7 +297,12 @@ class AnimeDocument:
         ids = [int(anime_id) for anime_id in re.findall('(?<=\(anime )\d+(?=\))', otherVals)]
         for other_id in ids:
             seenIds.add(other_id)
-        return sorted(list(seenIds))
+            val = (animeDocumentManager.getAnimeById(other_id))
+            if val != None:
+                seenAnime.append(val)
+#        print("returning")    
+        return sorted(list(set([int(anime.anime_index) for anime in seenAnime])))
+#        return sorted(list(seenIds))
       
 
     def toJSON(self):

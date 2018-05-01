@@ -36,13 +36,17 @@ def makeAnimeDocuments(fileName, destName):
                             value = int(value.strip())
                         setattr(animeDocument, key, value)
                 animeDocuments[anime_id] = animeDocument
-            review = Review()
-            for key in list(row.keys()):
-                if "review_" in key:
-                    value = row[key]
-                    if value.strip().isdigit():
-                        value = int(value.strip())
-                    setattr(review, key, value)
+            #review = Review()
+            if len(str(row["review_overall"])) > 0:
+                review = Review()
+                for key in list(row.keys()):
+                    if "review_" in key:
+                        value = row[key]
+                        if value.strip().isdigit():
+                            value = int(value.strip())
+                        setattr(review, key, value)
+            else:
+                print("Skipping review")
             animeDocuments[anime_id].addReview(review)
     animeDocuments = sorted(animeDocuments.values(), key = lambda document: document.anime_id)
     for index, document in enumerate(animeDocuments):
