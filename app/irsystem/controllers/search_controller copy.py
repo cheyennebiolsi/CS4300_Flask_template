@@ -94,7 +94,7 @@ def search():
 	else:
 		anime_indexes = query.split(',')
 		query_words = words.split('|')
-		output_message = 'Your search: ' + query
+		output_message = ''
 		if(not query=='None'):
 			positive = np.zeros((len(anime_indexes)),dtype=int)
 			for index,anim_ind in enumerate(anime_indexes):
@@ -157,7 +157,7 @@ def search():
             
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevtags=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters=filter_dictionary, prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+		prevsearch=keep(query), prevtags=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
