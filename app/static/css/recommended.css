@@ -1,3 +1,11 @@
+.owl-carousel {
+    display: none;
+}
+
+.owl-carousel.owl-loaded {
+    display: block;
+}
+
 .owl-prev {
     width: 15px;
     height: 100px;
