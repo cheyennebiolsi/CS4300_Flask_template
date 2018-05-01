@@ -76,6 +76,7 @@ def search():
 		# else:
 		# 	filter_dictionary[filters] = None
 		filter_dictionary2[filters] = switch
+		# switchlist.append(switch)
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
