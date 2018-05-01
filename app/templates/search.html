@@ -123,8 +123,9 @@
                         <div class="form-check">
                             {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'mecha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
                             {% for genre in genres %}
+                            {% set genre_name = genre.replace(" ", "_") %}
                             <label class="genre-checkbox" style="color:white">
-                                <input type="checkbox" name={{genre}} checked/>
+                                <input type="checkbox" name={{genre_name}} checked/>
                                 <div class="tag-button active checked">{{genre}}</div>
                                 <div class="tag-button inactive unchecked">{{genre}}</div>
                             </label>
