@@ -626,11 +626,13 @@
                             <div class="col=6" style="padding-right: 2px">
                                 <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"]}}</span></div>
                                 <div class="synopsis-header" id="reviewer-number"><span>Number of Reviewers: {{data[0]["anime_review_number"]}}</span></div>
+                                
                             </div>
                        </div>
                     </div>
                     <div class="container anime-statistics">
                         <div class="container" style="width: 90%; height: 100%">
+                                <br>
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
                                 <script>
                                     var data_chart = {
@@ -755,7 +757,7 @@
            </div>
 
 {% else %}
-<h1 style="color: white"> Recommended Anime </h1>
+<h1 style="color: white"> Editors' Pick Anime to Search </h1>
 
 <div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
     <div class="owl-stage-outer">
