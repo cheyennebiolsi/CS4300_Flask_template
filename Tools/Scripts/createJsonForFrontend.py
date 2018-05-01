@@ -37,6 +37,9 @@ for document in data:
     dictionary["anime_id"] = int(anime_id)
     if dictionary["anime_english_title"] == "":
         dictionary["anime_english_title"] = document.anime_title
+    if isinstance(dictionary["anime_english_title"], str):
+        dictionary["anime_english_title"] = dictionary["anime_english_title"].replace(',', " ")
+#    dictionary["anime_english_title"] = dictionary["anime_english_title"].encode("ascii", "ignore")
     if anime_id in videoUrlDict:
         dictionary["anime_video_url"] = videoUrlDict[anime_id]
     else:
@@ -56,6 +59,7 @@ for document in data:
     dictionary["anime_review_character_average"] = document.getReviewCharacterAverage()
     dictionary["anime_review_enjoyment_average"] = document.getReviewEnjoymentAverage()
     dictionary["anime_tags"] = "|".join(document.getAllTags()).replace("_", " ")
+    dictionary["anime_review_number"] = len(document.anime_reviews)
  #   result[int(anime_id)] = dictionary
     result.append(dictionary)
 #    print(anime_id)
