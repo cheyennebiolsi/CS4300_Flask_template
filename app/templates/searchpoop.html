@@ -1,0 +1,973 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/static/owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/owlcarousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/static/mdb/css/mdb.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <script src="/static/bootstrap-tagsinput.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="/static/css/search.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/recommended.css" type="text/css">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
+    <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <script src="/static/typeahead.bundle.js"></script>
+    <script src="/static/bloodhound.js"></script>
+    <script src="/static/js/Chart.bundle.min.js"></script>
+    <script src="/static/aniai.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
+    <script>
+        $(document).ready(function() {
+            $("#recommended-carousel").owlCarousel( {
+                items: 5,
+                stagePadding: 100,
+                loop: true,
+                margin: 30,
+                autoWidth: false,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
+            });
+            $("#suggestion-carousel").owlCarousel( {
+                items: 6,
+                loop: true,
+                margin: 0,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function(event) {
+            {% if data %}
+            {% else %}
+                loadrecommended();
+
+            {% endif %}
+            
+        }
+        );
+    </script>    
+</head>
+
+<body>
+
+
+    
+
+    <style>
+        .tree{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 300px;
+            padding:0;
+            background: none;
+            z-index: -2;
+        }
+    </style>
+
+    <div class="tree">
+        <img src="/static/images/csscherry3.png" style='width: 100%; '>
+    </div>
+    <div>
+        <!--title-->
+        <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:#efe9e8; text-align:center">
+            &ensp;Aniai.&#24859
+        </h1>
+        <!--tag line-->
+        <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
+        <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
+            <div class="form row" style="height:32px; padding:0; margin:0; width:100%"> 
+                <!-- style:"height:30px vertical-align:bottom"> -->
+                <div class="col-lg-11 animesearch" style="padding:0; margin:0">
+                    <div id="scrollable-dropdown-menu">
+                        <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..." value="{{prevsearch}}"/>
+                    </div>
+                    
+<!--                    <div id="scrollable-dropdown-menu">
+                        <input id="wordinput" type="text" name="wordsearch" placeholder="Words..."/>
+                    </div> -->
+                    
+                </div>
+                <div class="col-md-1" style="margin: 0; padding: 0">
+                    <button class="search-button" type="submit" style="border-top-right-radius:4px"><i class="fa fa-search"></i></button>
+                </div>
+                <!--<div class="form-group col-md-4">
+                                <input type="submit" value="Submit">
+                            </div> -->
+            </div> <!--class = "form-inline global-search" id="myform"> -->
+            <div class="form row" style="height:32px; padding:0; margin:0; width:100%"> 
+                <!-- style:"height:30px vertical-align:bottom"> -->
+                <div class="col-lg-11 wordsearch" style="padding:0; margin:0">
+                    <div id="scrollable-dropdown-menu">
+                        <input id="wordinput" type="text" name="wordsearch" placeholder="Words..." value="{{prevwords}}"/>
+                    </div>
+                </div>
+                <div class="col-md-1" style="margin: 0; padding:0">
+                    <!-- <button type="submit" id="submit" class="btn btn-info btn-submit" style="margin:0; height:32px">Submit3</button> -->
+                    <button class="search-button" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm" style="margin:0;border-left:white;border-right:white;border-bottom-right-radius:4px"><i class="fa fa-filter"></i>Filter</button>
+                </div>
+             </div>
+
+            <div class="collapse" id="collapseForm">
+                <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
+                    <div class="col-md-6" style="text-align:center">
+                        <div class="filter-header">
+                            <span>Choose As Many Flavors As You Like</span>
+                        </div>
+                        <hr>
+                        <div class="form-check">
+                            
+                            {% set genres=['action', 'adventure', 'cars', 'comedy', 'dementia', 'demons', 'drama','fantasy', 'game', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic', 'martial arts', 'mecha', 'military', 'music', 'mystery', 'parody', 'police', 'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen', 'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice of life', 'space', 'sports', 'super power', 'supernatural', 'thriller', 'vampire'] %}
+                            {% if filtertrue %}
+                                {% for genre in genres %}
+                                    {% set genre_name = genre.replace(" ", "_") %}
+                            <label class="genre-checkbox" style="color:white">
+                                <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <div class="tag-button active checked">{{genre}}</div>
+                                <div class="tag-button inactive unchecked">{{genre}}</div>
+                            </label>
+                                {% endfor %}
+                            {% else %}
+                                {% for genre in genres %}
+                                {% set genre_name = genre.replace(" ", "_") %}
+                                <label class="genre-checkbox" style="color:white">
+                                    <input type="checkbox" name={{genre}} checked/>
+                                    <div class="tag-button active checked">{{genre}}</div>
+                                    <div class="tag-button inactive unchecked">{{genre}}</div>
+                                </label>
+                                {% endfor %}
+                            {% endif %}
+                            <div>
+                                <div class="collapse" id="collapsensfw">
+                                    <div class="form-check">
+                                        {% set nsfwgenres=['ecchi', 'hentai', 'yaoi', 'yuri']%}
+                                        {% for nsfwgenre in nsfwgenres %}
+                                        <label class="genre-checkbox" style="color:white">
+                                            <input type="checkbox" name={{nsfwgenre}} unchecked/>
+                                            <div class="tag-button active checked">
+                                                {{nsfwgenre}}
+                                            </div>
+                                            <div class="tag-button inactive unchecked">
+                                                {{nsfwgenre}}
+                                            </div>
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="col-md-auto">
+                        <div class="filter-header">
+                            <span>Type</span>
+                        </div>
+                        <hr>
+                        
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displayTv" {% if prevfilters2['displayTv'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                television
+                            </label>
+                        </div>
+                        {% else %}
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displayTv" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                television
+                            </label>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displayMovie" {% if prevfilters2['displayMovie'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                movie
+                            </label>
+                        </div>
+                        {% else %}
+                         <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displayMovie" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                movie
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displaySpecial" {% if prevfilters2['displaySpecial'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                special
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displaySpecial" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                special
+                            </label>
+                        </div>
+                        {% endif %}
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white;">
+                                <input type="checkbox" name="displayOva" {% if prevfilters2['displayOva'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                OVA
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white;">
+                                <input type="checkbox" name="displayOva" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                OVA
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white;">
+                                <input type="checkbox" name="displayOna" {% if prevfilters2['displayOna'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                ONA
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white;">
+                                <input type="checkbox" name="displayOna" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                ONA
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        <div class="filter-header">
+                            <span>How You Want To Watch</span>
+                        </div>
+                        <hr>
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamCrunchy" {% if prevfilters2['streamCrunchy'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                crunchyroll
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamCrunchy" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                crunchyroll
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamHulu" {% if prevfilters2['streamHulu'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                hulu
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamHulu" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                hulu
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamYahoo" {% if prevfilters2['streamYahoo'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                Yahoo! View
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamYahoo" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                Yahoo! View
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamNone" {% if prevfilters2['streamNone'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                allow no provider
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamNone" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                allow no provider
+                            </label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-auto">
+                        <div class="form-check filter">
+                            {% if filtertrue %}
+                            <div class="filter-header">
+                                <span> Rated </span>
+                                <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
+                                    <input type="checkbox" name="sfw" checked/>
+                                    <div class="sfw-button unchecked">NSFW ON</div>
+                                    <div class="sfw-button active checked">SFW ON</div>
+                                </label>
+                            </div>
+                            {% else %}
+                            <div class="filter-header">
+                                <span> Rated </span>
+                                <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
+                                    <input type="checkbox" name="sfw" checked/>
+                                    <div class="sfw-button unchecked">NSFW ON</div>
+                                    <div class="sfw-button active checked">SFW ON</div>
+                                </label>
+                            </div>
+                            {% endif %}
+                                <!--<input style="display:inline" type="checkbox" class="form-check-input tag" id="sfwSearch" name="sfwSearch" checked>
+                                <label style="display:inline" for="sfwSearch" class="sfw-button active" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">  SFW ON  </label> -->
+                            </div>
+                        <!-- </div> -->
+                        <hr>
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="gRating" {% if prevfilters2['gRating'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                G &#8212 all ages
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="gRating" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                G &#8212 all ages
+                            </label>
+                        </div>
+                        {% endif %}
+                        
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="pgRating" {% if prevfilters2['pgRating'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                PG &#8212 children
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="pgRating" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                PG &#8212 children
+                            </label>
+                        </div>
+                        {% endif %}
+                        
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="pg13Rating" {% if prevfilters2['pg13Rating'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                PG-13 &#8212 teens 13 or older
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="pg13Rating" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                PG-13 &#8212 teens 13 or older
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                        <label class="fancy-checkbox" style="color:white">
+                        <input type="checkbox" name="r17Rating" {% if prevfilters2['r17Rating'] is not none %} checked {% else %} unchecked {% endif%}/>
+                        <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                        <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                        R &#8212 17+ (violence & profanity)
+                        </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                        <label class="fancy-checkbox" style="color:white">
+                        <input type="checkbox" name="r17Rating" checked/>
+                        <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                        <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                        R &#8212 17+ (violence & profanity)
+                        </label>
+                        </div>
+                        {% endif %}
+
+                        <div class="collapse" id="collapsensfwrating">
+                            {% if filtertrue %}
+                            <div class="form-check">
+                                <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="rPlusRating"/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                R+ &#8212 mild nudity
+                                </label>
+                            </div>
+                            {% else %}
+                            <div class="form-check">
+                                <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="rPlusRating"/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                R+ &#8212 mild nudity
+                                </label>
+                            </div>
+                            {% endif %}
+
+                            {% if filtertrue %}
+                            <div class="form-check">
+                                <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="rxRating"/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                Rx &#8212 hentai
+                                </label>
+                            </div>
+                            {% else %}
+                            <div class="form-check">
+                                <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="rxRating"/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                Rx &#8212 hentai
+                                </label>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-check filter" style="border: 2px solid white; padding-bottom: 10px; margin-top: 4px">
+                            {% if filtertrue %}
+                            <div class="filter-header">
+                                <span> Filter Same Series </span>
+                                <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
+                                <input type="checkbox" name="filter same series" {% if prevfilters2['filter same series'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                </label>
+                            </div>
+                            {% else %}
+                            <div class="filter-header">
+                                <span> Filter Same Series </span>
+                                <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
+                                <input type="checkbox" name="filter same series" unchecked/>
+                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                </label>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <hr hidden>
+                        
+                        <!--<div class="filter-header">
+                            <span>Stream Provider</span>
+                        </div>
+                       <hr>
+                       <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="streamCrunchy" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                crunchyroll
+                            </label>
+                        </div> -->
+                    </div>
+
+                </div>             
+            </div>
+            
+        </form>
+</div>
+        {% if data %}
+<!--            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br> -->
+            <hr>
+            <div id="tester" class="media-header">
+                <div class="row title">
+                    <div class="col title" id="media-title">
+                        <span>{{data[0]["anime_english_title"]}}</span>
+                    </div>
+                    <div class="col-auto icon" style="font-style:normal">
+                        <img src="/static/images/yahoo-view.png" id="yahoo-provider" 
+                        {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                        <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
+                        {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
+                        <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0" id="crunchyroll-provider-image"
+                        {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                        <div style="display:inline-block; vertical-align: top" id="crunchyroll-provider"
+                        {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                            <span style="font-family:Maven pro; font-size:24; display:inline-block" >crunchyroll </span>
+                        </div>
+                        <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
+                        {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                    </div>
+                </div>
+                <div class="row episodeinfo">
+                    <div class="col type" id="media-type">
+                       <span> {{data[0]["anime_type"]}}</span>
+                    </div>
+                   <div class="col rating" id="media-rating">
+                    <span> {{data[0]["anime_rating"]}}</span>               
+                    </div>
+                    <div class="col duration" id="media-duration">
+                        <span> {{data[0]["anime_duration"]}}</span>
+                    </div>
+                    <div class="col episodes" id="episode-count">
+                        <span> {{data[0]["anime_number_of_episodes"]}} episodes</span>
+                    </div>
+                </div>
+
+                <div class="row genres">
+-                    <div class="col genres" id="media-genres">
+                        <!-- CHANGE THIS TO GENRE -->
+                         {% set genrelist = data[0]["anime_tags"].split('|') %} 
+                         {% for tag in genrelist %}
+                         <span class="genre">{{tag}}</span>
+                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+             
+            <div class="media">
+                <div class = "media-self-center media-left anime-picture">
+                   <div class="container anime-picture">
+                        <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
+                    </div>
+                </div>
+                <div class = "media-self-center media-left anime-synopsis">	
+                    <div class="container anime-synopsis" id="media-synopsis">	
+                                <div class="synopsis-header"> Synopsis </div>	
+                                <span>{{data[0]["anime_synopsis"]}}</span>	
+                    </div>
+                    <div class="container anime-words" id="anime-words"><div class="synopsis-header"> Top Ten Words </div> 
+                        {% for word in data[0]["words"].split('|') %}
+                        <span>{{word}}</span> 
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class= "media-self-center media-left anime-statistics">
+                    <div class="container anime-score">
+                        <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"][0]}}</span></div>
+                    </div>
+                    <div class="container anime-statistics">
+                                <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
+                                <script>
+                                    var data_chart = {
+                                        labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                                        datasets: [
+                                            {
+                                                fill: true,
+                                                backgroundColor: "rgba(255,99,132,0.2)",
+                                                borderColor: "rgba(255,99,132,1)",
+                                                pointBorderColor: "#fff",
+                                                pointBackgroundColor: "rgba(255,99,132,1)",
+                                                pointBorderColor: "#fff",
+                                                data: [
+                                                    Math.round({{data[0]["anime_review_overall_average"]}}*100)/100, 
+                                                    Math.round({{data[0]["anime_review_story_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_enjoyment_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_character_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_sound_average"]}}*100)/100,
+                                                    Math.round({{data[0]["anime_review_animation_average"]}}*100)/100
+                                                ]
+                                            }
+                                        ]
+                                    };
+
+                                    anime_scores = new Chart(document.getElementById("vis"), {
+                                        type: 'radar',
+                                        data: data_chart,
+                                        draggable: true,
+                                        options: {
+                                            title: {
+                                                display: true,
+                                                text: 'Anime Statistics',
+                                                fontColor: "#FFFFFF",
+                                                fontSize: 14
+                                            },
+                                            legend: {
+                                                display: false
+                                            },
+                                            scale: {
+                                                ticks: {
+                                                    maxTicksLimit: 5,
+                                                    backdropColor: 'black',
+                                                    max: 10,
+                                                    min: 0, 
+                                                    fontSize: 6,
+                                                    color: '#FFFFFF'
+                                                },
+                                                gridLines: {
+                                                    color: "#FFFFFF"
+                                                }
+                                            },
+                                            tooltips: {
+                                                enabled: true
+                                            },
+                                        }
+                                    });
+
+                                </script>
+                    </div>
+                </div>
+                <div class="media-body" style="height:50%">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col semantic media-logo">
+                        </div>
+                        </div>
+
+                        <!--                <div class="row"><h2> This is a header </h2>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p>Genres: Action, Adventure, Comedy</p>
+                                <p>Duration: 24 min per ep</p>
+                           1 of 3
+                            </div>
+                            <div class="col-6">
+                            2 of 3 (wider)
+                            </div>
+                            <div class="col">
+                           3 of 3
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                
+            </div>
+            <div class="media-footer"> 
+                <div class="container">
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="owl-carousel owl-theme owl-loaded" style="height: 25%" id="suggestion-carousel">
+                <div class="owl-stage-outer">
+                    <div class="owl-stage">
+                        {% for d in data%}
+                        {% set image_url = d['anime_image_url'] %}
+                        <div class="owl-item" style="height:100%">
+                            <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
+                                 data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
+                                 data-overallreview = '{{d["anime_review_overall_average"]}}' 
+                                 data-storyreview = '{{d["anime_review_story_average"]}}'
+                                 data-enjoyment = '{{d["anime_review_enjoyment_average"]}}'
+                                 data-character = '{{d["anime_review_character_average"]}}'
+                                 data-sound= '{{d["anime_review_sound_average"]}}'
+                                 data-animation= '{{d["anime_review_animation_average"]}}'
+                                 data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}" 
+                                 data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}"
+                                 data-similarity="{{d['score'][0]}}" 
+                                 data-words="{{d['words']}}" style="height:100%">
+                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
+                                <div class="mask flex-center rgba-stylish-strong">
+                                    <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
+                                 </div>
+                            </div>
+                         </div>
+                         {% endfor %}
+                    </div>
+                 </div>
+           </div>
+
+{% else %}
+<h1 style="color: white"> Recommended Anime </h1>
+
+<div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
+    <div class="owl-stage-outer">
+        <div class="owl-stage" id="recommendation-stage">
+            <div class="owl-item">
+            </div>
+        </div>
+    </div>
+<!--    <div class="owl-nav">
+        <div class="owl-prev">prev</div>
+        <div class="owl-next">next</div>
+    </div> -->
+</div>
+        {% endif %}
+    </div>
+    <!--    <script>
+            $.getJSON("/static/data/anime_info.json", function(data) {
+                 console.log(data);
+                 document.getElementById('anime_info').innerHTML = data;
+            });
+    </script> -->
+
+    <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script> -->
+ 
+            <script>
+                var potato = function(anime_id) {
+                        $.getJSON("/static/data/anime_recommended.json", function(data) {
+                        var anime = data[anime_id];
+                        $('#media-image').attr('src', anime.anime_image_url);
+                        $('#media-title span').text(anime.anime_english_title);
+                        $('#media-type span').text(anime.anime_type);
+                        $('#media-rating span').text(anime.anime_rating);
+                        $('#episode-count span').text(anime.anime_number_of_episodes);
+                        $('#media-duration').text(anime.anime_duration);
+                        var tags = anime.anime_tags.split("|");
+                        var str = "";
+                        for (var tag in tags) {
+                            str += '<span class="genre">' + tags[tag] + "</span>";
+                        };
+                        $('#media-genres').replaceWith(
+                        '<div class="col genres" id="media-genres">' + str + '</div>'
+                        );
+                        console.log("Finished potato");
+                        });
+                    };
+
+                $("#suggestion-carousel").on('click', '.view', function() {
+                    var anime_index = $(this).attr('data-index');
+                    var anime_image_url = $(this).data("image");
+                    var title = $(this).data("title");
+                    var type = $(this).data("type");
+                    var synopsis = $(this).data("synopsis");
+                    var tags = $(this).data("tags");
+                    var words = $(this).data("words");
+                    var episode_count = $(this).data("episodes");
+                    var duration = $(this).data("duration");
+                    var rating = $(this).data("rating");
+                    var overall = $(this).data("overallreview");  
+                    var story = $(this).data("storyreview");  
+                    var enjoyment = $(this).data("enjoyment");  
+                    var character = $(this).data("character");  
+                    var sound = $(this).data("sound");  
+                    var animation = $(this).data("animation");
+                    var similarity = $(this).data("similarity");
+                    $('#media-image').attr('src', anime_image_url);
+                    $('#media-title span').text(title);
+                    $('#media-type span').text(type);
+                    $('#media-rating span').text(rating);
+                    $('#media-count span').text(episode_count);
+                    $('#media-duration span').text(duration);
+                    $('#media-synopsis span').text(synopsis);
+                    $('#episode-count span').text(episode_count + " episodes");
+                    $('#similarity-score span').text("Similarity Score: " + similarity);
+                    var tags = tags.split("|");
+                    var str = "";
+                    for (var tag in tags) {
+                        str += '<span class="genre">' + tags[tag] + "</span>";
+                    };
+                    var words = words.split("|");
+                    var wordStr = "";
+                    for (var word in words) {
+                        wordStr += '<span>' + words[word] + '</span>';
+                    };
+                    $('#anime-words').replaceWith(
+                         '<div class="container anime-words" id="anime-words">' +
+                         '<div class="synopsis-header"> Top Ten Words </div>' + wordStr  +
+                         '</div>'
+                    );
+                    $('#media-genres').replaceWith(
+                        '<div class="col genres" id="media-genres">' + str + '</div>'
+                        );
+                    var anime_video_url = $(this).data("video");
+                    if (anime_video_url.includes('crunchyroll')) {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#crunchyroll-provider-image').attr("hidden", false);
+                        $('#crunchyroll-provider').attr("hidden", false);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#yahoo-provider').attr("hidden", true);
+                    } else if (anime_video_url.includes('yahoo')) {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#yahoo-provider').attr("hidden", false);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                    } else if (anime_video_url.includes('hulu')) {
+                        $('#hulu-provider').attr("hidden", false);
+                        $('#yahoo-provider').attr("hidden", true);
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                    } else {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", true);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#yahoo-provider').attr("hidden", true);
+                    };
+
+                    anime_scores.destroy(); //delete charts
+                    // var oldchart = document.getElementById("vis")
+                    // if (oldchart !== undefined)
+                    //     oldchart.destroy(); //delete charts
+
+                    var data_chart = {
+                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                    datasets: [
+                        {
+                            label: title,
+                            fill: true,
+                            backgroundColor: "rgba(255,99,132,0.2)",
+                            borderColor: "rgba(255,99,132,1)",
+                            pointBorderColor: "#fff",
+                            pointBackgroundColor: "rgba(255,99,132,1)",
+                            pointBorderColor: "#fff",
+                            data: [
+                                Math.round(overall*100)/100, 
+                                Math.round(story*100)/100, 
+                                Math.round(enjoyment*100)/100,
+                                Math.round(character*100)/100, 
+                                Math.round(sound*100)/100,
+                                Math.round(animation*100)/100
+                            ]
+                        }
+                    ]
+                    };
+
+                    anime_scores = new Chart(document.getElementById("vis"), {
+                        type: 'radar',
+                        data: data_chart,
+                        draggable: true,
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Anime Statistics',
+                                fontColor: "#FFFFFF",
+                                fontSize: 14
+                            },
+                            legend: {
+                                display: false
+                            },
+                            scale: {
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    backdropColor: 'black',
+                                    max: 10,
+                                    min: 0, 
+                                    fontSize: 6,
+                                    color: '#FFFFFF'
+                                },
+                                gridLines: {
+                                    color: "#FFFFFF"
+                                }
+                            },
+                            tooltips: {
+                                enabled: true
+                            },
+                        }
+                    });
+
+                });
+                  </script>
+    <script>
+        var loadrecommended = function() {
+            $.getJSON("/static/data/anime_recommended.json", function(data) {
+                var str = "";
+                data.forEach(function(anime) {
+                    console.log(anime.anime_image_url);
+                str += '<div class="owl-item">' + 
+                            '<div class="flip">' + 
+                                '<div class="recommend-card">' + 
+                                    '<div class="face front">' + 
+                                        '<div class="well well-sm inner" style="background-image: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
+                            '</div>' + 
+                            '<div class="face back">' +
+                                '<div class="well well-sm inner">' + 
+                                    '<div class="recommendation-header">' + anime.anime_english_title +
+                                    '</div>' + 
+                                    '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                                '</div>' +
+                           ' </div>' + 
+                        '</div>' +
+                    '</div>' +
+            '</div>'
+                });
+              $('#recommendation-stage').replaceWith(
+                  '<div class="owl-stage" id="recommendation-stage">' + str + '</div>');
+              
+              $(document).on("click", ".flip", function() {
+                  $(this).find('.recommend-card').toggleClass('flipped');
+              });
+                
+        });
+        };
+    </script>
+
+
+
+    <script>
+        $('.flip').click(function() {
+            $(this).find('.recommend-card').toggleClass('flipped');
+        });
+    </script>
+    <script src="/static/owlcarousel/owl.carousel.min.js"></script>
+</body>
+</html>
