@@ -127,7 +127,7 @@
                                 {% for genre in genres %}
                                     {% set genre_name = genre.replace(" ", "_") %}
                             <label class="genre-checkbox" style="color:white">
-                                <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre_name] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <div class="tag-button active checked">{{genre}}</div>
                                 <div class="tag-button inactive unchecked">{{genre}}</div>
                             </label>

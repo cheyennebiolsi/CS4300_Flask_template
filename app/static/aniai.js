@@ -34,7 +34,6 @@ $(document).ready(function() {
             source: anime.ttAdapter(),
             hint: true,
             minLength: 3,
-            delimiter: ',',
         },
         confirmKeys: [13, 44, 188],
         maxTags: 5,
