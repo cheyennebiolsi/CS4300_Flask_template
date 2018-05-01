@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
     <link rel="stylesheet" href="/static/css/recommended.css" type="text/css">
     <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
+    <script src="https://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <script src="/static/typeahead.bundle.js"></script>
     <script src="/static/bloodhound.js"></script>
     <script src="/static/js/Chart.bundle.min.js"></script>
@@ -126,7 +127,7 @@
                                 {% for genre in genres %}
                                     {% set genre_name = genre.replace(" ", "_") %}
                             <label class="genre-checkbox" style="color:white">
-                                <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre_name] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <div class="tag-button active checked">{{genre}}</div>
                                 <div class="tag-button inactive unchecked">{{genre}}</div>
                             </label>
@@ -614,16 +615,7 @@
                 </div>
                 <div class= "media-self-center media-left anime-statistics">
                     <div class="container anime-score">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="synopsis-header" id="rating-value"><span>Rating: {{data[0]["anime_rating_value"]}}</span></div>
-                                <div class="synopsis-header" id="rater-number"><span>Number of Raters: {{data[0]["anime_rating_count"]}}</span></div>
-                            </div>
-                            <div class="col=6">
-                                <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"]}}</span></div>
-                                <div class="synopsis-header" id="reviewer-number"><span>Number of Reviewers: {{data[0]["anime_review_number"]}}</span></div>
-                            </div>
-                       </div>
+                        <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"][0]}}</span></div>
                     </div>
                     <div class="container anime-statistics">
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
@@ -657,7 +649,7 @@
                                         options: {
                                             title: {
                                                 display: true,
-                                                text: 'Review Score',
+                                                text: 'Anime Statistics',
                                                 fontColor: "#FFFFFF",
                                                 fontSize: 14
                                             },
@@ -775,6 +767,27 @@
     <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script> -->
  
             <script>
+                var potato = function(anime_id) {
+                        $.getJSON("/static/data/anime_recommended.json", function(data) {
+                        var anime = data[anime_id];
+                        $('#media-image').attr('src', anime.anime_image_url);
+                        $('#media-title span').text(anime.anime_english_title);
+                        $('#media-type span').text(anime.anime_type);
+                        $('#media-rating span').text(anime.anime_rating);
+                        $('#episode-count span').text(anime.anime_number_of_episodes);
+                        $('#media-duration').text(anime.anime_duration);
+                        var tags = anime.anime_tags.split("|");
+                        var str = "";
+                        for (var tag in tags) {
+                            str += '<span class="genre">' + tags[tag] + "</span>";
+                        };
+                        $('#media-genres').replaceWith(
+                        '<div class="col genres" id="media-genres">' + str + '</div>'
+                        );
+                        console.log("Finished potato");
+                        });
+                    };
+
                 $("#suggestion-carousel").on('click', '.view', function() {
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
@@ -886,7 +899,7 @@
                         options: {
                             title: {
                                 display: true,
-                                text: 'Review Score',
+                                text: 'Anime Statistics',
                                 fontColor: "#FFFFFF",
                                 fontSize: 14
                             },
@@ -919,6 +932,7 @@
             $.getJSON("/static/data/anime_recommended.json", function(data) {
                 var str = "";
                 data.forEach(function(anime) {
+                    console.log(anime.anime_image_url);
                 str += '<div class="owl-item">' + 
                             '<div class="flip">' + 
                                 '<div class="recommend-card">' + 

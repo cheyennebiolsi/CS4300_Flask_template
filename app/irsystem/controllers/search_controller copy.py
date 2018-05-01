@@ -47,13 +47,14 @@ review_array = np.load("data/doc2vecreviewArray.npy")
 filter_bools= np.load("data/filterArray.npy")
 word_array=np.load("data/wordArray.npy")
 words=np.load("data/wordList.npy")
+#rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
 	word_to_ind[word]=index
 
 
 # Tags and Jaccard Similarity
-filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life',
+filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super','vampire','yaoi','yuri','harem','slice',
 'supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
 
 @irsystem.route('/', methods=['GET'])
@@ -61,13 +62,14 @@ filter_array = ['action','adventure','cars','comedy','dementia','demons','myster
 def search():
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
-	
+
 	filtered_true = False
 	if query or words: 
 		filtered_true = True
-
+	
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
 	switchlist=list()
+	filter_dictionary = {}
 	filter_dictionary2 = {}
 	for index, filters in enumerate(filter_array):
 		switch=request.args.get(filters)
@@ -76,27 +78,28 @@ def search():
 		# else:
 		# 	filter_dictionary[filters] = None
 		filter_dictionary2[filters] = switch
+		switchlist.append(switch)
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
-			filter_out[index]=True
+			filter_out[index]=True       
 	rel_filters=filter_bools[:, filter_out]   
 	shows_removed=np.where(rel_filters.any(axis=1))[0]
+	print(filter_dictionary)
 	# Option 1: No Anime or Tags
 	if not query and not words:
 		data = []
 		output_message = ''
 	# Option 3: Only Anime
 	else:
-		anime_names = query.split('|')
-		anime_set=set(anime_names)
-		id_set=get_anime_set(anime_set,allanimelite) 
+		anime_indexes = query.split(',')
 		query_words = words.split('|')
-		output_message = 'Your search: ' + query
+		output_message = ''
 		if(not query=='None'):
-			positive = np.zeros((len(id_set)),dtype=int)
-			for index,anim_ind in enumerate(id_set):
+			positive = np.zeros((len(anime_indexes)),dtype=int)
+			for index,anim_ind in enumerate(anime_indexes):
 				positive[index]=int(anim_ind)
+			set_anime_ids=set(positive)
 		else:
 			positive= np.zeros((0))
 			set_anime_ids=set()
@@ -122,23 +125,14 @@ def search():
                 
 		result=show_result+word_result           
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
-		adjust=scores
+		adjust=scores#+rat_array
 		top_shows= np.argsort(-adjust,axis=0)
             #filter out the shows we don't want
 		mask=np.isin(top_shows,shows_removed,invert=True)
 		top_shows=top_shows[mask]   
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
-		if(len(top_n_shows)<=0):
-			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
 
-            
-		norm=scores[top_shows[0]]
-		if(norm==1):
-			norm=scores[top_shows[1]]    
-		scores=scores/np.max(norm)
-        
 		# rocchio
 		for value in enumerate(positive):
 			anim_id=value[1]
@@ -148,22 +142,22 @@ def search():
  			word_id=value[1]
  			review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
                                                a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
-		json_array = []       
+		json_array = []
             #returns most similar anime ids and similarity scores
-		for anim_ind in (top_n_shows):
-			score = scores[anim_ind]
+		for array_ind, anim_ind in enumerate(top_n_shows):
+			score = scores[array_ind]
 			jsonfile = get_anime(anim_ind, allanimelite)
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
-			if anim_ind not in id_set and jsonfile != "not found":
-				jsonfile['score'] = str(round(score*100, 2))
+			if anim_ind not in set_anime_ids and jsonfile != "not found":
+				jsonfile['score'] = score
 				jsonfile['words'] = concat                    
 				json_array.append(jsonfile)
 		data = json_array
             
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+		prevsearch=keep(query), prevtags=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
@@ -178,19 +172,6 @@ def get_top_words(anime_index,howmany=10):
 	top_n_words=words[top_n_words_ind]
 	return top_n_words.flatten(order="F")
 
-
-def get_anime_set(anime_set, jsonfile):
-	# print(anime_id)
-	id_set=set()    
-	for element in jsonfile:
-		# print(element['anime_id'])
-		name=(element["anime_english_title"])
-		if (element["anime_english_title"] in anime_set):
-			id_set.add(int(element['anime_index']))
-			anime_set.remove(element['anime_english_title'])
-			if(len(anime_set)==0):
-				break
-	return id_set
 
 def get_anime(anime_index, jsonfile):
 	# print(anime_id)
@@ -383,3 +364,4 @@ def keep(x):
 		return ""
 	else:
 		return x
+
