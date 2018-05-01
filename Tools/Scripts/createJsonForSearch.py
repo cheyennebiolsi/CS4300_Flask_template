@@ -37,8 +37,13 @@ for document in data:
     #except:
     #    pass
     if dictionary["anime_english_title"] == "":
-        print("Replacing anime id {}".format(document.anime_id))
+#        print("Replacing anime id {}".format(document.anime_id))
         dictionary["anime_english_title"] = document.anime_title
+
+    if isinstance(dictionary["anime_english_title"], str):
+        dictionary["anime_english_title"] = dictionary["anime_english_title"].replace(",", " ")
+ 
+
 #    if anime_id in videoUrlDict:
 #        dictionary["anime_video_url"] = videoUrlDict[anime_id]
 #    else:
