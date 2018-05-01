@@ -128,7 +128,7 @@ def search():
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
 		if(len(top_n_shows)<=0):
-			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
+			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
 				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], 								prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
 
@@ -138,14 +138,15 @@ def search():
 			norm=scores[top_shows[1]]    
 		scores=scores/np.max(norm)
         
-		# rocchio
-		for value in enumerate(positive):
-			anim_id=value[1]
-			review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
-                                              a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
- 		for value in enumerate(positive_words):
- 			word_id=value[1]
- 			review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
+ 		# rocchio
+        
+ 		for value in enumerate(positive):
+ 			anim_id=value[1]
+ 			review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
+                                               a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
+  		for value in enumerate(positive_words):
+  			word_id=value[1]
+  			review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
                                                a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
 		json_array = []       
             #returns most similar anime ids and similarity scores
