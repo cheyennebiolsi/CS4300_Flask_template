@@ -36,9 +36,11 @@ for document in data:
     anime_id = int(dictionary["anime_id"])
     dictionary["anime_id"] = int(anime_id)
     if dictionary["anime_english_title"] == "":
-        dictionary["anime_english_title"] = document.anime_title
-    if isinstance(dictionary["anime_english_title"], str):
-        dictionary["anime_english_title"] = dictionary["anime_english_title"].replace(',', " ")
+        dictionary["anime_english_title"] = document.anime_title 
+#    try:
+#        dictionary["anime_english_title"] = " ".join(dictionary["anime_english_title"].replace(",", " ").split())
+#    except:
+#        print("Failed on {}".format(dictionary["anime_english_title"]))
 #    dictionary["anime_english_title"] = dictionary["anime_english_title"].encode("ascii", "ignore")
     if anime_id in videoUrlDict:
         dictionary["anime_video_url"] = videoUrlDict[anime_id]

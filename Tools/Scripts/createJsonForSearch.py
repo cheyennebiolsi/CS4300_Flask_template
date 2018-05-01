@@ -40,8 +40,12 @@ for document in data:
 #        print("Replacing anime id {}".format(document.anime_id))
         dictionary["anime_english_title"] = document.anime_title
 
-    if isinstance(dictionary["anime_english_title"], str):
-        dictionary["anime_english_title"] = dictionary["anime_english_title"].replace(",", " ")
+#    try:
+#        dictionary["anime_english_title"] = " ".join(dictionary["anime_english_title"].replace(",", " ").split())
+#    except:
+#        print("Failed on {}".format(dictionary["anime_english_title"]))
+    if int(document.anime_id) == 12175:
+        print(dictionary["anime_english_title"])
  
 
 #    if anime_id in videoUrlDict:
