@@ -47,7 +47,6 @@ review_array = np.load("data/doc2vecreviewArray.npy")
 filter_bools= np.load("data/filterArray.npy")
 word_array=np.load("data/wordArray.npy")
 words=np.load("data/wordList.npy")
-#rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
 	word_to_ind[word]=index
@@ -123,13 +122,18 @@ def search():
                 
 		result=show_result+word_result           
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
-		adjust=scores#+rat_array
+		adjust=scores
 		top_shows= np.argsort(-adjust,axis=0)
             #filter out the shows we don't want
 		mask=np.isin(top_shows,shows_removed,invert=True)
 		top_shows=top_shows[mask]   
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
+		if(len(top_n_shows)<=0):
+			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
+				prevsearch=query, prevtags=[], prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43])
+
+            
 		norm=scores[top_shows[0]]
 		if(norm==1):
 			norm=scores[top_shows[1]]    
