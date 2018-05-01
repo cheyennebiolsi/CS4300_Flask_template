@@ -10,6 +10,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from collections import defaultdict
 from bs4 import BeautifulSoup
+import json
 
 tokenizer = TweetTokenizer()
 
@@ -202,68 +203,84 @@ english_plus = [
 	'zero'
 ]
 
+
+
 english_plus2 = english_plus + ["episodes", "art", "character", "anime", "series", "watched", "watch", "num", "num0", "NUM", "NUM0"]
 
 # Create Count Vectorizer 
 csv_array = []
-for counter, anime_idx in enumerate(anime_id_column):
-	cvect = CountVectorizer(stop_words=english_plus2, min_df=20, max_df = 0.95, max_features =200, ngram_range=(1,2))
-	X = cvect.fit_transform(df[df.anime_id == anime_idx]["review_text"])
-	terms = cvect.get_feature_names()
-	pmi_matrix = getcollocations_matrix(X)
-	reviews_pos_tagged=[pos_tag(tokenizer.tokenize(m)) for m in df[df.anime_english_title == "Naruto"]["review_text"]]
-	reviews_adj_adv_only=[" ".join([w for w,tag in m if tag in ["JJ","RB","RBS","RBJ","JJR","JJS"]])
-						  for m in reviews_pos_tagged]
-	X = cvect.fit_transform(reviews_adj_adv_only)
-	terms = cvect.get_feature_names()
-	pmi_matrix=getcollocations_matrix(X)
+with open('poop.json', 'w') as outfile:
+	json_array = []
+	for counter, anime_idx in enumerate(anime_id_column):
+		cvect = CountVectorizer(stop_words=english_plus2, min_df=1, max_df = 1, max_features =200, ngram_range=(1,1))
+		try:
+			X = cvect.fit_transform(df[df.anime_id == anime_idx]["review_text"])
+		# print(X)
+		except:
+			dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':"", 'negative':""}
+			continue
+		terms = cvect.get_feature_names()
+		# pmi_matrix = getcollocations_matrix(X)
+		
+		
+		def getcollocations_matrix(X):
+			XX=X.T.dot(X)  ## multiply X with it's transpose to get number docs in which both w1 (row) and w2 (column) occur
+			term_freqs = np.asarray(X.sum(axis=0)) ## number of docs in which a word occurs
+			pmi = XX.toarray() * 1.0  ## Casting to float, making it an array to use simple operations
+			pmi /= term_freqs.T ## dividing by the number of documents in which w1 occurs
+			pmi /= term_freqs  ## dividing by the number of documents in which w2 occurs
+			
+			return pmi  # this is not technically PMI beacuse we are ignoring some normalization factor and not taking the log 
+						# but it's sufficient for ranking
 
-	posscores=seed_score(['good','great','perfect','cool', "amazing", "enjoyable", "favorite", "worth", "greatest", "awesome", "beautiful", "deep", "unique", "nice", "funny"])
-	negscores=seed_score(['bad','terrible','wrong',"crap","long","boring", "stupid", "worst", "slow", "useless", "old", "terrible", "filler"])
+		pmi_matrix=getcollocations_matrix(X)
+		
+		def getcollocations(w,PMI_MATRIX=pmi_matrix,TERMS=terms):
+			if w not in TERMS:
+				return []
+			idx = TERMS.index(w)
+			col = PMI_MATRIX[:,idx].ravel().tolist()
+			return sorted([(TERMS[i],val) for i,val in enumerate(col)],key=operator.itemgetter(1),reverse=True)
 
-	sentscores={}
-	for w in terms:
-		sentscores[w] = posscores[w] - negscores[w]
+		reviews_pos_tagged=[pos_tag(tokenizer.tokenize(m)) for m in df[df.anime_id == anime_idx]["review_text"]]
+		reviews_adj_adv_only=[" ".join([w for w,tag in m if tag in ["JJ","RB","RBS","RBJ","JJR","JJS"]])
+							  for m in reviews_pos_tagged]
+		X = cvect.fit_transform(reviews_adj_adv_only)
+		terms = cvect.get_feature_names()
+		pmi_matrix=getcollocations_matrix(X)
 
-	meep = sorted(sentscores.items(),key=operator.itemgetter(1),reverse=False)
-	bottom5 = meep[:5]
-	top5 = meep[-5:]
-	totalwords = ""
-	for word in bottom5:
-		totalwords = totalwords + word + "|"
-	totalwords[:-1]
+		def seed_score(pos_seed,PMI_MATRIX=pmi_matrix,TERMS=terms):
+			score=defaultdict(int)
+			for seed in pos_seed:
+				c=dict(getcollocations(seed,PMI_MATRIX,TERMS))
+				for w in c:
+					score[w]+=c[w]
+			return score
 
-	totalwords2 = ""
-	for word2 in top5:
-		totalwords2 = totalwords2 + word2 + "|"
-	totalwords2[:-1]
-	dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':totalwords2, 'negative:'totalwords }
+		posscores=seed_score(['good','great','perfect','cool', "amazing", "enjoyable", "favorite", "worth", "greatest", "awesome", "beautiful", "deep", "unique", "nice", "funny"])
+		negscores=seed_score(['bad','terrible','wrong',"crap","long","boring", "stupid", "worst", "slow", "useless", "old", "terrible", "filler"])
 
-	json.dump(dict_json,'poop.json', indent=4)
+		sentscores={}
+		for w in terms:
+			sentscores[w] = posscores[w] - negscores[w]
+
+		meep = sorted(sentscores.items(),key=operator.itemgetter(1),reverse=False)
+		bottom5 = meep[:5]
+		top5 = meep[-5:]
+		totalwords = ""
+		print(bottom5)
+		for word in bottom5:
+			totalwords = totalwords + word[0] + "|"
+		totalwords[:-1]
+
+		totalwords2 = ""
+		for word2 in top5:
+			totalwords2 = totalwords2 + word2[0] + "|"
+		totalwords2[:-1]
+		dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':totalwords2, 'negative':totalwords}
+		json_array.append(dict_json)
+
+	json.dump(json_array, outfile, indent=4)
 
 
 
-def getcollocations_matrix(X):
-	XX=X.T.dot(X)  ## multiply X with it's transpose to get number docs in which both w1 (row) and w2 (column) occur
-	term_freqs = np.asarray(X.sum(axis=0)) ## number of docs in which a word occurs
-	pmi = XX.toarray() * 1.0  ## Casting to float, making it an array to use simple operations
-	pmi /= term_freqs.T ## dividing by the number of documents in which w1 occurs
-	pmi /= term_freqs  ## dividing by the number of documents in which w2 occurs
-	
-	return pmi  # this is not technically PMI beacuse we are ignoring some normalization factor and not taking the log 
-				# but it's sufficient for ranking
-
-def getcollocations(w,PMI_MATRIX=pmi_matrix,TERMS=terms):
-	if w not in TERMS:
-		return []
-	idx = TERMS.index(w)
-	col = PMI_MATRIX[:,idx].ravel().tolist()
-	return sorted([(TERMS[i],val) for i,val in enumerate(col)],key=operator.itemgetter(1),reverse=True)
-
-def seed_score(pos_seed,PMI_MATRIX=pmi_matrix,TERMS=terms):
-	score=defaultdict(int)
-	for seed in pos_seed:
-		c=dict(getcollocations(seed,PMI_MATRIX,TERMS))
-		for w in c:
-			score[w]+=c[w]
-	return score

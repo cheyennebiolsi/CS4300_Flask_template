@@ -90,7 +90,7 @@ def search():
 		anime_set=set(anime_names)
 		id_set=get_anime_set(anime_set,allanimelite) 
 		query_words = words.split('|')
-		output_message = 'Your search: ' + query
+		output_message = ''
 		if(not query=='None'):
 			positive = np.zeros((len(id_set)),dtype=int)
 			for index,anim_ind in enumerate(id_set):
@@ -128,8 +128,9 @@ def search():
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
 		if(len(top_n_shows)<=0):
-			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], 								prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+			output_message = "Impossible Combination. Please Change Filters."
+			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
 
             
