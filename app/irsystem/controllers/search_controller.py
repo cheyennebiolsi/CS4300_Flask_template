@@ -82,14 +82,13 @@ def search():
 	else:
 		anime_names = query.split('|')
 		anime_set=set(anime_names)
-		id_set=get_anime(anime_set,allanimelite)        
+		id_set=get_anime_set(anime_set,allanimelite) 
 		query_words = words.split(',')
 		output_message = 'Your search: ' + query
 		if(not query=='None'):
 			positive = np.zeros((len(id_set)),dtype=int)
 			for index,anim_ind in enumerate(id_set):
 				positive[index]=int(anim_ind)
-			set_anime_ids=set(positive)
 		else:
 			positive= np.zeros((0))
 			set_anime_ids=set()
@@ -122,7 +121,10 @@ def search():
 		top_shows=top_shows[mask]   
 		top_n_shows= top_shows[:20]
 		bottom_n_shows= top_shows[-20:]
-		score=score/np.max(score[top_shows[1]])
+		norm=scores[top_shows[0]]
+		if(norm==1):
+			norm=scores[top_shows[1]]    
+		scores=scores/np.max(norm)
         
 		# rocchio
 		for value in enumerate(positive):
@@ -133,14 +135,14 @@ def search():
  			word_id=value[1]
  			review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
                                                a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
-		json_array = []
+		json_array = []       
             #returns most similar anime ids and similarity scores
-		for array_ind, anim_ind in enumerate(top_n_shows):
-			score = scores[array_ind]
+		for anim_ind in (top_n_shows):
+			score = scores[anim_ind]
 			jsonfile = get_anime(anim_ind, allanimelite)
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
-			if anim_ind not in set_anime_ids and jsonfile != "not found":
+			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['score'] = score
 				jsonfile['words'] = concat                    
 				json_array.append(jsonfile)
@@ -164,17 +166,26 @@ def get_top_words(anime_index,howmany=10):
 	return top_n_words.flatten(order="F")
 
 
-def get_anime(anime_set, jsonfile):
+def get_anime_set(anime_set, jsonfile):
 	# print(anime_id)
 	id_set=set()    
 	for element in jsonfile:
 		# print(element['anime_id'])
-		if (element['anime_english_title'] in anime_set):
+		name=(element["anime_english_title"])
+		if (element["anime_english_title"] in anime_set):
 			id_set.add(int(element['anime_index']))
 			anime_set.remove(element['anime_english_title'])
-            if(len(anime_set)==0):
-                break
+			if(len(anime_set)==0):
+				break
 	return id_set
+
+def get_anime(anime_index, jsonfile):
+	# print(anime_id)
+	for element in jsonfile:
+		# print(element['anime_id'])
+		if (element['anime_index']) == anime_index:
+			return element
+	return "not found"
 
 def get_cossim(queryvector, ind2, tfidf):
 	"""Returns a float giving the cosine similarity of 
