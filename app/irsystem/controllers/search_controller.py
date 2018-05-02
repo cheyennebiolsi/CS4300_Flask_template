@@ -43,10 +43,10 @@ alltags_nocolumn = np.delete(alltags_data, 0, 1)
 # review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 
 # doc2vec numpy
-review_array = np.load("data/doc2vecreviewArray.npy")
+review_array = np.load("data/doc2vecreviewArray2.npy")
 filter_bools= np.load("data/filterArray.npy")
-word_array=np.load("data/wordArray.npy")
-words=np.load("data/wordList.npy")
+word_array=np.load("data/wordArray2.npy")
+words=np.load("data/wordList2.npy")
 rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
@@ -54,8 +54,7 @@ for index,word in enumerate(words):
 
 
 # Tags and Jaccard Similarity
-filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super','vampire','yaoi','yuri','harem','slice',
-'supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
+filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
 
 @irsystem.route('/', methods=['GET'])
 
@@ -91,7 +90,7 @@ def search():
 		anime_set=set(anime_names)
 		id_set=get_anime_set(anime_set,allanimelite) 
 		query_words = words.split('|')
-		output_message = 'Your search: ' + query
+		output_message = ''
 		if(not query=='None'):
 			positive = np.zeros((len(id_set)),dtype=int)
 			for index,anim_ind in enumerate(id_set):
@@ -121,30 +120,37 @@ def search():
                 
 		result=show_result+word_result           
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
-		adjust=scores.flatten("F")+(.5)*rat_array
+		adjust=scores.flatten("F")+(.1)*rat_array
 		top_shows_unfiltered= np.argsort(-adjust,axis=0)
             #filter out the shows we don't want
-		mask=np.isin(top_shows_unfiltered,shows_removed)
+		mask=np.isin(top_shows_unfiltered,shows_removed,invert=True)
 		print(np.where(mask==False))
 		top_shows=top_shows_unfiltered[mask]   
 		top_n_shows= top_shows[:20]
 
 		bottom_n_shows= top_shows[-20:]
 		if(len(top_n_shows)<=0):
+			output_message = "Impossible Combination. Please Change Filters."
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], 								prevfilters2=filter_dictionary2, filtertrue = filtered_true)
-        
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+
+
+            
+# 		norm=scores[top_shows[0]]
+# 		if(norm==1):
+# 			norm=scores[top_shows[1]]    
+# 		scores=scores/np.max(norm)
  		# rocchio
-#   		weights=weights=1/(np.arange(20.).reshape((20,1))+1)  
-#  		for value in enumerate(positive):
-#  			anim_id=value[1]
-#  			rocchiod=rocchio(review_array[anim_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights,a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))
-#  			review_array[anim_id]=rocchiod/np.linalg.norm(rocchiod)
-#  			print(np.linalg.norm(rocchiod/np.linalg.norm(rocchiod)-result))
-#   		for value in enumerate(positive_words):
-#   			word_id=value[1]
-#   			rocchiod=rocchio(word_array[word_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights, a=1, b=2*float(1)/len(positive_words), c=2*float(1)/len(positive_words)) 
-#   			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
+  		weights=weights=1/(np.arange(20.).reshape((20,1))+1)  
+  		for value in enumerate(positive):
+  			anim_id=value[1]
+  			rocchiod=rocchio(review_array[anim_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights,a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))
+  			review_array[anim_id]=rocchiod/np.linalg.norm(rocchiod)
+  			print(np.linalg.norm(rocchiod/np.linalg.norm(rocchiod)-result))
+   		for value in enumerate(positive_words):
+   			word_id=value[1]
+   			rocchiod=rocchio(word_array[word_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights, a=1, b=2*float(1)/len(positive_words), c=2*float(1)/len(positive_words)) 
+   			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
             
 		json_array = []       
             #returns most similar anime ids and similarity scores
