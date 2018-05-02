@@ -47,6 +47,7 @@ review_array = np.load("data/doc2vecreviewArray.npy")
 filter_bools= np.load("data/filterArray.npy")
 word_array=np.load("data/wordArray.npy")
 words=np.load("data/wordList.npy")
+rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
 	word_to_ind[word]=index
@@ -120,34 +121,31 @@ def search():
                 
 		result=show_result+word_result           
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
-		adjust=scores
-		top_shows= np.argsort(-adjust,axis=0)
+		adjust=scores.flatten("F")+(.5)*rat_array
+		top_shows_unfiltered= np.argsort(-adjust,axis=0)
             #filter out the shows we don't want
-		mask=np.isin(top_shows,shows_removed,invert=True)
-		top_shows=top_shows[mask]   
+		mask=np.isin(top_shows_unfiltered,shows_removed)
+		print(np.where(mask==False))
+		top_shows=top_shows_unfiltered[mask]   
 		top_n_shows= top_shows[:20]
+
 		bottom_n_shows= top_shows[-20:]
 		if(len(top_n_shows)<=0):
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
 				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], 								prevfilters2=filter_dictionary2, filtertrue = filtered_true)
-
-
-            
-		norm=scores[top_shows[0]]
-		if(norm==1):
-			norm=scores[top_shows[1]]    
-		scores=scores/np.max(norm)
         
  		# rocchio
-        
- 		for value in enumerate(positive):
- 			anim_id=value[1]
- 			review_array[anim_id]=rocchio(review_array[anim_id], top_n_shows, bottom_n_shows,
-                                               a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))          
-  		for value in enumerate(positive_words):
-  			word_id=value[1]
-  			review_array[word_id]=rocchio(word_array[word_id], top_n_shows, bottom_n_shows,
-                                               a=.3, b=.3*float(1)/len(positive_words), c=.3*float(1)/len(positive_words))              
+#   		weights=weights=1/(np.arange(20.).reshape((20,1))+1)  
+#  		for value in enumerate(positive):
+#  			anim_id=value[1]
+#  			rocchiod=rocchio(review_array[anim_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights,a=.3, b=.3*float(1)/len(positive), c=.3*float(1)/len(positive))
+#  			review_array[anim_id]=rocchiod/np.linalg.norm(rocchiod)
+#  			print(np.linalg.norm(rocchiod/np.linalg.norm(rocchiod)-result))
+#   		for value in enumerate(positive_words):
+#   			word_id=value[1]
+#   			rocchiod=rocchio(word_array[word_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights, a=1, b=2*float(1)/len(positive_words), c=2*float(1)/len(positive_words)) 
+#   			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
+            
 		json_array = []       
             #returns most similar anime ids and similarity scores
 		for anim_ind in (top_n_shows):
@@ -160,7 +158,7 @@ def search():
 				jsonfile['words'] = concat                    
 				json_array.append(jsonfile)
 		data = json_array
-            
+		print(np.sum(result-np.load("data/doc2vecreviewArray.npy")[7221]))
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
@@ -349,27 +347,8 @@ def hide_filter(data, jsonfile, show, min_rating, time, finished, licensed, age,
 
 def rocchio(query, relevant, irrelevant,a=.3, b=.3, c=.8, clip = False):
 	q0 = query
-	if relevant.shape[0]!=0:
-		f = lambda i: np.array(relevant)[i]
-		dREL = np.fromfunction(np.vectorize(f), (len(relevant),) , dtype=int)
-		dREL = np.sum(dREL,axis=0)
-	else:
-		dREL = 0
-	  
-	if irrelevant.shape[0]!=0:
-		f = lambda i: np.array(irrelevant)[i]
-		dNREL = np.fromfunction(np.vectorize(f), (len(irrelevant),) , dtype=int)
-		dNREL = np.sum(dNREL,axis=0)
-	else:
-		dNREL = 0    
-	
 	if relevant.shape[0]!=0 and irrelevant.shape[0]!=0:
-		q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)-(c*((1/irrelevant.shape[0])*dNREL))
-	elif len(relevant)==0:
-		q1 = (a*q0)-(c*((1/irrelevant.shape[0])*dNREL))
-	elif len(irrelevant)==0:
-		q1 = (a*q0)+(b*(1/relevant.shape[0])*dREL)
-
+		q1 = (a*q0)+(b*(1/relevant.shape[0])*np.sum(relevant,axis=0))-(c*((1/irrelevant.shape[0])*np.sum(irrelevant,axis=0)))
 	if clip:
 		q1[q1<0] = 0
 
