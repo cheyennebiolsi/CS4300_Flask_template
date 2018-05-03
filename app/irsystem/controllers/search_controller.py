@@ -149,7 +149,7 @@ def search():
   			print(np.linalg.norm(rocchiod/np.linalg.norm(rocchiod)-result))
    		for value in enumerate(positive_words):
    			word_id=value[1]
-   			rocchiod=rocchio(word_array[word_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights, a=1, b=2*float(1)/len(positive_words), c=2*float(1)/len(positive_words)) 
+   			rocchiod=rocchio(word_array[word_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights, a=1, b=3*float(1)/len(positive_words), c=3*float(1)/len(positive_words)) 
    			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
             
 		json_array = []       
