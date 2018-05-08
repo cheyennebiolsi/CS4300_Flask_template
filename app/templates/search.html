@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
-        $(document).ready(function() {
+        $(window).on("load", function() {
             $("#recommended-carousel").owlCarousel( {
                 items: 5,
                 stagePadding: 100,
@@ -133,9 +133,9 @@
                                 {% endfor %}
                             {% else %}
                                 {% for genre in genres %}
-                                {% set genre_name = genre.replace(" ", "_") %}
+                                    {% set genre_name = genre.replace(" ", "_") %}
                                 <label class="genre-checkbox" style="color:white">
-                                    <input type="checkbox" name={{genre}} checked/>
+                                    <input type="checkbox" name={{genre_name}} checked/>
                                     <div class="tag-button active checked">{{genre}}</div>
                                     <div class="tag-button inactive unchecked">{{genre}}</div>
                                 </label>
@@ -620,13 +620,13 @@
                     <div class="container anime-score">
                         <div class="row">
                             <div class="col-6" style="padding-right: 2px">
-                                <div class="synopsis-header" id="rating-value"><span>Rating: {{data[0]["anime_rating_value"]}}</span></div>
-                                <div class="synopsis-header" id="rater-number"><span>Number of Raters: {{data[0]["anime_rating_count"]}}</span></div>
+                                <div class="row synopsis-header" id="rating-value"><span>Rating: {{data[0]["anime_rating_value"]}}</span></div>
+                                <div class="row synopsis-header" id="rater-number"><span>Number of Raters: {{data[0]["anime_rating_count"]}}</span></div>
                             </div>
-                            <div class="col=6" style="padding-right: 2px">
-                                <div class="synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"]}}</span></div>
-                                <div class="synopsis-header" id="reviewer-number"><span>Number of Reviewers: {{data[0]["anime_review_number"]}}</span></div>
-                                
+                            <div class="col-6" style="padding-right: 2px">
+                                <div class="row synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"]}}</span></div>
+                                <div class="row synopsis-header" id="reviewer-number"><span>Number of Reviewers: {{data[0]["anime_review_number"]}}</span></div>
+
                             </div>
                        </div>
                     </div>
@@ -757,7 +757,7 @@
            </div>
 
 {% else %}
-<h1 style="color: white"> Editors' Pick Anime to Search </h1>
+<h1 style="color: white"> Editors' Choice Anime to Search </h1>
 
 <div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
     <div class="owl-stage-outer">
