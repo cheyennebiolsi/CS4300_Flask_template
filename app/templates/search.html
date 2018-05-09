@@ -23,7 +23,7 @@
     <script>
         $(window).on("load", function() {
             $("#recommended-carousel").owlCarousel( {
-                items: 5,
+                items: 4,
                 stagePadding: 100,
                 loop: true,
                 margin: 30,
@@ -606,7 +606,7 @@
                         <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
-                <div class="col-sm-6 synopsis-col">
+                <div class="col-sm-5 synopsis-col">
 <!--                <div class = "media-self-center media-left anime-synopsis">	-->
                     <div class="container anime-synopsis" id="media-synopsis">	
                                 <div class="synopsis-header"> Synopsis </div>	
@@ -618,24 +618,11 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class= "col-sm-3">
-                    <div class="container anime-score">
-                        <div class="row">
-                            <div class="col-6" style="padding-right: 2px">
-                                <div class="row synopsis-header" id="rating-value"><span>Rating: {{data[0]["anime_rating_value"]}}</span></div>
-                                <div class="row synopsis-header" id="rater-number"><span>Number of Raters: {{data[0]["anime_rating_count"]}}</span></div>
-                            </div>
-                            <div class="col-6" style="padding-right: 2px">
-                                <div class="row synopsis-header" id="similarity-score"><span>Similarity Score: {{data[0]["score"]}}</span></div>
-                                <div class="row synopsis-header" id="reviewer-number"><span>Number of Reviewers: {{data[0]["anime_review_number"]}}</span></div>
-
-                            </div>
-                       </div>
-                    </div>
+                <div class= "col-sm-4 statistics-col">
                     <div class="container anime-statistics">
-                        <div class="container" style="width: 90%; height: 100%">
-                                <br>
-                                <canvas class="data-visualization" id="vis" width="800" height="600"></canvas>
+<!--                        <div class="container" style="width: 90%; height: 100%">
+                                <br> -->
+                                <canvas class="data-visualization" id="vis" width="800" height="600"></canvas> 
                                 <script>
                                     var data_chart = {
                                         labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
@@ -693,7 +680,7 @@
                                     });
 
                                 </script>
-                          </div>
+<!--                          </div> -->
                     </div>
                 </div>
                 <div class="media-body" style="height:50%">
@@ -735,7 +722,7 @@
                         {% for d in data%}
                         {% set image_url = d['anime_image_url'] %}
                         <div class="owl-item" style="height:100%">
-                            <div class="view overlay" id="suggestionCard" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
+                            <div class="view overlay" id="suggestionCard" style="cursor:pointer" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
                                  data-overallreview = '{{d["anime_review_overall_average"]}}' 
                                  data-storyreview = '{{d["anime_review_story_average"]}}'
@@ -764,8 +751,8 @@
 <div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
     <div class="owl-stage-outer">
         <div class="owl-stage" id="recommendation-stage">
-            <div class="owl-item">
-            </div>
+<!--            <div class="owl-item">
+            </div> -->
         </div>
     </div>
 <!--    <div class="owl-nav">
