@@ -599,24 +599,26 @@
                 </div>
             </div>
              
-            <div class="media">
-                <div class = "media-self-center media-left anime-picture">
+            <div class="row feature-display">
+                <div class="col-sm-3 picture-col">
+<!--                <div class = "media-self-center media-left anime-picture"> -->
                    <div class="container anime-picture">
                         <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
-                <div class = "media-self-center media-left anime-synopsis">	
+                <div class="col-sm-6 synopsis-col">
+<!--                <div class = "media-self-center media-left anime-synopsis">	-->
                     <div class="container anime-synopsis" id="media-synopsis">	
                                 <div class="synopsis-header"> Synopsis </div>	
                                 <span>{{data[0]["anime_synopsis"]}}</span>	
                     </div>
-                    <div class="container anime-words" id="anime-words"><div class="synopsis-header"> Top Ten Words </div> 
+                    <div class="container anime-words" id="anime-words"><div class="synopsis-header"> Top Tags: </div> 
                         {% for word in data[0]["words"].split('|') %}
                         <span>{{word}}</span> 
                         {% endfor %}
                     </div>
                 </div>
-                <div class= "media-self-center media-left anime-statistics">
+                <div class= "col-sm-3">
                     <div class="container anime-score">
                         <div class="row">
                             <div class="col-6" style="padding-right: 2px">
@@ -832,7 +834,7 @@
                     };
                     $('#anime-words').replaceWith(
                          '<div class="container anime-words" id="anime-words">' +
-                         '<div class="synopsis-header"> Top Ten Words </div>' + wordStr  +
+                         '<div class="synopsis-header"> Top Tags: </div>' + wordStr  +
                          '</div>'
                     );
                     $('#media-genres').replaceWith(
