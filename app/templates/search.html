@@ -556,6 +556,7 @@
             <div id="tester" class="media-header">
                 <div class="row title">
                     <div class="col title" id="media-title">
+                        <div class="bumper"></div>
                         <span>{{data[0]["anime_english_title"]}}</span>
                     </div>
                     <div class="col-auto icon" style="font-style:normal">
@@ -571,20 +572,32 @@
                         </div>
                         <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
                         {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                        <div class="bumper"></div>
                     </div>
                 </div>
                 <div class="row episodeinfo">
                     <div class="col type" id="media-type">
+                       <div class="bumper"></div>
                        <span> {{data[0]["anime_type"]}}</span>
                     </div>
+                   <div class="col-dot">
+                       <div> &#9670 </div>
+                   </div>
                    <div class="col rating" id="media-rating">
                     <span> {{data[0]["anime_rating"]}}</span>               
                     </div>
+                   <div class="col-dot">
+                       <div> &#9670 </div>
+                   </div>
                     <div class="col duration" id="media-duration">
                         <span> {{data[0]["anime_duration"]}}</span>
                     </div>
+                   <div class="col-dot">
+                       <div> &#9670 </div>
+                   </div>
                     <div class="col episodes" id="episode-count">
                         <span> {{data[0]["anime_number_of_episodes"]}} episodes</span>
+                       <div class="bumper"></div>
                     </div>
                 </div>
 

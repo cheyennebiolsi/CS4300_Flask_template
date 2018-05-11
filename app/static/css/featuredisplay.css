@@ -19,6 +19,26 @@
     src: url('/static/fonts/futura-md-bt/FuturaMediumBT.ttf');
 }
 
+.col-dot {
+    display: flex;
+    align-items: center;
+    color: black;
+    font-size: 20;
+}
+
+.dot {
+    height: 0.6vw;
+    width: 0.6vw;
+    background-color: black;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.bumper {
+    width: 30px;
+    display: inline-block;
+}
+
 .row.feature-display {
     height: 50%;
     margin: 0;
@@ -217,9 +237,9 @@
 
 .media-header .col.title {
     text-align: left;
-    font-size: 30;
+    font-size: 35;
     font-family: "Futura";
-    padding-left: 20px;
+    margin-top: 8px;
 }
 
 .media-header .row.episodeinfo {
@@ -248,6 +268,8 @@
 .media-header .col-auto.icon {
     text-align: right;
     font-size: 30;
+    padding: 0;
+    margin: 0;
 }
 
 .media-header .row {
@@ -267,7 +289,6 @@
 
 .media-header .col.type {
     text-align: left;
-    padding-left: 20px;
 }
 
 .media-header .row.genres {
@@ -278,7 +299,6 @@
 }
 .media-header .col.episodes {
     text-align: right;
-    padding-right: 20px;
 }
 
 .media-footer {
