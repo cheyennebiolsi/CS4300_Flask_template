@@ -185,6 +185,7 @@ hr {
 
 .fancy-checkbox {
     font-style: normal;
+    cursor: pointer;
 }
 
 .fancy-checkbox input[type="checkbox"],
