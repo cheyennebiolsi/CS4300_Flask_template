@@ -637,7 +637,7 @@
                     </div>
                 </div>
                 <div class= "col-sm-4 statistics-col">
-                    <div class="container header" id="similarity-score"> <span>Aniai Score: {{data[0]["score"]}}%</span> </div>
+                    <div class="container header" id="similarity-score"> <span>Aniai Score: {{data[0]["score"]}}</span> </div>
                     <div class="container anime-statistics" id="anime-statistics">
 <!--                        <div class="container" style="width: 90%; height: 100%">
                                 <br> -->
@@ -723,8 +723,8 @@
                                         draggable: true,
                                         options: {
                                             title: {
-                                                display: false,
-                                                text: 'Review Score',
+                                                display: true,
+                                                text: 'Top Words for Query',
                                                 fontColor: "#FFFFFF",
                                                 fontSize: 14
                                             },
@@ -882,7 +882,7 @@
                     $('#media-duration span').text(duration);
                     $('#media-synopsis span').text(synopsis);
                     $('#episode-count span').text(episode_count + " episodes");
-                    $('#similarity-score span').text("Aniai Score: " + similarity + "%");
+                    $('#similarity-score span').text("Aniai Score: " + similarity);
                     $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
                     $('#rater-number span').text("Number of Raters: " + raternumber);
                     $('#rating-value span').text("Rating: " + ratingvalue);
@@ -994,8 +994,8 @@
                         draggable: true,
                         options: {
                             title: {
-                                display: false,
-                                text: 'Review Score',
+                                display: true,
+                                text: 'Top Words for Query',
                                 fontColor: "#FFFFFF",
                                 fontSize: 14
                             },
