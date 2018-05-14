@@ -41,6 +41,7 @@
         });
         document.addEventListener("DOMContentLoaded", function(event) {
             {% if data %}
+                resizeTags();
             {% else %}
                 loadrecommended();
 
@@ -626,9 +627,10 @@
                                 <span>{{data[0]["anime_synopsis"]}}</span>	
                     </div>
                     <div class="container anime-words" id="anime-words"><div class="synopsis-header"> Top Tags: </div> 
-                        {% for word in data[0]["words"].split('|') %}
-                        <span>{{word}}</span> 
-                        {% endfor %}
+                        <div class = "container anime-tags" id="anime-tags">
+                            {% set word = " ".join(data[0]["words"].split('|')) %}
+                            <span>{{word}}</span> 
+                        </div>
                     </div>
                 </div>
                 <div class= "col-sm-4 statistics-col">
@@ -849,13 +851,9 @@
                     var words = words.split("|");
                     var wordStr = "";
                     for (var word in words) {
-                        wordStr += '<span>' + words[word] + '</span>';
+                        wordStr += words[word] + " ";
                     };
-                    $('#anime-words').replaceWith(
-                         '<div class="container anime-words" id="anime-words">' +
-                         '<div class="synopsis-header"> Top Tags: </div>' + wordStr  +
-                         '</div>'
-                    );
+                    $('#anime-tags span').text(wordStr);
                     $('#media-genres').replaceWith(
                         '<div class="col genres" id="media-genres">' + str + '</div>'
                         );
@@ -1006,6 +1004,25 @@
     <script>
         $('.flip').click(function() {
             $(this).find('.recommend-card').toggleClass('flipped');
+        });
+        var resizeTags = function() {
+
+            var bb = document.querySelector(".anime-words").getBoundingClientRect();
+            var topTags = document.querySelector(".anime-words .synopsis-header").getBoundingClientRect();
+            $('.anime-tags').css("width", bb.right - topTags.right - 15 + "px");
+        };
+        $(document).on("mouseenter", "#anime-tags span", function() {
+            var bb = document.querySelector(".anime-tags").getBoundingClientRect();
+            width = bb.right - bb.left;
+            if (width < document.querySelector(".anime-tags span").getBoundingClientRect().width) {
+                $(".anime-tags span").css("transform", "translateX(calc(" + width+"px - 100%))");
+            };
+        });
+        $(document).on("mouseleave", "#anime-tags span", function() {
+            $(".anime-tags span").css("transform", "translate(0)");
+        });
+        $(window).resize(function() {
+            resizeTags();
         });
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>
