@@ -637,8 +637,30 @@
                                 <br> -->
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas> 
                                 <script>
+                                    // var data_chart = {
+                                    //     labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                                    //     datasets: [
+                                    //         {
+                                    //             fill: true,
+                                    //             backgroundColor: "rgba(255,99,132,0.2)",
+                                    //             borderColor: "rgba(255,99,132,1)",
+                                    //             pointBorderColor: "#fff",
+                                    //             pointBackgroundColor: "rgba(255,99,132,1)",
+                                    //             pointBorderColor: "#fff",
+                                    //             data: [
+                                    //                 Math.round({{data[0]["anime_review_overall_average"]}}*100)/100, 
+                                    //                 Math.round({{data[0]["anime_review_story_average"]}}*100)/100,
+                                    //                 Math.round({{data[0]["anime_review_enjoyment_average"]}}*100)/100,
+                                    //                 Math.round({{data[0]["anime_review_character_average"]}}*100)/100,
+                                    //                 Math.round({{data[0]["anime_review_sound_average"]}}*100)/100,
+                                    //                 Math.round({{data[0]["anime_review_animation_average"]}}*100)/100
+                                    //             ]
+                                    //         }
+                                    //     ]
+                                    // };
+
                                     var data_chart = {
-                                        labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                                        labels: {{data[0]["graph_words"]}},
                                         datasets: [
                                             {
                                                 fill: true,
@@ -647,14 +669,7 @@
                                                 pointBorderColor: "#fff",
                                                 pointBackgroundColor: "rgba(255,99,132,1)",
                                                 pointBorderColor: "#fff",
-                                                data: [
-                                                    Math.round({{data[0]["anime_review_overall_average"]}}*100)/100, 
-                                                    Math.round({{data[0]["anime_review_story_average"]}}*100)/100,
-                                                    Math.round({{data[0]["anime_review_enjoyment_average"]}}*100)/100,
-                                                    Math.round({{data[0]["anime_review_character_average"]}}*100)/100,
-                                                    Math.round({{data[0]["anime_review_sound_average"]}}*100)/100,
-                                                    Math.round({{data[0]["anime_review_animation_average"]}}*100)/100
-                                                ]
+                                                data: {{data[0]["graph_value"]}}
                                             }
                                         ]
                                     };
@@ -737,6 +752,8 @@
                         <div class="owl-item" style="height:100%">
                             <div class="view overlay" id="suggestionCard" style="cursor:pointer" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
+                                 data-labels="{{d['graph_words']}}"
+                                 data-values= "{{d['graph_value']}}"
                                  data-overallreview = '{{d["anime_review_overall_average"]}}' 
                                  data-storyreview = '{{d["anime_review_story_average"]}}'
                                  data-enjoyment = '{{d["anime_review_enjoyment_average"]}}'
@@ -810,6 +827,8 @@
                     var reviewernumber = $(this).data("reviewernumber");
                     var raternumber = $(this).data("raternumber");
                     var ratingvalue = $(this).data("ratingvalue");
+                    var thelabels = $(this).data("labels")
+                    var thevalues = $(this).data("values")
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -876,8 +895,30 @@
                     // if (oldchart !== undefined)
                     //     oldchart.destroy(); //delete charts
 
+                    // var data_chart = {
+                    // labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                    // datasets: [
+                    //     {
+                    //         label: title,
+                    //         fill: true,
+                    //         backgroundColor: "rgba(255,99,132,0.2)",
+                    //         borderColor: "rgba(255,99,132,1)",
+                    //         pointBorderColor: "#fff",
+                    //         pointBackgroundColor: "rgba(255,99,132,1)",
+                    //         pointBorderColor: "#fff",
+                    //         data: [
+                    //             Math.round(overall*100)/100, 
+                    //             Math.round(story*100)/100, 
+                    //             Math.round(enjoyment*100)/100,
+                    //             Math.round(character*100)/100, 
+                    //             Math.round(sound*100)/100,
+                    //             Math.round(animation*100)/100
+                    //         ]
+                    //     }
+                    // ]
+                    // };
                     var data_chart = {
-                    labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
+                    labels: thelabels,
                     datasets: [
                         {
                             label: title,
@@ -887,17 +928,12 @@
                             pointBorderColor: "#fff",
                             pointBackgroundColor: "rgba(255,99,132,1)",
                             pointBorderColor: "#fff",
-                            data: [
-                                Math.round(overall*100)/100, 
-                                Math.round(story*100)/100, 
-                                Math.round(enjoyment*100)/100,
-                                Math.round(character*100)/100, 
-                                Math.round(sound*100)/100,
-                                Math.round(animation*100)/100
-                            ]
+                            data: thevalues
                         }
                     ]
                     };
+
+
 
                     anime_scores = new Chart(document.getElementById("vis"), {
                         type: 'radar',
