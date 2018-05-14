@@ -173,7 +173,9 @@ def search():
 				newscores=np.matmul(top_words_vecs,review_array[anim_ind])
 				newscores=np.round(newscores.flatten('F'),3)
 				jsonfile['graph_value']=list(newscores)
- 				print(jsonfile['graph_value'])
+				wordflatscores=np.round(word_scores[top_n_words[:10]].flatten('F'),3)
+				jsonfile['original_value']=list(wordflatscores)
+ 				print(jsonfile['original_value'])
 				json_array.append(jsonfile)
  
 		data = json_array
