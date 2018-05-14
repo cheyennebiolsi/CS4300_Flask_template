@@ -25,7 +25,6 @@ for index, element in enumerate(allanimelite):
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')
-sentiment = np.load('data/hello.npy')
 
 tags_column = tags_data[:,0]
 tags_nocolumn = np.delete(tags_data, 0, 1)
@@ -137,7 +136,7 @@ def search():
 		if(len(top_n_shows)<=0):
 			output_message = "Impossible Combination. Please Change Filters."
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true), original_value=[]
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
 
             
@@ -158,18 +157,24 @@ def search():
    			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
 
 		top_n_words=top_words[:10]
+		values=word_array[top_n_shows1.flatten('F')]
+#        sims=np.matmul(values,values.T)
+#        mins=np.argmin(sims,axis=0)
+#        holder=set()
+#        for index in range(1,5):
+#            holder.add(words[top_n_shows1[mins[index]]][0])
 		top_words_vecs=word_array[top_words[:10]]
 		top_word_strings=word_list[top_words[:10]]
+        
         
 		json_array = []       
             #returns most similar anime ids and similarity scores
 		for anim_ind in (top_n_shows):
-			score = scores[anim_ind]
+			score = adjust[anim_ind]
 			jsonfile = get_anime(anim_ind, allanimelite)
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
-				jsonfile['positive_words'] = sentiment[anim_ind]
 				jsonfile['score'] =str(round(score*100, 2))
 				jsonfile['words'] = concat
 				jsonfile['graph_words']="|".join(word_list[top_n_words.flatten('F')])
@@ -184,7 +189,7 @@ def search():
 		data = json_array
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=originalValue)
+		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)#, original_value=originalValue)
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
