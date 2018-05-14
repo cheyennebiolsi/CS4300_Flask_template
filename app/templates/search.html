@@ -660,9 +660,35 @@
                                     //         }
                                     //     ]
                                     // };
+                                    // function decodeEntities(encodedString) {
+                                    //     var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+                                    //     var translate = {
+                                    //         "nbsp":" ",
+                                    //         "amp" : "&",
+                                    //         "quot": "\"",
+                                    //         "lt"  : "<",
+                                    //         "gt"  : ">"
+                                    //     };
+                                    //     return encodedString.replace(translate_re, function(match, entity) {
+                                    //         return translate[entity];
+                                    //     }).replace(/&#(\d+);/gi, function(match, numStr) {
+                                    //         var num = parseInt(numStr, 10);
+                                    //         return String.fromCharCode(num);
+                                    //     });
+                                    // }
+
+
+                                    // var arr = [];
+                                    var labels = '{{data[0]["graph_words"]}}';
+                                    // for (i = 0; i < labels.length; i++) { 
+                                    //     arr.push(decodeEntities(labels[i]))
+                                    // }
+                                    // console.log(arr)
+                                    var labels_words = labels.split("|");
+                                    console.log(labels_words)
 
                                     var data_chart = {
-                                        labels: {{data[0]["graph_words"]}},
+                                        labels: labels_words,
                                         datasets: [
                                             {
                                                 fill: true,
@@ -694,7 +720,7 @@
                                                 ticks: {
                                                     maxTicksLimit: 5,
                                                     backdropColor: 'black',
-                                                    max: 10,
+                                                    max: .5,
                                                     min: 0, 
                                                     fontSize: 6,
                                                     color: '#FFFFFF'
@@ -754,7 +780,7 @@
                         <div class="owl-item" style="height:100%">
                             <div class="view overlay" id="suggestionCard" style="cursor:pointer" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
-                                 data-labels="{{d['graph_words']}}"
+                                 data-labels='{{ d["graph_words"]}}'
                                  data-values= "{{d['graph_value']}}"
                                  data-overallreview = '{{d["anime_review_overall_average"]}}' 
                                  data-storyreview = '{{d["anime_review_story_average"]}}'
@@ -762,6 +788,7 @@
                                  data-character = '{{d["anime_review_character_average"]}}'
                                  data-sound= '{{d["anime_review_sound_average"]}}'
                                  data-animation= '{{d["anime_review_animation_average"]}}'
+                                 data-positive_words = '{{d["positive_words"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}"  
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
                                  data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
@@ -829,8 +856,9 @@
                     var reviewernumber = $(this).data("reviewernumber");
                     var raternumber = $(this).data("raternumber");
                     var ratingvalue = $(this).data("ratingvalue");
-                    var thelabels = $(this).data("labels")
-                    var thevalues = $(this).data("values")
+                    var thelabels = $(this).data("labels");
+                    var thevalues = $(this).data("values");
+                    var positive_words = $(this).data("positive_words");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -915,8 +943,10 @@
                     //     }
                     // ]
                     // };
+                    var thelabels2 = thelabels.split("|");
+
                     var data_chart = {
-                    labels: thelabels,
+                    labels: thelabels2,
                     datasets: [
                         {
                             label: title,
@@ -951,7 +981,7 @@
                                 ticks: {
                                     maxTicksLimit: 5,
                                     backdropColor: 'black',
-                                    max: 10,
+                                    max: .5,
                                     min: 0, 
                                     fontSize: 6,
                                     color: '#FFFFFF'

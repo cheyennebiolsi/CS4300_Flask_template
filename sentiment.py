@@ -11,6 +11,7 @@ from sklearn.naive_bayes import MultinomialNB
 from collections import defaultdict
 from bs4 import BeautifulSoup
 import json
+import csv
 
 tokenizer = TweetTokenizer()
 
@@ -200,7 +201,22 @@ english_plus = [
 	'yours',
 	'yourself',
 	'yourselves',
-	'zero'
+	'zero',
+	'previously',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'10',
+	'ive',
+	'didn',
+	'back',
+	'time'
 ]
 
 
@@ -233,23 +249,50 @@ def seed_score(pos_seed,PMI_MATRIX,TERMS):
 
 # Create Count Vectorizer 
 csv_array = []
-with open('poop.json', 'w') as outfile:
-	json_array = []
+# with open('poop.json', 'w') as outfile:
+
+
+# with open(infile, encoding='utf-8') as f, open(outfile, 'w') as o:
+# 	reader = csv.reader(f)
+# 	writer = csv.writer(o, delimiter=',') # adjust as necessary
+
+# 	for row in reader:
+# 		# print('hi'+row[7])
+# 		if row[0] != "age":
+
+# 			for i in range(0,16):
+# 				row_i = row[i]
+# 				# row_i = row_i.replace('<br />',' ')
+# 				row_i = row_i.replace('\n','')
+# 				row_i = row_i.replace('\t','')
+# 				row_i = cleanhtml(row[i])
+# 				row[i] = row_i
+
+# 			writer.writerow(row)
+# 		else:
+# 			writer.writerow(row)
+with open('poop.csv', "w") as csv_file:
+        # for line in data:
+        #     writer.writerow(line)
+	writer = csv.writer(csv_file, delimiter=',')
+	# json_array = []
 	for counter, anime_idx in enumerate(anime_id_column):
-		cvect = CountVectorizer(stop_words=english_plus2, min_df=1, max_df = 1, max_features =200, ngram_range=(1,1))
-		reviews_pos_tagged=[pos_tag(tokenizer.tokenize(m)) for m in df[df.anime_id == anime_idx]["review_text"]]
-		reviews_adj_adv_only=[" ".join([w for w,tag in m if tag in ["JJ","RB","RBS","RBJ","JJR","JJS"]])
-							  for m in reviews_pos_tagged]
 		try:
+			cvect = CountVectorizer(stop_words=english_plus2, max_df = .75, max_features =200, ngram_range=(1,1))
+			reviews_pos_tagged=[pos_tag(tokenizer.tokenize(m)) for m in df[df.anime_id == anime_idx]["review_text"]]
+			reviews_adj_adv_only=[" ".join([w for w,tag in m if tag in ["JJ","JJR","JJS"]])
+								  for m in reviews_pos_tagged]
+			
 			X = cvect.fit_transform(reviews_adj_adv_only)
 		except:
-			dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':"", 'negative':""}
+			# dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':"", 'negative':""}
+			writer.writerow(["Review Text Too Short For Sentiment Analysis"])
 			continue
 		terms = cvect.get_feature_names()
 		pmi_matrix=getcollocations_matrix(X)
 		
 		posscores=seed_score(['good','great','perfect','cool', "amazing", "enjoyable", "favorite", "worth", "greatest", "awesome", "beautiful", "deep", "unique", "nice", "funny"],pmi_matrix,terms)
-		negscores=seed_score(['bad','terrible','wrong',"crap","long","boring", "stupid", "worst", "slow", "useless", "old", "terrible", "filler"],pmi_matrix,terms)
+		negscores=seed_score(['worthless','stiff','shyly','bad','unnecessary','terrible','wrong',"crap","long","boring", "stupid", "worst", "slow", "useless", "old", "terrible", "filler", "miserably"],pmi_matrix,terms)
 
 		sentscores={}
 		for w in terms:
@@ -262,10 +305,11 @@ with open('poop.json', 'w') as outfile:
 		for word2 in top5:
 			totalwords2 = totalwords2 + word2[0] + "|"
 		totalwords2[:-1]
-		dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':totalwords2}
-		json_array.append(dict_json)
+		# dict_json = {'anime_id':anime_idx, 'anime_index': counter, 'positive':totalwords2}
+		writer.writerow([totalwords2])
+		# json_array.append(dict_json)
 
-	json.dump(json_array, outfile, indent=4)
+	# json.dump(json_array, outfile, indent=4)
 
 
 

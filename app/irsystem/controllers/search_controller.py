@@ -25,6 +25,7 @@ for index, element in enumerate(allanimelite):
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')
+sentiment = np.load('data/hello.npy')
 
 tags_column = tags_data[:,0]
 tags_nocolumn = np.delete(tags_data, 0, 1)
@@ -167,16 +168,14 @@ def search():
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
+				jsonfile['positive_words'] = sentiment[anim_ind]
 				jsonfile['score'] =str(round(score*100, 2))
 				jsonfile['words'] = concat
-				jsonfile['graph_words']=list()
-				jsonfile['graph_value']=list()
-				for ind in top_n_words.flatten('F'):
- 					# jsonfile['graph_words'].append(word_list[ind].replace("'",'"').encode('utf-8'))
- 					jsonfile['graph_words'].append(word_list[ind])
- 					jsonfile['graph_value'].append(round(word_scores[ind][0],3))
- 				print(jsonfile['graph_words'])
-				print(json.dumps(jsonfile))
+				jsonfile['graph_words']="|".join(word_list[top_n_words.flatten('F')])
+				newscores=np.matmul(top_words_vecs,review_array[anim_ind])
+				newscores=np.round(newscores.flatten('F'),3)
+				jsonfile['graph_value']=list(newscores)
+ 				print(jsonfile['graph_value'])
 				json_array.append(jsonfile)
  
 		data = json_array
