@@ -695,6 +695,7 @@
                                         labels: labels_words,
                                         datasets: [
                                             {
+                                                label: "Suggestion",
                                                 fill: true,
                                                 backgroundColor: "rgba(255,99,132,0.2)",
                                                 borderColor: "rgba(255,99,132,1)",
@@ -704,7 +705,7 @@
                                                 data: {{data[0]["graph_value"]}}
                                             },
                                             {
-                                                label: "Original Query(s)",
+                                                label: "Query(s)",
                                                 fill: true,
                                                 backgroundColor: "rgba(179,181,198,0.2)",
                                                 borderColor: "rgba(179,181,198,1)",
@@ -714,7 +715,6 @@
                                                 data: {{original_value}}
                                             }
                                         ]
-
                                     };
 
                                     anime_scores = new Chart(document.getElementById("vis"), {
@@ -729,13 +729,16 @@
                                                 fontSize: 14
                                             },
                                             legend: {
-                                                display: false
+                                                display: true,
+                                                position: 'bottom',
+                                                boxWidth: 20
+
                                             },
                                             scale: {
                                                 ticks: {
                                                     maxTicksLimit: 5,
                                                     backdropColor: 'black',
-                                                    max: .5,
+                                                    max: Math.max.apply(Math, {{original_value}}.concat({{data[0]["graph_value"]}})),
                                                     min: 0, 
                                                     fontSize: 6,
                                                     color: '#FFFFFF'
@@ -974,7 +977,7 @@
                             data: thevalues
                         },
                         {
-                            label: "Original Query(s)",
+                            label: "Query(s)",
                             fill: true,
                             backgroundColor: "rgba(179,181,198,0.2)",
                             borderColor: "rgba(179,181,198,1)",
@@ -1000,13 +1003,16 @@
                                 fontSize: 14
                             },
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'bottom',
+                                boxWidth: 20
+
                             },
                             scale: {
                                 ticks: {
                                     maxTicksLimit: 5,
                                     backdropColor: 'black',
-                                    max: .5,
+                                    max: Math.max.apply(Math, {{original_value}}.concat(thevalues)),
                                     min: 0, 
                                     fontSize: 6,
                                     color: '#FFFFFF'
