@@ -169,16 +169,15 @@ def search():
 			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['score'] =str(round(score*100, 2))
 				jsonfile['words'] = concat
-				jsonfile['graph_words']=list()
+				jsonfile['graph_words']="|".join(word_list[top_n_words.flatten('F')])
 				jsonfile['graph_value']=list()
 				for ind in top_n_words.flatten('F'):
- 					# jsonfile['graph_words'].append(word_list[ind].replace("'",'"').encode('utf-8'))
- 					jsonfile['graph_words'].append(word_list[ind].encode("utf-8"))
  					jsonfile['graph_value'].append(round(word_scores[ind][0],3))
  				print(jsonfile['graph_words'])
 				json_array.append(jsonfile)
  
 		data = json_array
+		print(data)
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
