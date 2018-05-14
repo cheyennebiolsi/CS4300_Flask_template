@@ -786,6 +786,7 @@
                                  data-character = '{{d["anime_review_character_average"]}}'
                                  data-sound= '{{d["anime_review_sound_average"]}}'
                                  data-animation= '{{d["anime_review_animation_average"]}}'
+                                 data-positive_words = '{{d["positive_words"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}"  
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
                                  data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
@@ -853,8 +854,9 @@
                     var reviewernumber = $(this).data("reviewernumber");
                     var raternumber = $(this).data("raternumber");
                     var ratingvalue = $(this).data("ratingvalue");
-                    var thelabels = $(this).data("labels")
-                    var thevalues = $(this).data("values")
+                    var thelabels = $(this).data("labels");
+                    var thevalues = $(this).data("values");
+                    var positive_words = $(this).data("positive_words");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
