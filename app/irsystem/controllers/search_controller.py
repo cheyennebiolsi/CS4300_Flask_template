@@ -172,8 +172,9 @@ def search():
 				jsonfile['graph_words']=list()
 				jsonfile['graph_value']=list()
 				for ind in top_n_words.flatten('F'):
+ 					# jsonfile['graph_words'].append(word_list[ind].replace("'",'"').encode('utf-8'))
  					jsonfile['graph_words'].append(word_list[ind])
- 					jsonfile['graph_value'].append(word_scores[ind][0])
+ 					jsonfile['graph_value'].append(round(word_scores[ind][0],3))
  				print(jsonfile['graph_words'])
 				print(json.dumps(jsonfile))
 				json_array.append(jsonfile)
