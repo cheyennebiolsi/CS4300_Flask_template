@@ -84,6 +84,7 @@ def search():
 	if not query and not words:
 		data = []
 		output_message = ''
+		originalValue = []
 	# Option 3: Only Anime
 	else:
 		anime_names = query.split('|')
@@ -136,7 +137,7 @@ def search():
 		if(len(top_n_shows)<=0):
 			output_message = "Impossible Combination. Please Change Filters."
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=[])
 
 
             
