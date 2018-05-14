@@ -638,10 +638,11 @@
                 </div>
                 <div class= "col-sm-4 statistics-col">
                     <div class="container header" id="similarity-score"> <span>Aniai Score: {{data[0]["score"]}}</span> </div>
-                    <div class="container anime-statistics" id="anime-statistics">
+                    <div class="container anime-statistics" id="anime-statistics" style="overflow: hidden">
 <!--                        <div class="container" style="width: 90%; height: 100%">
                                 <br> -->
-                                <canvas class="data-visualization" id="vis" width="800" height="600"></canvas> 
+                                <div>
+                                <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas></div>
                                 <script>
                                     // var data_chart = {
                                     //     labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
@@ -750,6 +751,8 @@
                                             tooltips: {
                                                 enabled: true
                                             },
+                                            responsive: true,
+                                            maintainAspectRatio: false,
                                         }
                                     });
 
@@ -1026,6 +1029,8 @@
                             tooltips: {
                                 enabled: true
                             },
+                            responsive: true,
+                            maintainAspectRatio: false,
                         }
                     });
 
@@ -1068,9 +1073,14 @@
         $('.flip').click(function() {
             $(this).find('.recommend-card').toggleClass('flipped');
         });
+        var resizeChart = function() {
+            var bb = document.querySelector("#anime-statistics").getBoundingClientRect();
+            $('#vis').attr("width", bb.width);
+        };
         var resizeStatistics = function() {
             var bb = document.querySelector(".statistics-col").getBoundingClientRect();
             $('.anime-statistics').css("height", bb.height - 40 + "px");
+            $('.anime-statistics').css("max-height", bb.height - 40 + "px");
         };
         var resizeTags = function() {
 
