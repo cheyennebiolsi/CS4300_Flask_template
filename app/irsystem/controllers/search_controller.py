@@ -25,7 +25,6 @@ for index, element in enumerate(allanimelite):
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')
-sentiment = np.load('data/hello.npy')
 
 tags_column = tags_data[:,0]
 tags_nocolumn = np.delete(tags_data, 0, 1)
@@ -85,6 +84,7 @@ def search():
 	if not query and not words:
 		data = []
 		output_message = ''
+		originalValue = []
 	# Option 3: Only Anime
 	else:
 		anime_names = query.split('|')
@@ -159,15 +159,15 @@ def search():
 
 		top_n_words=top_words[:10]
         
+        
 		json_array = []       
             #returns most similar anime ids and similarity scores
 		for anim_ind in (top_n_shows):
-			score = scores[anim_ind]
+			score = adjust[anim_ind]
 			jsonfile = get_anime(anim_ind, allanimelite)
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
-				jsonfile['positive_words'] = sentiment[anim_ind]
 				jsonfile['score'] =str(round(score*100, 2))
 				show_word_result=np.matmul(word_array,review_array[anim_ind])
 				new_results=show_word_result+word_scores.flatten('F')

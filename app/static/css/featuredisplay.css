@@ -106,9 +106,16 @@
 
 .container.header {
     color: white;
-    height: 30%;
+    height: 36px;
     font-size: 14;
     text-align: center;
+    width: 100%;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-weight: bold;
+    vertical-align: top;
+    display: inline-block;
+    padding-top: 8px;
+    border-bottom: 2px solid white;
 }
 
 .media-self-center.media-left.anime-picture {
@@ -180,9 +187,11 @@
 
 .feature-display .container.anime-statistics {
     width: 100%;
-    height: 85%;
+    height: 90%;
     overflow-y: scroll;
     color: white;
+    display: inline-block;
+    padding-top: 10px;
 }
 
 .feature-display .container.anime-words {
