@@ -104,6 +104,13 @@
     padding-top: 3px;
 }
 
+.container.header {
+    color: white;
+    height: 30%;
+    font-size: 14;
+    text-align: center;
+}
+
 .media-self-center.media-left.anime-picture {
     width: 35%;
     height: 50%;

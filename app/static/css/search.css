@@ -251,8 +251,9 @@ hr {
 }
 
 .tag-button.active {
-    border: 2px solid pink;
+    border: 2px solid green;
     color: black;
+    background-color: palegreen;
 }
 
 .tag-button.inactive {

@@ -517,8 +517,8 @@
                                 <span> Filter Same Series </span>
                                 <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
                                 <input type="checkbox" name="filter same series" unchecked/>
-                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:pink"></i>
-                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
                                 </label>
                             </div>
                             {% endif %}
@@ -620,10 +620,12 @@
                         <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
-                <div class="col-sm-5 synopsis-col">
+                <div class="col-sm-5 synopsis-col" style="background-color: black">
+<!--                    <div class="container header"> Synopsis
+                    </div> -->
 <!--                <div class = "media-self-center media-left anime-synopsis">	-->
                     <div class="container anime-synopsis" id="media-synopsis">	
-                                <div class="synopsis-header"> Synopsis </div>	
+                                <div class="synopsis-header" style="padding-top: 8px"> Synopsis </div>	
                                 <span>{{data[0]["anime_synopsis"]}}</span>	
                     </div>
                     <div class="container anime-words" id="anime-words"><div class="synopsis-header"> Top Tags: </div> 
