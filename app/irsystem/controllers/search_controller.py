@@ -158,23 +158,6 @@ def search():
    			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
 
 		top_n_words=top_words[:10]
-		top_tw_words=top_words[:20]
-		values=word_array[top_tw_words.flatten('F')]
-		sims=np.matmul(values,values.T)
-		mins=np.argmin(sims,axis=0)
-		holder=set()
-		top_tw_words=top_words[:20].flatten('F')
-
-		for index in range(0,19):
- 			holder.add(top_tw_words[index])
- 			if(len(holder)>10):
- 			 	break
-			holder.add(mins[index])
-			if(len(holder)>10):
- 			 	break
- 			base=np.array(list(holder))
-		top_words_vecs=word_array[base]
-		top_word_strings=word_list[base]
         
 		json_array = []       
             #returns most similar anime ids and similarity scores
@@ -186,21 +169,30 @@ def search():
 			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['positive_words'] = sentiment[anim_ind]
 				jsonfile['score'] =str(round(score*100, 2))
+				show_word_result=np.matmul(word_array,review_array[anim_ind])
+				new_results=show_word_result+word_scores.flatten('F')
+				new_top_words=np.argsort(-new_results,axis=0)
+				new_top_n_words=new_top_words[:10]
+				new_top_word_vecs=word_array[new_top_n_words]
 				jsonfile['words'] = concat
-				jsonfile['graph_words']="|".join(word_list[top_n_words.flatten('F')])
-				newscores=np.matmul(top_words_vecs,review_array[anim_ind])
+				jsonfile['graph_words']="|".join(word_list[new_top_n_words.flatten('F')])
+				newscores=np.matmul(new_top_word_vecs,review_array[anim_ind])
 				newscores=np.round(newscores.flatten('F'),3)
+				neworigscore=np.matmul(new_top_word_vecs,result)
+				neworigscore=np.round(neworigscore.flatten('F'),3)
 				jsonfile['graph_value']=list(newscores)
+				jsonfile['original_value']=list(neworigscore)
+
 				json_array.append(jsonfile)
 
-		newwordscores=np.matmul(top_words_vecs,result)
-		wordflatscores=np.round(newwordscores.flatten('F'),3)
-		originalValue=list(wordflatscores)
+		#newwordscores=np.matmul(top_words_vecs,result)
+		#wordflatscores=np.round(newwordscores.flatten('F'),3)
+		#originalValue=list(wordflatscores)
 
 		data = json_array
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=originalValue)
+		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=[])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
