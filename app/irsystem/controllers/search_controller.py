@@ -46,10 +46,10 @@ alltags_nocolumn = np.delete(alltags_data, 0, 1)
 review_array = np.load("data/doc2vecreviewArray2.npy")
 filter_bools= np.load("data/filterArray.npy")
 word_array=np.load("data/wordArray2.npy")
-words=np.load("data/wordList2.npy")
+word_list=np.load("data/wordList2.npy")
 rat_array=np.load("data/ratArray.npy")
 word_to_ind=dict()
-for index,word in enumerate(words):
+for index,word in enumerate(word_list):
 	word_to_ind[word]=index
 
 
@@ -120,8 +120,11 @@ def search():
                 
 		result=show_result+word_result           
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
+		word_scores=np.matmul((word_array),(result[:,np.newaxis]))
 		adjust=scores.flatten("F")+(.1)*rat_array
 		top_shows_unfiltered= np.argsort(-adjust,axis=0)
+		top_words= np.argsort(-word_scores,axis=0)
+        
             #filter out the shows we don't want
 		mask=np.isin(top_shows_unfiltered,shows_removed,invert=True)
 		print(np.where(mask==False))
@@ -151,7 +154,11 @@ def search():
    			word_id=value[1]
    			rocchiod=rocchio(word_array[word_id], review_array[top_n_shows]*weights,         review_array[bottom_n_shows]*weights, a=1, b=3*float(1)/len(positive_words), c=3*float(1)/len(positive_words)) 
    			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
-            
+
+		top_n_words=top_words[:10]
+		top_words_vecs=word_array[top_words[:10]]
+		top_word_strings=word_list[top_words[:10]]
+        
 		json_array = []       
             #returns most similar anime ids and similarity scores
 		for anim_ind in (top_n_shows):
@@ -161,10 +168,17 @@ def search():
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['score'] =str(round(score*100, 2))
-				jsonfile['words'] = concat                    
+				jsonfile['words'] = concat
+				jsonfile['graph_words']=list()
+				jsonfile['graph_value']=list()
+				for ind in top_n_words.flatten('F'):
+ 					jsonfile['graph_words'].append(word_list[ind])
+ 					jsonfile['graph_value'].append(word_scores[ind][0])
+ 				print(jsonfile['graph_words'])
+				print(json.dumps(jsonfile))
 				json_array.append(jsonfile)
+ 
 		data = json_array
-		print(np.sum(result-np.load("data/doc2vecreviewArray.npy")[7221]))
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
@@ -179,7 +193,7 @@ def get_top_words(anime_index,howmany=10):
 	scores=np.matmul((word_array),(query.T))
 	top_words_ind= np.argsort(-scores,axis=0)
 	top_n_words_ind = top_words_ind[:howmany]
-	top_n_words=words[top_n_words_ind]
+	top_n_words=word_list[top_n_words_ind]
 	return top_n_words.flatten(order="F")
 
 

@@ -43,10 +43,10 @@ alltags_nocolumn = np.delete(alltags_data, 0, 1)
 # review_model = gensim.models.doc2vec.Doc2Vec.load("data/doc2vecreview.model")
 
 # doc2vec numpy
-review_array = np.load("data/doc2vecreviewArray.npy")
-filter_bools= np.load("data/filterArray.npy")
-word_array=np.load("data/wordArray.npy")
-words=np.load("data/wordList.npy")
+review_array = np.load("data/doc2vecreviewArray2.npy")
+filter_bools= np.load("data/filterArray2.npy")
+word_array=np.load("data/wordArray2.npy")
+words=np.load("data/wordList2.npy")
 word_to_ind=dict()
 for index,word in enumerate(words):
 	word_to_ind[word]=index
@@ -120,8 +120,11 @@ def search():
                 
 		result=show_result+word_result           
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
+		word_scores=np.matmul((word_array),(result[:,np.newaxis]))
 		adjust=scores
 		top_shows= np.argsort(-adjust,axis=0)
+		top_words= np.argsort(-word_scores,axis=0)
+
             #filter out the shows we don't want
 		mask=np.isin(top_shows,shows_removed,invert=True)
 		top_shows=top_shows[mask]   
@@ -132,7 +135,9 @@ def search():
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
 				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
 
-
+		top_n_words=top_words[:10]
+		top_words_vecs=word_array[top_words[:10]]
+		top_word_strings=words[top_words[:10]]
             
 		norm=scores[top_shows[0]]
 		if(norm==1):
@@ -153,12 +158,20 @@ def search():
 		for anim_ind in (top_n_shows):
 			score = scores[anim_ind]
 			jsonfile = get_anime(anim_ind, allanimelite)
-			wordvec = get_top_words(anim_ind)   
+			wordvec = get_top_words(anim_ind)
+			jsonfile['graph_words']=list()
+			jsonfile['graph_value']=list()
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['score'] =str(round(score*100, 2))
 				jsonfile['words'] = concat                    
-				json_array.append(jsonfile)
+				for ind in top_n_words:
+ 					jsonfile['graph_words'].append(words[ind])
+ 					jsonfile['graph_value'].append(word_scores[ind])
+				print(json.dumps(jsonfile))
+				hello=asldjkfhsldkaf
+		hello=asldjkfhsldkaf
+
 		data = json_array
             
 	# print(data)
