@@ -158,12 +158,6 @@ def search():
    			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
 
 		top_n_words=top_words[:10]
-		values=word_array[top_n_shows1.flatten('F')]
-#        sims=np.matmul(values,values.T)
-#        mins=np.argmin(sims,axis=0)
-#        holder=set()
-#        for index in range(1,5):
-#            holder.add(words[top_n_shows1[mins[index]]][0])
 		top_words_vecs=word_array[top_words[:10]]
 		top_word_strings=word_list[top_words[:10]]
         
@@ -177,6 +171,7 @@ def search():
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['score'] =str(round(score*100, 2))
+				print jsonfile['score']
 				jsonfile['words'] = concat
 				jsonfile['graph_words']="|".join(word_list[top_n_words.flatten('F')])
 				newscores=np.matmul(top_words_vecs,review_array[anim_ind])
