@@ -137,7 +137,7 @@ def search():
 		if(len(top_n_shows)<=0):
 			output_message = "Impossible Combination. Please Change Filters."
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true), original_value=[]
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=[])
 
 
             
@@ -158,6 +158,18 @@ def search():
    			word_array[word_id]=rocchiod/np.linalg.norm(rocchiod)
 
 		top_n_words=top_words[:10]
+		top_tw_words=top_words[:20]
+		values=word_array[top_tw_words.flatten('F')]
+		sims=np.matmul(values,values.T)
+		mins=np.argmin(sims,axis=0)
+		holder=set()
+		for index in range(0,19):
+ 			
+ 			if(len(holder>10)):
+ 			 	break
+			holder.add(words[top_n_shows1[mins[index]]][0])
+			if(len(holder>10)):
+ 			 	break
 		top_words_vecs=word_array[top_words[:10]]
 		top_word_strings=word_list[top_words[:10]]
         
