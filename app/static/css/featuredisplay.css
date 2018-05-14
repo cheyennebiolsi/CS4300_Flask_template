@@ -106,7 +106,7 @@
 
 .container.header {
     color: white;
-    height: 30px;
+    height: 36px;
     font-size: 14;
     text-align: center;
     width: 100%;
@@ -115,6 +115,7 @@
     vertical-align: top;
     display: inline-block;
     padding-top: 8px;
+    border-bottom: 2px solid white;
 }
 
 .media-self-center.media-left.anime-picture {

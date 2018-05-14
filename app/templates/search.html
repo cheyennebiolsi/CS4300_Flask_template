@@ -637,7 +637,7 @@
                     </div>
                 </div>
                 <div class= "col-sm-4 statistics-col">
-                    <div class="container header" id="similarity-score"> <span>Similarity Score: {{data[0]["score"]}}%</span> </div>
+                    <div class="container header" id="similarity-score"> <span>Aniai Score: {{data[0]["score"]}}</span> </div>
                     <div class="container anime-statistics" id="anime-statistics">
 <!--                        <div class="container" style="width: 90%; height: 100%">
                                 <br> -->
@@ -695,6 +695,7 @@
                                         labels: labels_words,
                                         datasets: [
                                             {
+                                                label: "Suggestion",
                                                 fill: true,
                                                 backgroundColor: "rgba(255,99,132,0.2)",
                                                 borderColor: "rgba(255,99,132,1)",
@@ -704,7 +705,7 @@
                                                 data: {{data[0]["graph_value"]}}
                                             },
                                             {
-                                                label: "Original Query(s)",
+                                                label: "Query(s)",
                                                 fill: true,
                                                 backgroundColor: "rgba(179,181,198,0.2)",
                                                 borderColor: "rgba(179,181,198,1)",
@@ -714,7 +715,6 @@
                                                 data: {{original_value}}
                                             }
                                         ]
-
                                     };
 
                                     anime_scores = new Chart(document.getElementById("vis"), {
@@ -723,19 +723,22 @@
                                         draggable: true,
                                         options: {
                                             title: {
-                                                display: false,
-                                                text: 'Review Score',
+                                                display: true,
+                                                text: 'Top Words for Query',
                                                 fontColor: "#FFFFFF",
                                                 fontSize: 14
                                             },
                                             legend: {
-                                                display: false
+                                                display: true,
+                                                position: 'bottom',
+                                                boxWidth: 20
+
                                             },
                                             scale: {
                                                 ticks: {
                                                     maxTicksLimit: 5,
                                                     backdropColor: 'black',
-                                                    max: .5,
+                                                    max: Math.max.apply(Math, {{original_value}}.concat({{data[0]["graph_value"]}})),
                                                     min: 0, 
                                                     fontSize: 6,
                                                     color: '#FFFFFF'
@@ -882,7 +885,7 @@
                     $('#media-duration span').text(duration);
                     $('#media-synopsis span').text(synopsis);
                     $('#episode-count span').text(episode_count + " episodes");
-                    $('#similarity-score span').text("Similarity Score: " + similarity + "%");
+                    $('#similarity-score span').text("Aniai Score: " + similarity);
                     $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
                     $('#rater-number span').text("Number of Raters: " + raternumber);
                     $('#rating-value span').text("Rating: " + ratingvalue);
@@ -974,7 +977,7 @@
                             data: thevalues
                         },
                         {
-                            label: "Original Query(s)",
+                            label: "Query(s)",
                             fill: true,
                             backgroundColor: "rgba(179,181,198,0.2)",
                             borderColor: "rgba(179,181,198,1)",
@@ -994,19 +997,22 @@
                         draggable: true,
                         options: {
                             title: {
-                                display: false,
-                                text: 'Review Score',
+                                display: true,
+                                text: 'Top Words for Query',
                                 fontColor: "#FFFFFF",
                                 fontSize: 14
                             },
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'bottom',
+                                boxWidth: 20
+
                             },
                             scale: {
                                 ticks: {
                                     maxTicksLimit: 5,
                                     backdropColor: 'black',
-                                    max: .5,
+                                    max: Math.max.apply(Math, {{original_value}}.concat(thevalues)),
                                     min: 0, 
                                     fontSize: 6,
                                     color: '#FFFFFF'
