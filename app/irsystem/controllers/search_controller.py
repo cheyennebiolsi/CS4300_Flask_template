@@ -119,7 +119,8 @@ def search():
 			positive_word_vectors = word_array[positive_words,:]
 			word_result=np.sum(positive_word_vectors,axis=0)
                 
-		result=show_result+word_result           
+		result=show_result+word_result    
+		result=result/np.linalg.norm(result)       
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
 		word_scores=np.matmul((word_array),(result[:,np.newaxis]))
 		adjust=scores.flatten("F")+(.1)*rat_array
@@ -136,7 +137,7 @@ def search():
 		if(len(top_n_shows)<=0):
 			output_message = "Impossible Combination. Please Change Filters."
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true), original_value=[]
 
 
             
@@ -175,13 +176,15 @@ def search():
 				newscores=np.matmul(top_words_vecs,review_array[anim_ind])
 				newscores=np.round(newscores.flatten('F'),3)
 				jsonfile['graph_value']=list(newscores)
- 				print(jsonfile['graph_value'])
 				json_array.append(jsonfile)
- 
+
+		wordflatscores=np.round(word_scores[top_n_words[:10]].flatten('F'),3)
+		originalValue=list(wordflatscores)
+
 		data = json_array
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)
+		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=originalValue)
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
