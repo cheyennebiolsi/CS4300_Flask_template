@@ -171,7 +171,6 @@ def search():
 			concat="|".join(wordvec)                
 			if anim_ind not in id_set and jsonfile != "not found":
 				jsonfile['score'] =str(round(score*100, 2))
-				print jsonfile['score']
 				jsonfile['words'] = concat
 				jsonfile['graph_words']="|".join(word_list[top_n_words.flatten('F')])
 				newscores=np.matmul(top_words_vecs,review_array[anim_ind])
@@ -185,7 +184,7 @@ def search():
 		data = json_array
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true)#, original_value=originalValue)
+		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=originalValue)
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
