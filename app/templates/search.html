@@ -41,6 +41,7 @@
         });
         document.addEventListener("DOMContentLoaded", function(event) {
             {% if data %}
+                resizeStatistics();
                 resizeTags();
             {% else %}
                 loadrecommended();
@@ -636,7 +637,8 @@
                     </div>
                 </div>
                 <div class= "col-sm-4 statistics-col">
-                    <div class="container anime-statistics">
+                    <div class="container header" id="similarity-score"> <span>Similarity Score: {{data[0]["score"]}}%</span> </div>
+                    <div class="container anime-statistics" id="anime-statistics">
 <!--                        <div class="container" style="width: 90%; height: 100%">
                                 <br> -->
                                 <canvas class="data-visualization" id="vis" width="800" height="600"></canvas> 
@@ -710,7 +712,7 @@
                                         draggable: true,
                                         options: {
                                             title: {
-                                                display: true,
+                                                display: false,
                                                 text: 'Review Score',
                                                 fontColor: "#FFFFFF",
                                                 fontSize: 14
@@ -869,7 +871,7 @@
                     $('#media-duration span').text(duration);
                     $('#media-synopsis span').text(synopsis);
                     $('#episode-count span').text(episode_count + " episodes");
-                    $('#similarity-score span').text("Similarity Score: " + similarity);
+                    $('#similarity-score span').text("Similarity Score: " + similarity + "%");
                     $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
                     $('#rater-number span').text("Number of Raters: " + raternumber);
                     $('#rating-value span').text("Rating: " + ratingvalue);
@@ -971,7 +973,7 @@
                         draggable: true,
                         options: {
                             title: {
-                                display: true,
+                                display: false,
                                 text: 'Review Score',
                                 fontColor: "#FFFFFF",
                                 fontSize: 14
@@ -1037,6 +1039,10 @@
         $('.flip').click(function() {
             $(this).find('.recommend-card').toggleClass('flipped');
         });
+        var resizeStatistics = function() {
+            var bb = document.querySelector(".statistics-col").getBoundingClientRect();
+            $('.anime-statistics').css("height", bb.height - 40 + "px");
+        };
         var resizeTags = function() {
 
             var bb = document.querySelector(".anime-words").getBoundingClientRect();
