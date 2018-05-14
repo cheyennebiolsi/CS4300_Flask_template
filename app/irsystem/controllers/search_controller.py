@@ -163,15 +163,18 @@ def search():
 		sims=np.matmul(values,values.T)
 		mins=np.argmin(sims,axis=0)
 		holder=set()
+		top_tw_words=top_words[:20].flatten('F')
+
 		for index in range(0,19):
- 			
- 			if(len(holder>10)):
+ 			holder.add(top_tw_words[index])
+ 			if(len(holder)>10):
  			 	break
-			holder.add(words[top_n_shows1[mins[index]]][0])
-			if(len(holder>10)):
+			holder.add(mins[index])
+			if(len(holder)>10):
  			 	break
-		top_words_vecs=word_array[top_words[:10]]
-		top_word_strings=word_list[top_words[:10]]
+ 			base=np.array(list(holder))
+		top_words_vecs=word_array[base]
+		top_word_strings=word_list[base]
         
 		json_array = []       
             #returns most similar anime ids and similarity scores
@@ -190,7 +193,8 @@ def search():
 				jsonfile['graph_value']=list(newscores)
 				json_array.append(jsonfile)
 
-		wordflatscores=np.round(word_scores[top_n_words[:10]].flatten('F'),3)
+		newwordscores=np.matmul(top_words_vecs,result)
+		wordflatscores=np.round(newwordscores.flatten('F'),3)
 		originalValue=list(wordflatscores)
 
 		data = json_array
