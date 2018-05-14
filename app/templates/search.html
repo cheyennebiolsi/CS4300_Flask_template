@@ -41,6 +41,7 @@
         });
         document.addEventListener("DOMContentLoaded", function(event) {
             {% if data %}
+                resizeTags();
             {% else %}
                 loadrecommended();
 
@@ -516,8 +517,8 @@
                                 <span> Filter Same Series </span>
                                 <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
                                 <input type="checkbox" name="filter same series" unchecked/>
-                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:pink"></i>
-                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:pink"></i>
+                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
                                 </label>
                             </div>
                             {% endif %}
@@ -619,16 +620,19 @@
                         <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
                     </div>
                 </div>
-                <div class="col-sm-5 synopsis-col">
+                <div class="col-sm-5 synopsis-col" style="background-color: black">
+<!--                    <div class="container header"> Synopsis
+                    </div> -->
 <!--                <div class = "media-self-center media-left anime-synopsis">	-->
                     <div class="container anime-synopsis" id="media-synopsis">	
-                                <div class="synopsis-header"> Synopsis </div>	
+                                <div class="synopsis-header" style="padding-top: 8px"> Synopsis </div>	
                                 <span>{{data[0]["anime_synopsis"]}}</span>	
                     </div>
                     <div class="container anime-words" id="anime-words"><div class="synopsis-header"> Top Tags: </div> 
-                        {% for word in data[0]["words"].split('|') %}
-                        <span>{{word}}</span> 
-                        {% endfor %}
+                        <div class = "container anime-tags" id="anime-tags">
+                            {% set word = " ".join(data[0]["words"].split('|')) %}
+                            <span>{{word}}</span> 
+                        </div>
                     </div>
                 </div>
                 <div class= "col-sm-4 statistics-col">
@@ -786,6 +790,7 @@
                                  data-character = '{{d["anime_review_character_average"]}}'
                                  data-sound= '{{d["anime_review_sound_average"]}}'
                                  data-animation= '{{d["anime_review_animation_average"]}}'
+                                 data-positive_words = '{{d["positive_words"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}"  
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
                                  data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
@@ -853,8 +858,9 @@
                     var reviewernumber = $(this).data("reviewernumber");
                     var raternumber = $(this).data("raternumber");
                     var ratingvalue = $(this).data("ratingvalue");
-                    var thelabels = $(this).data("labels")
-                    var thevalues = $(this).data("values")
+                    var thelabels = $(this).data("labels");
+                    var thevalues = $(this).data("values");
+                    var positive_words = $(this).data("positive_words");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
                     $('#media-type span').text(type);
@@ -875,13 +881,9 @@
                     var words = words.split("|");
                     var wordStr = "";
                     for (var word in words) {
-                        wordStr += '<span>' + words[word] + '</span>';
+                        wordStr += words[word] + " ";
                     };
-                    $('#anime-words').replaceWith(
-                         '<div class="container anime-words" id="anime-words">' +
-                         '<div class="synopsis-header"> Top Tags: </div>' + wordStr  +
-                         '</div>'
-                    );
+                    $('#anime-tags span').text(wordStr);
                     $('#media-genres').replaceWith(
                         '<div class="col genres" id="media-genres">' + str + '</div>'
                         );
@@ -1034,6 +1036,25 @@
     <script>
         $('.flip').click(function() {
             $(this).find('.recommend-card').toggleClass('flipped');
+        });
+        var resizeTags = function() {
+
+            var bb = document.querySelector(".anime-words").getBoundingClientRect();
+            var topTags = document.querySelector(".anime-words .synopsis-header").getBoundingClientRect();
+            $('.anime-tags').css("width", bb.right - topTags.right - 15 + "px");
+        };
+        $(document).on("mouseenter", "#anime-tags span", function() {
+            var bb = document.querySelector(".anime-tags").getBoundingClientRect();
+            width = bb.right - bb.left;
+            if (width < document.querySelector(".anime-tags span").getBoundingClientRect().width) {
+                $(".anime-tags span").css("transform", "translateX(calc(" + width+"px - 100%))");
+            };
+        });
+        $(document).on("mouseleave", "#anime-tags span", function() {
+            $(".anime-tags span").css("transform", "translate(0)");
+        });
+        $(window).resize(function() {
+            resizeTags();
         });
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>

@@ -104,6 +104,13 @@
     padding-top: 3px;
 }
 
+.container.header {
+    color: white;
+    height: 30%;
+    font-size: 14;
+    text-align: center;
+}
+
 .media-self-center.media-left.anime-picture {
     width: 35%;
     height: 50%;
@@ -184,25 +191,43 @@
     color: white;
     border-top: 2px solid white;
     text-align: justify;
-    font-size: 0.65vw;
+    font-size: 12;
     white-space: nowrap;
-    overflow-x: scroll;
+    overflow: hidden;
     margin: 0;
-    border-right: 15px solid black;
-    border-left: 15px solid black;
-    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .feature-display .container.anime-words .synopsis-header {
     display: inline-block;
-    font-size: 0.65vw;
-    margin-right: 2px;
+    font-size: 12;
+    border-left: 15px solid transparent;
 }
 
-.feature-display .container.anime-words span {
-    margin-right: 2px;
-    margin-left: 2px;
+.feature-display .container.anime-tags {
     display: inline-block;
+    height: 100%;
+    padding: 0;
+    width: 0;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    vertical-align: middle;
+    line-height: 2;
+    margin: 0;
+    margin-right: 15px;
+}
+
+.feature-display .container.anime-tags span{
+    display: inline-block;
+    transform: translateX(0);
+    transition: 1s;
+}
+
+.feature-display .container.anime-tags:hover span{
 }
 
 .media-header .genre {
