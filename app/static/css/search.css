@@ -2,6 +2,15 @@ html, body {
     height: 100%;
 }
 
+.form-check {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
 .suggestion-text {
     color: white;
     padding: 20px;
@@ -199,22 +208,6 @@ hr {
     width: 100%;
 }
 
-
-.sfw-button {
-    text-align: center;
-    margin-left: 20px !important;
-    vertical-align: middle;
-    display: inline-block;
-    cursor: pointer;
-    padding: 6px;
-    background-color: black;
-    border: 2px solid red;
-    color: red;
-    margin-left: 1.5px;
-    margin-right: 1.5px;
-    font-size: 11;
-    width: 70px !important;
-}
 .tag-button {
     background-color: white;
     text-align: center;
@@ -246,11 +239,59 @@ hr {
     color: lightslategray;
 }
 
+.genre-button-inner {
+   border: 1px solid rgb(219, 112, 147);
+   display: inline-block;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+   font-size: 12px;
+   font-weight: 300;
+   text-transform: uppercase;
+   padding: 2px 8px;
+   border-radius: 4px;
+   cursor: pointer;
+}
+
+.genre-button-inner.active {
+    background-color: rgb(219, 112, 147);
+    color: white;
+}
+
+.genre-button-inner.active:hover {
+    background-color: rgb(159, 74, 103);
+    color: white;
+}
+
+.genre-button-inner.inactive {
+   background-color: rgb(27, 27, 27);
+   color: lightslategray; 
+   border-color: lightslategray;
+}
+
+.genre-button-inner.inactive:hover {
+    background-color: rgb(159, 74, 103);
+    color: white;
+    border-color: rgb(219, 112, 147);
+}
+
+.sfw-button {
+   border: 1px solid red;
+   display: inline-block;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+   font-size: 12px;
+   font-weight: 300;
+   text-transform: uppercase;
+   padding: 2px 8px;
+   border-radius: 4px;
+   cursor: pointer;
+   margin-left: 10px;
+   color: red;
+}
+
 .sfw-button.active {
-    border: 2px solid green;
+    border: 1px solid green;
     color: green;
     width: 70px !important;
-    font-size: 10;
+    font-size: 12px;
 }
 
 .tag-button.inactive:hover {

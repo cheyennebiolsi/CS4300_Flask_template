@@ -131,8 +131,8 @@
                                     {% set genre_name = genre.replace(" ", "_") %}
                             <label class="genre-checkbox" style="color:white">
                                 <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre_name] is not none %} checked {% else %} unchecked {% endif%}/>
-                                <div class="tag-button active checked">{{genre}}</div>
-                                <div class="tag-button inactive unchecked">{{genre}}</div>
+                                <div class="genre-button-inner active checked">{{genre}}</div>
+                                <div class="genre-button-inner inactive unchecked">{{genre}}</div>
                             </label>
                                 {% endfor %}
                             {% else %}
@@ -140,8 +140,8 @@
                                     {% set genre_name = genre.replace(" ", "_") %}
                                 <label class="genre-checkbox" style="color:white">
                                     <input type="checkbox" name={{genre_name}} checked/>
-                                    <div class="tag-button active checked">{{genre}}</div>
-                                    <div class="tag-button inactive unchecked">{{genre}}</div>
+                                    <div class="genre-button-inner active checked">{{genre}}</div>
+                                    <div class="genre-button-inner inactive unchecked">{{genre}}</div>
                                 </label>
                                 {% endfor %}
                             {% endif %}
@@ -152,10 +152,10 @@
                                         {% for nsfwgenre in nsfwgenres %}
                                         <label class="genre-checkbox" style="color:white">
                                             <input type="checkbox" name={{nsfwgenre}} unchecked/>
-                                            <div class="tag-button active checked">
+                                            <div class="genre-button-inner active checked">
                                                 {{nsfwgenre}}
                                             </div>
-                                            <div class="tag-button inactive unchecked">
+                                            <div class="genre-button-inner inactive unchecked">
                                                 {{nsfwgenre}}
                                             </div>
                                         </label>
@@ -171,8 +171,10 @@
                             <span>Type</span>
                         </div>
                         <hr>
+                        <div class="d-flex flex-column justify-content-between">
                         
-                        {% if filtertrue %}
+                        <div class="d-flex flex-row justify-content-between">
+                        {% if filtertrue %}                        
                         <div class="form-check">
                             <label class="fancy-checkbox" style="color:white">
                                 <input type="checkbox" name="displayTv" {% if prevfilters2['displayTv'] is not none %} checked {% else %} unchecked {% endif%}/>
@@ -194,45 +196,6 @@
 
                         {% if filtertrue %}
                         <div class="form-check">
-                            <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="displayMovie" {% if prevfilters2['displayMovie'] is not none %} checked {% else %} unchecked {% endif%}/>
-                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
-                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
-                                movie
-                            </label>
-                        </div>
-                        {% else %}
-                         <div class="form-check">
-                            <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="displayMovie" checked/>
-                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
-                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
-                                movie
-                            </label>
-                        </div>
-                        {% endif %}
-
-                        {% if filtertrue %}
-                        <div class="form-check">
-                            <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="displaySpecial" {% if prevfilters2['displaySpecial'] is not none %} checked {% else %} unchecked {% endif%}/>
-                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
-                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
-                                special
-                            </label>
-                        </div>
-                        {% else %}
-                        <div class="form-check">
-                            <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="displaySpecial" checked/>
-                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
-                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
-                                special
-                            </label>
-                        </div>
-                        {% endif %}
-                        {% if filtertrue %}
-                        <div class="form-check">
                             <label class="fancy-checkbox" style="color:white;">
                                 <input type="checkbox" name="displayOva" {% if prevfilters2['displayOva'] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
@@ -247,6 +210,28 @@
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 OVA
+                            </label>
+                        </div>
+                        {% endif %}
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-between">
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displayMovie" {% if prevfilters2['displayMovie'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                movie
+                            </label>
+                        </div>
+                        {% else %}
+                         <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displayMovie" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                movie
                             </label>
                         </div>
                         {% endif %}
@@ -270,6 +255,29 @@
                             </label>
                         </div>
                         {% endif %}
+
+                        </div>
+
+                        {% if filtertrue %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displaySpecial" {% if prevfilters2['displaySpecial'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                special
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="form-check">
+                            <label class="fancy-checkbox" style="color:white">
+                                <input type="checkbox" name="displaySpecial" checked/>
+                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
+                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
+                                special
+                            </label>
+                        </div>
+                        {% endif %}
+                        </div>
 
                         <div class="filter-header">
                             <span>How You Want To Watch</span>
