@@ -47,9 +47,11 @@
                 anime_scores.resize();
             {% else %}
                 loadrecommended();
-
             {% endif %}
-            
+            {% if ((filtertrue) and (not sfw_on)) %}
+               $('#collapsensfwrating').collapse('toggle');
+               $('#collapsensfw').collapse('toggle');
+            {% endif %}
         }
         );
     </script>    
@@ -150,6 +152,18 @@
                                     <div class="form-check">
                                         {% set nsfwgenres=['ecchi', 'hentai', 'yaoi', 'yuri']%}
                                         {% for nsfwgenre in nsfwgenres %}
+                                        {% if filtertrue %}
+                                        <label class="genre-checkbox" style="color:white">
+                                            <input type="checkbox" name={{nsfwgenre}} {% if prevfilters2[nsfwgenre] is not none %} checked {% else %} unchecked {% endif%}/>
+                                            <div class="genre-button-inner active checked">
+                                                {{nsfwgenre}}
+                                            </div>
+                                            <div class="genre-button-inner inactive unchecked">
+                                                {{nsfwgenre}}
+                                            </div>
+                                        </label>
+
+                                        {%else%}
                                         <label class="genre-checkbox" style="color:white">
                                             <input type="checkbox" name={{nsfwgenre}} unchecked/>
                                             <div class="genre-button-inner active checked">
@@ -159,6 +173,7 @@
                                                 {{nsfwgenre}}
                                             </div>
                                         </label>
+                                        {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -370,7 +385,7 @@
                             <div class="filter-header">
                                 <span> Rated </span>
                                 <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
-                                    <input type="checkbox" name="sfw" checked/>
+                                    <input type="checkbox" name="sfw" {% if sfw_on %} checked {% else %} unchecked {%endif%}/>
                                     <div class="sfw-button unchecked">NSFW ON</div>
                                     <div class="sfw-button active checked">SFW ON</div>
                                 </label>
@@ -475,7 +490,7 @@
                             {% if filtertrue %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rPlusRating"/>
+                                <input type="checkbox" name="rPlusRating" {% if prevfilters2['rPlusRating'] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 R+ &#8212 mild nudity
@@ -484,7 +499,7 @@
                             {% else %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rPlusRating"/>
+                                <input type="checkbox" name="rPlusRating" unchecked/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 R+ &#8212 mild nudity
@@ -495,7 +510,7 @@
                             {% if filtertrue %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rxRating"/>
+                                <input type="checkbox" name="rxRating" {% if prevfilters2['rxRating'] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 Rx &#8212 hentai
@@ -504,7 +519,7 @@
                             {% else %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rxRating"/>
+                                <input type="checkbox" name="rxRating" unchecked/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 Rx &#8212 hentai

@@ -64,7 +64,7 @@ def search():
 	filtered_true = False
 	if query or words: 
 		filtered_true = True
-
+        sfw_on = request.args.get('sfw') == "on"
 	filter_out=np.zeros((len(filter_array)),dtype=bool)
 	filter_dictionary2=dict()
 	for index, filters in enumerate(filter_array):
@@ -137,7 +137,7 @@ def search():
 		if(len(top_n_shows)<=0):
 			output_message = "Impossible Combination. Please Change Filters."
 			return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=[], 
-				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=[])
+				prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, sfw_on = sfw_on, original_value=[])
 
 
             
@@ -192,7 +192,7 @@ def search():
 		data = json_array
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
-		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, original_value=[])
+		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, sfw_on = sfw_on, original_value=[])
 
 # def fake_most_similiar(positive, negative, matrix, topn) {
 # 	for pos in positive:
