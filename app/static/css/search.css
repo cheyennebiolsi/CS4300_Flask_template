@@ -123,21 +123,6 @@ hr {
     background-color: black;
 }
 
-.col {
-    padding-left: 5;
-    padding-right: 5;
-    padding-top: 10;
-    padding-bottom: 10;
-    color: white;
-    overflow-y: scroll;
-    width: 100% + 8px;
-    text-align: justify;
-    text-justify: inter-word;
-    font-style: normal;
-    font-family: "Helvetica Neue", Helvetica;
-    font-weight: lighter;
-}
-
 .media-logo {
     color: white;
     position: relative, fixed;
