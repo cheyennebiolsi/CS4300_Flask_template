@@ -123,6 +123,11 @@
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
                             <span>Choose As Many Flavors As You Like</span>
+                                <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
+                                <input type="checkbox" onclick="toggle(this);" checked/>
+                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                </label>
                         </div>
                         <hr>
                         <div class="form-check">
@@ -132,7 +137,7 @@
                                 {% for genre in genres %}
                                     {% set genre_name = genre.replace(" ", "_") %}
                             <label class="genre-checkbox" style="color:white">
-                                <input type="checkbox" name={{genre_name}} {% if prevfilters2[genre_name] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <input type="checkbox" name={{genre_name}} id = "sfwgenre" {% if prevfilters2[genre_name] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <div class="genre-button-inner active checked">{{genre}}</div>
                                 <div class="genre-button-inner inactive unchecked">{{genre}}</div>
                             </label>
@@ -141,7 +146,7 @@
                                 {% for genre in genres %}
                                     {% set genre_name = genre.replace(" ", "_") %}
                                 <label class="genre-checkbox" style="color:white">
-                                    <input type="checkbox" name={{genre_name}} checked/>
+                                    <input type="checkbox" name={{genre_name}} id="sfwgenre" checked/>
                                     <div class="genre-button-inner active checked">{{genre}}</div>
                                     <div class="genre-button-inner inactive unchecked">{{genre}}</div>
                                 </label>
@@ -154,7 +159,7 @@
                                         {% for nsfwgenre in nsfwgenres %}
                                         {% if filtertrue %}
                                         <label class="genre-checkbox" style="color:white">
-                                            <input type="checkbox" name={{nsfwgenre}} {% if prevfilters2[nsfwgenre] is not none %} checked {% else %} unchecked {% endif%}/>
+                                            <input type="checkbox" name={{nsfwgenre}} id="nsfwgenre" {% if prevfilters2[nsfwgenre] is not none %} checked {% else %} unchecked {% endif%}/>
                                             <div class="genre-button-inner active checked">
                                                 {{nsfwgenre}}
                                             </div>
@@ -165,7 +170,7 @@
 
                                         {%else%}
                                         <label class="genre-checkbox" style="color:white">
-                                            <input type="checkbox" name={{nsfwgenre}} unchecked/>
+                                            <input type="checkbox" name={{nsfwgenre}} id="nsfwgenre" unchecked/>
                                             <div class="genre-button-inner active checked">
                                                 {{nsfwgenre}}
                                             </div>
@@ -385,7 +390,7 @@
                             <div class="filter-header">
                                 <span> Rated </span>
                                 <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
-                                    <input type="checkbox" name="sfw" {% if sfw_on %} checked {% else %} unchecked {%endif%}/>
+                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" {% if sfw_on %} checked {% else %} unchecked {%endif%}/>
                                     <div class="sfw-button unchecked">NSFW ON</div>
                                     <div class="sfw-button active checked">SFW ON</div>
                                 </label>
@@ -394,7 +399,7 @@
                             <div class="filter-header">
                                 <span> Rated </span>
                                 <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
-                                    <input type="checkbox" name="sfw" checked/>
+                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" checked/>
                                     <div class="sfw-button unchecked">NSFW ON</div>
                                     <div class="sfw-button active checked">SFW ON</div>
                                 </label>
@@ -490,7 +495,7 @@
                             {% if filtertrue %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rPlusRating" {% if prevfilters2['rPlusRating'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <input type="checkbox" name="rPlusRating" id="nsfwrating" {% if prevfilters2['rPlusRating'] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 R+ &#8212 mild nudity
@@ -499,7 +504,7 @@
                             {% else %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rPlusRating" unchecked/>
+                                <input type="checkbox" name="rPlusRating" id="nsfwrating" unchecked/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 R+ &#8212 mild nudity
@@ -510,7 +515,7 @@
                             {% if filtertrue %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rxRating" {% if prevfilters2['rxRating'] is not none %} checked {% else %} unchecked {% endif%}/>
+                                <input type="checkbox" name="rxRating" id="nsfwrating" {% if prevfilters2['rxRating'] is not none %} checked {% else %} unchecked {% endif%}/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 Rx &#8212 hentai
@@ -519,7 +524,7 @@
                             {% else %}
                             <div class="form-check">
                                 <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="rxRating" unchecked/>
+                                <input type="checkbox" name="rxRating" id="nsfwrating" unchecked/>
                                 <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
                                 <i class="fa fa-fw fa-check checked" style="color:green"></i>
                                 Rx &#8212 hentai
@@ -550,20 +555,6 @@
                             {% endif %}
                         </div>
                         <hr hidden>
-                        
-                        <!--<div class="filter-header">
-                            <span>Stream Provider</span>
-                        </div>
-                       <hr>
-                       <div class="form-check">
-                            <label class="fancy-checkbox" style="color:white">
-                                <input type="checkbox" name="streamCrunchy" checked/>
-                                <i class="fa fa-fw fa-times unchecked" style="color:red"></i>
-                                <i class="fa fa-fw fa-check checked" style="color:green"></i>
-                                crunchyroll
-                            </label>
-                        </div> -->
-                       
                     </div>
 
                 </div>             
@@ -1052,6 +1043,32 @@
             var topTags = document.querySelector(".anime-words .synopsis-header").getBoundingClientRect();
             $('#anime-tags').css("width", words.right - topTags.right - 15 + "px");
         };
+        function toggle(source) {
+            var checkboxes = document.querySelectorAll('#sfwgenre');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != source) {
+                    checkboxes[i].checked = source.checked;
+                };
+            };
+            if (!(document.querySelector('#sfw-button').checked)) {
+                var checkboxes = document.querySelectorAll('#nsfwgenre');
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = source.checked;
+                }
+            };
+        };
+        function clearnsfw(source) {
+            if (source.checked) {
+                var genres = document.querySelectorAll('#nsfwgenre');
+                for (var i = 0; i < genres.length; i++) {
+                    genres[i].checked = false;
+                };
+                var ratings = document.querySelectorAll('#nsfwrating');
+                for (var i = 0; i < ratings.length; i++) {
+                    ratings[i].checked = false;
+                };
+            };
+        };
         $(document).on("mouseenter", "#anime-tags span", function() {
             var bb = document.querySelector("#anime-tags").getBoundingClientRect();
             width = bb.right - bb.left;
@@ -1065,6 +1082,7 @@
         $(window).resize(function() {
             resizeInfo();
             resizeTags();
+            anime_scores.resize();
         });
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>
