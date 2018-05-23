@@ -23,20 +23,16 @@
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(window).on("load", function() {
-		document.getElementById("vis").onclick = function(evt){
+            {% if data %}
+		document.querySelector("#vis").onclick = function(evt){
 			var activePoints = anime_scores.getElementsAtEvent(evt);
-                        console.log(anime_scores);
-                        console.log(anime_scores.tooltip);
-                        console.log(anime_scores.tooltip._eventPosition);
-                        var position = Chart.helpers.getRelativePosition(evt, anime_scores);
-                        var yValue = map(position.y, $(this).height, 0, yMin, yMax);
-                        alert(yValue);
 			var firstPoint = activePoints[0];
-			var label = anime_scores.data.labels[firstPoint._index];
-			var value = anime_scores.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
-			if (firstPoint !== undefined)
-				alert(label + ": " + value);
+			if (firstPoint !== undefined) {
+			        var label = anime_scores.data.labels[firstPoint._index];
+                                $('#wordinput').tagsinput('add', {word: label});
+                        };
 		};
+            {% endif %}
             $("#recommended-carousel").owlCarousel( {
                 items: 4,
                 stagePadding: 100,
@@ -56,11 +52,19 @@
         });
         document.addEventListener("DOMContentLoaded", function(event) {
             {% if data %}
+                {% if prevwords %}
+                    var prevwords = '{{prevwords}}';
+                    var words = prevwords.split('|');
+                    initializeWordSearch(words);
+                {% else %}
+                    initializeWordSearch([]);
+                {% endif %}
                 resizeInfo();
                 resizeStatistics();
                 resizeTags();
                 anime_scores.resize();
             {% else %}
+                initializeWordSearch([]);
                 loadrecommended();
             {% endif %}
             {% if ((filtertrue) and (not sfw_on)) %}
@@ -125,7 +129,7 @@
                 <!-- style:"height:30px vertical-align:bottom"> -->
                 <div class="col-lg-11 wordsearch" style="padding:0; margin:0">
                     <div id="scrollable-dropdown-menu">
-                        <input id="wordinput" type="text" name="wordsearch" placeholder="Words..." value="{{prevwords}}"/>
+                        <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch" placeholder="Words..."/>
                     </div>
                 </div>
                 <div class="col-md-1" style="margin: 0; padding:0">
@@ -720,6 +724,16 @@
                                         data: data_chart,
                                         draggable: true,
                                         options: {
+                                            hover: {
+                                                onHover: function(e) {
+                                                    var activePoints = this.getElementAtEvent(e);
+                                                    if (activePoints[0] !== undefined) {
+                                                        e.target.style.cursor = "pointer";
+                                                    } else {
+                                                       e.target.style.cursor = "default";
+                                                    }
+                                                }
+                                            },
                                             title: {
                                                 display: true,
                                                 text: 'Most Similar Words to Query',
@@ -746,7 +760,15 @@
                                                 }
                                             },
                                             tooltips: {
-                                                enabled: true
+                                                callbacks: {
+                                                    label: function(tooltipItem, data) {
+                                                    var datasetLabel = '';
+                                                    var label = data.labels[tooltipItem.index];
+                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                                    }
+                                                },
+                                                enabled: true,
+                                                mode: 'index'
                                             },
                                             responsive: true,
                                             maintainAspectRatio: false,
@@ -962,6 +984,16 @@
                         data: data_chart,
                         draggable: true,
                         options: {
+                                            hover: {
+                                                onHover: function(e) {
+                                                    var activePoints = this.getElementAtEvent(e);
+                                                    if (activePoints[0] !== undefined) {
+                                                        e.target.style.cursor = "pointer";
+                                                    } else {
+                                                       e.target.style.cursor = "default";
+                                                    }
+                                                }
+                                            },
                             title: {
                                 display: true,
                                 text: 'Most Similar Words to Query',
@@ -987,9 +1019,17 @@
                                     color: "#FFFFFF"
                                 }
                             },
-                            tooltips: {
-                                enabled: true
-                            },
+                                            tooltips: {
+                                                callbacks: {
+                                                    label: function(tooltipItem, data) {
+                                                    var datasetLabel = '';
+                                                    var label = data.labels[tooltipItem.index];
+                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                                    }
+                                                },
+                                                enabled: true,
+                                                mode: 'index'
+                                            },
                             responsive: true,
                             maintainAspectRatio: false,
                         }

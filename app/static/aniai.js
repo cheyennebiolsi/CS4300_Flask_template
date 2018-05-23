@@ -39,33 +39,6 @@ $(document).ready(function() {
         maxTags: 5,
         freeInput: false,
     });
-
-    var word = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('word'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-            url: '/static/data/words.json',
-            cache: false
-        }
-    });
-    word.initialize();
-    $('#wordinput').tagsinput({
-        typeaheadjs: {
-            // name: 'anime_search',
-            // image: 'anime_image_url',
-            displayKey: 'word',
-            valueKey: 'word',
-            // engine: Handlebars,
-            // suggestion: ,
-            source: word.ttAdapter(),
-            hint: true,
-            minLength: 3
-        },
-        confirmKeys: [13, 44, 188],
-        maxTags: 5,
-        freeInput: false,
-        delimiter: '|'
-    });
     // var genre = new Bloodhound({
     //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
     //     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -90,3 +63,38 @@ $(document).ready(function() {
     //     delimiter: ','
     // });
 });
+
+function initializeWordSearch(wordList) {
+    var word = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('word'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: '/static/data/words.json',
+            cache: false
+        }
+    });
+    word.initialize();
+    $('#wordinput').tagsinput({
+        itemValue: 'word',
+        typeaheadjs: {
+            // name: 'anime_search',
+            // image: 'anime_image_url',
+            displayKey: 'word',
+//            valueKey: 'word',
+            // engine: Handlebars,
+            // suggestion: ,
+            source: word.ttAdapter(),
+            hint: true,
+            minLength: 3
+        },
+        confirmKeys: [13, 44, 188],
+        maxTags: 5,
+        freeInput: false,
+        delimiter: '|'
+    });
+    console.log(wordList);
+
+    for (var word in wordList) {
+        $('#wordinput').tagsinput('add', {word: wordList[word]});
+    ;}
+};
