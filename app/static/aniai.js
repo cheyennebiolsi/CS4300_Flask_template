@@ -27,7 +27,17 @@ $(document).ready(function() {
             // engine: Handlebars,
             templates: {
                 suggestion: function (data) {
-                    return '<div><p>' + '<img style="height:50px; width:30px;" src=' + data.anime_image_url + '> ' + data.anime_english_title + '</p></div>';
+                    return '<div class="d-flex">' +
+                               '<img class="align-self-center mr-3" src="' + data.anime_image_url + '" alt="Generic placeholder image">' +
+                               '<div class="align-self-center">' +
+                                   '<div class="d-flex">' +
+                                      '<span class="align-self-center search-anime-title">' + data.anime_english_title + '</span>' + 
+                                      '<span class="align-self-center search-anime-type">(' + data.anime_type + ')</span>' + 
+                                   '</div>' + 
+                                   '<p class="search-anime-type">' + data.anime_type + '</p>' + 
+                                   '<p class="search-anime-aired">Aired: ' + data.anime_aired + '</p>' + 
+                               '</div>' +
+                           '</div>'
                 }
             },
             // suggestion: ,
