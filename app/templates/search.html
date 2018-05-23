@@ -23,6 +23,20 @@
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(window).on("load", function() {
+		document.getElementById("vis").onclick = function(evt){
+			var activePoints = anime_scores.getElementsAtEvent(evt);
+                        console.log(anime_scores);
+                        console.log(anime_scores.tooltip);
+                        console.log(anime_scores.tooltip._eventPosition);
+                        var position = Chart.helpers.getRelativePosition(evt, anime_scores);
+                        var yValue = map(position.y, $(this).height, 0, yMin, yMax);
+                        alert(yValue);
+			var firstPoint = activePoints[0];
+			var label = anime_scores.data.labels[firstPoint._index];
+			var value = anime_scores.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+			if (firstPoint !== undefined)
+				alert(label + ": " + value);
+		};
             $("#recommended-carousel").owlCarousel( {
                 items: 4,
                 stagePadding: 100,
