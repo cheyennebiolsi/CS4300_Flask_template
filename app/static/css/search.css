@@ -333,32 +333,79 @@ hr {
 }
 
 .form-group {
-    width: 85%;
+    width: 100%;
     background: rgba(88, 88, 88, 0.3);
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
-} 
+    margin: 0;
+    padding: 0;
+}
 
-.bootstrap-tagsinput{
+.input-group {
+    margin: 0 !important;
+}
+
+.input-group span {
+    z-index: auto !important;
+}
+
+.bootstrap-tagsinput {
+    height: 36px;
+    width: 90%;
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 0px;
+    border-right: 0.5px solid grey;
+    padding: 6.5;
+}
+
+.wordinput .bootstrap-tagsinput {
+    border-top: 0.5px solid grey;
+    border-bottom-left-radius: 4px;
+}
+
+.animeinput .bootstrap-tagsinput{
+    border-bottom: 0.5px solid grey;
+    border-top-left-radius: 4px;
+}
+
+.input-group-append {
+    width: 10%;
+}
+
+.tag.label.label-info {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 10;
+    font-weight: 300;
+    padding: 6px; 
+    background-color: grey;
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"] {
+    color: red;
+    font-weight: 700;
+    display: none;
+}
+
+.input-group-append button {
     width: 100%;
-    height: 100%;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
+    background-color: white;
+    border: 1px solid grey;
+    border-left: 0.5px solid grey;
 }
 
-.animesearch .bootstrap-tagsinput {
-    border-bottom-left-radius: 0px;
+.wordinput .input-group-append button {
+    border-top: 0.5px solid grey;
+    border-bottom-right-radius: 4px;
 }
 
-.wordsearch .bootstrap-tagsinput {
-    border-top-left-radius: 0px;
+.animeinput .input-group-append button {
+    border-bottom: 0.5px solid grey;
+    border-top-right-radius: 4px;
 }
 
 .twitter-typeahead {
     display: inline;
     position: relative;
-    width: 40% !important;
 }
 
 .twitter-typeahead .tt-hint {
@@ -370,6 +417,7 @@ hr {
     background-color: white !important; 
     vertical-align: middle !important;
     border: 1px solid lightgray;
+    z-index: 10;
     /*border-radius: 4px;*/
 }
 
@@ -377,6 +425,10 @@ hr {
     color: #3b5998;
     height:110%;
     font-weight: 1000;
+}
+
+form hr {
+    background-color: white;
 }
 /*
 span.twitter-typeahead .tt-suggestion:hover {
