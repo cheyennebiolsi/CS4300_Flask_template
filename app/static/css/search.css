@@ -270,8 +270,17 @@ hr {
 
 .genre-button-inner.inactive:hover {
     background-color: rgb(159, 74, 103);
+    color: lightslategrey;
+    border-color: lightslategrey;
+}
+
+.tooltip > .tooltip-inner {
+    background-color: rgb(159, 74, 103);
     color: white;
-    border-color: rgb(219, 112, 147);
+}
+
+.tooltip .arrow:before {
+    border-right-color: rgb(159, 74, 103) !important;
 }
 
 .sfw-button {
