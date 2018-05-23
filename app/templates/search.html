@@ -59,12 +59,20 @@
                 {% else %}
                     initializeWordSearch([]);
                 {% endif %}
+                {% if prevsearch %}
+                    var prevwords = '{{prevsearch}}';
+                    var words = prevwords.split('|');
+                    initializeAnimeSearch(words);
+                {% else %}
+                    initializeAnimeSearch([]);
+                {% endif %}
                 resizeInfo();
                 resizeStatistics();
                 resizeTags();
                 anime_scores.resize();
             {% else %}
                 initializeWordSearch([]);
+                initializeAnimeSearch([]);
                 loadrecommended();
             {% endif %}
             {% if ((filtertrue) and (not sfw_on)) %}
@@ -109,7 +117,7 @@
             <div class="form-group">
                 <!-- style:"height:30px vertical-align:bottom"> -->
                 <div class="input-group mb-3 animeinput">
-                    <input id="animeinput" type="text" name="animesearch" placeholder="Similar anime..." value="{{prevsearch}}"/>
+                    <input id="animeinput" class="tagsinput-typeahead" type="text" name="animesearch" placeholder="Similar anime..."/>
                     <div class="input-group-append">
                         <button type="submit" id="search-btn"><i class="fa fa-search"></i></button>
                     </div>

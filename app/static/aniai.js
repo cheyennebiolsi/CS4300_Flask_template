@@ -1,4 +1,12 @@
 $(document).ready(function() {
+    $(document).on("click", ".wordinput .tag", function() {
+        $('#wordinput').tagsinput('remove', {word: $(this).text()});
+    });
+
+    $(document).on("click", ".animeinput .tag", function() {
+        console.log($(this).text());
+        $('#animeinput').tagsinput('remove', {anime_english_title: $(this).text()});
+    });
     
     // Stop Format on 
     $("#submit").click(function() {
@@ -6,49 +14,6 @@ $(document).ready(function() {
     });
 
     // Anime Search
-    var anime = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-            url: '/static/data/anime_search.json',
-            cache: false
-        }
-    });
-    anime.initialize();
-    $('#animeinput').tagsinput({
-        delimiter: '|',
-        // itemValue: 'anime_index',
-        // itemText: 'anime_english_title',
-        typeaheadjs: {
-            // name: 'anime_search',
-            // image: 'anime_image_url',
-            displayKey: 'anime_english_title',
-            valueKey: 'anime_english_title',
-            // engine: Handlebars,
-            templates: {
-                suggestion: function (data) {
-                    return '<div class="d-flex">' +
-                               '<img class="align-self-center mr-3" src="' + data.anime_image_url + '" alt="Generic placeholder image">' +
-                               '<div class="align-self-center">' +
-                                   '<div class="d-flex">' +
-                                      '<span class="align-self-center search-anime-title">' + data.anime_english_title + '</span>' + 
-                                      '<span class="align-self-center search-anime-type">(' + data.anime_type + ')</span>' + 
-                                   '</div>' + 
-                                   '<p class="search-anime-type">' + data.anime_type + '</p>' + 
-                                   '<p class="search-anime-aired">Aired: ' + data.anime_aired + '</p>' + 
-                               '</div>' +
-                           '</div>'
-                }
-            },
-            // suggestion: ,
-            source: anime.ttAdapter(),
-            hint: true,
-            minLength: 3,
-        },
-        confirmKeys: [13, 44, 188],
-        maxTags: 5,
-        freeInput: false,
-    });
     // var genre = new Bloodhound({
     //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
     //     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -106,5 +71,50 @@ function initializeWordSearch(wordList) {
 
     for (var word in wordList) {
         $('#wordinput').tagsinput('add', {word: wordList[word]});
+    ;}
+};
+
+function initializeAnimeSearch(animeList) {
+    var anime = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: '/static/data/anime_search.json',
+            cache: false
+        }
+    });
+    anime.initialize();
+    $('#animeinput').tagsinput({
+        delimiter: '|',
+        itemValue: 'anime_english_title',
+        typeaheadjs: {
+            displayKey: 'anime_english_title',
+            templates: {
+                suggestion: function (data) {
+                    return '<div class="d-flex">' +
+                               '<img class="align-self-center mr-3" src="' + data.anime_image_url + '" alt="Generic placeholder image">' +
+                               '<div class="align-self-center">' +
+                                   '<div class="d-flex">' +
+                                      '<span class="align-self-center search-anime-title">' + data.anime_english_title + '</span>' + 
+                                      '<span class="align-self-center search-anime-type">(' + data.anime_type + ')</span>' + 
+                                   '</div>' + 
+                                   '<p class="search-anime-type">' + data.anime_type + '</p>' + 
+                                   '<p class="search-anime-aired">Aired: ' + data.anime_aired + '</p>' + 
+                               '</div>' +
+                           '</div>'
+                }
+            },
+            source: anime.ttAdapter(),
+            hint: true,
+            minLength: 3,
+        },
+        confirmKeys: [13, 44, 188],
+        maxTags: 5,
+        freeInput: false,
+    });
+    console.log(animeList);
+
+    for (var anime in animeList) {
+        $('#animeinput').tagsinput('add', {anime_english_title: animeList[anime]});
     ;}
 };

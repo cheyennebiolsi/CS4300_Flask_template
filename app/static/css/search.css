@@ -437,6 +437,14 @@ hr {
     display: none;
 }
 
+.bootstrap-tagsinput .tag {
+    cursor: pointer;
+}
+
+.bootstrap-tagsinput .tag:hover {
+    background-color: darkgrey;
+}
+
 .input-group-append button {
     width: 100%;
     background-color: white;
