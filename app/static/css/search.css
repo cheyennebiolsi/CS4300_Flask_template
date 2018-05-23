@@ -366,18 +366,24 @@ hr {
 }
 
 .tt-hint, .tt-input, .tt-menu {
-    width: 80%;
+    width: 450px;
     background-color: white !important; 
     vertical-align: middle !important;
     border: 1px solid lightgray;
     /*border-radius: 4px;*/
 }
 
+.tt-cursor {
+    color: #3b5998;
+    height:110%;
+    font-weight: 1000;
+}
+/*
 span.twitter-typeahead .tt-suggestion:hover {
     color: #3b5998;
     height: 110%;
     font-weight: 1000;
-}
+}*/
 
 #scrollable-dropdown-menu .tt-dropdown-menu {
   max-height: 150px;
