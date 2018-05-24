@@ -41,7 +41,6 @@ $(document).ready(function() {
 });
 
 function createLegend() { 
-    console.log(anime_scores.data.datasets[0]);
     document.getElementById('chart-legends').innerHTML = anime_scores.generateLegend();
 };
 

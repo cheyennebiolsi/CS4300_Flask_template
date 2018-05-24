@@ -69,7 +69,7 @@
                 resizeInfo();
                 resizeStatistics();
                 resizeTags();
-                anime_scores.resize();
+                anime_scores.update();
             {% else %}
                 initializeWordSearch([]);
                 initializeAnimeSearch([]);
@@ -405,8 +405,8 @@
                             {% if filtertrue %}
                             <div class="filter-header">
                                 <span> Rated </span>
-                                <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
-                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" {% if sfw_on %} checked {% else %} unchecked {%endif%}/>
+                                <label id="sfw-collapse" class="genre-checkbox" style="color:white; position:absolute; top:10px">
+                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw" {% if sfw_on %} checked {% else %} unchecked {%endif%}/>
                                     <div class="sfw-button unchecked">NSFW ON</div>
                                     <div class="sfw-button active checked">SFW ON</div>
                                 </label>
@@ -414,8 +414,8 @@
                             {% else %}
                             <div class="filter-header">
                                 <span> Rated </span>
-                                <label class="genre-checkbox" style="color:white; position:absolute; top:10px" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw">
-                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" checked/>
+                                <label id="sfw-collapse" class="genre-checkbox" style="color:white; position:absolute; top:10px">
+                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw" checked/>
                                     <div class="sfw-button unchecked">NSFW ON</div>
                                     <div class="sfw-button active checked">SFW ON</div>
                                 </label>
@@ -592,7 +592,6 @@
                 <div class="media-header">
                     <div class="d-flex justify-content-between" id="title-header">
                         <div id="media-title" class="title">
-                            <div class="bumper"></div>
                             <span>{{data[0]["anime_english_title"]}}</span>
                         </div>
                         <div class="col-auto icon" style="font-style:normal">
@@ -608,12 +607,10 @@
                             </div>
                             <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
                             {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
-                            <div class="bumper"></div>
                         </div>
                     </div>
                     <div class="row" id="episodeinfo">
                         <div class="col type" id="media-type">
-                            <div class="bumper"></div>
                             <span> {{data[0]["anime_type"]}}</span>
                         </div>
                        <div class="col-dot">
@@ -633,7 +630,6 @@
                        </div>
                        <div class="col episodes" id="episode-count">
                            <span> {{data[0]["anime_number_of_episodes"]}} episodes</span>
-                          <div class="bumper"></div>
                         </div>
                     </div>
 
@@ -671,7 +667,7 @@
                         <div class="container anime-statistics">
                         <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas>
                         </div>
-                        <div id="chart-legends" class="d-flex flex-column">
+                        <div id="chart-legends" unselectable="on" class="unselectable">
                                 <label class="fancy-checkbox">
                                     <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
                                     <div class="legend-tag checked"><div class="legend-button"></div></div>
@@ -705,16 +701,6 @@
                                         labels: labels_words,
                                         datasets: [
                                             {
-                                                label: "{{data[0]["anime_english_title"]}}",
-                                                fill: true,
-                                                backgroundColor: "rgba(219,112,147,0.2)",
-                                                borderColor: "rgba(219,112,147,1)",
-                                                pointBorderColor: "#fff",
-                                                pointBackgroundColor: "rgba(219,112,147,1)",
-                                                pointBorderColor: "#fff",
-                                                data: {{data[0]["graph_value"]}}
-                                            },
-                                            {
                                                 label: "Query",
                                                 fill: true,
                                                 backgroundColor: "rgba(152,251,152,0.2)",
@@ -723,6 +709,16 @@
                                                 pointBackgroundColor: "rgba(152,251,152,0.2)",
                                                 pointBorderColor: "#fff",
                                                 data: {{data[0]["original_value"]}}
+                                            },
+                                            {
+                                                label: "{{data[0]["anime_english_title"]}}",
+                                                fill: true,
+                                                backgroundColor: "rgba(219,112,147,0.2)",
+                                                borderColor: "rgba(219,112,147,1)",
+                                                pointBorderColor: "#fff",
+                                                pointBackgroundColor: "rgba(219,112,147,1)",
+                                                pointBorderColor: "#fff",
+                                                data: {{data[0]["graph_value"]}}
                                             }
                                         ]
                                     };
@@ -733,12 +729,12 @@
                                         draggable: true,
                                         options: {
                                             legendCallback: function(chart) {
-                                                var queryLabel = chart.data.datasets[1].label;
-                                                var queryColor = chart.data.datasets[1].backgroundColor;
-                                                var queryBorder = chart.data.datasets[1].borderColor;
-                                                var suggestionLabel = chart.data.datasets[0].label;
-                                                var suggestionColor = chart.data.datasets[0].backgroundColor;
-                                                var suggestionBorder = chart.data.datasets[0].borderColor;
+                                                var queryLabel = chart.data.datasets[0].label;
+                                                var queryColor = chart.data.datasets[0].backgroundColor;
+                                                var queryBorder = chart.data.datasets[0].borderColor;
+                                                var suggestionLabel = chart.data.datasets[1].label;
+                                                var suggestionColor = chart.data.datasets[1].backgroundColor;
+                                                var suggestionBorder = chart.data.datasets[1].borderColor;
                                                 var text = 
                                                 '<label class="fancy-checkbox">' +
                                                      '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
@@ -794,11 +790,16 @@
                                                 }
                                             },
                                             tooltips: {
+                                                footerFontStyle: 'normal',
                                                 callbacks: {
+                                                    footer: function(tooltipItem, data) {
+                                                        var label = data.labels[tooltipItem[0].index];
+                                                        return ['Click to add "' + label + '" to search bar'];
+                                                    },
                                                     label: function(tooltipItem, data) {
-                                                    var datasetLabel = '';
-                                                    var label = data.labels[tooltipItem.index];
-                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                                        var datasetLabel = '';
+                                                        var label = data.datasets[tooltipItem.datasetIndex].label;
+                                                        return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " " + label;
                                                     }
                                                 },
                                                 enabled: true,
@@ -989,16 +990,6 @@
                     labels: thelabels2,
                     datasets: [
                         {
-                            label: title,
-                            fill: true,
-                            backgroundColor: "rgba(219,112,147,0.2)",
-                            borderColor: "rgba(219,112,147,1)",
-                            pointBorderColor: "#fff",
-                            pointBackgroundColor: "rgba(219,112,147,1)",
-                            pointBorderColor: "#fff",
-                            data: thevalues
-                        },
-                        {
                             label: "Query",
                             fill: true,
                             backgroundColor: "rgba(152,251,152,0.2)",
@@ -1007,6 +998,16 @@
                             pointBackgroundColor: "rgba(152,251,152,0.2)",
                             pointBorderColor: "#fff",
                             data: original_value
+                        },
+                        {
+                            label: title,
+                            fill: true,
+                            backgroundColor: "rgba(219,112,147,0.2)",
+                            borderColor: "rgba(219,112,147,1)",
+                            pointBorderColor: "#fff",
+                            pointBackgroundColor: "rgba(219,112,147,1)",
+                            pointBorderColor: "#fff",
+                            data: thevalues
                         }
                     ]
                     };
@@ -1019,12 +1020,12 @@
 				draggable: true,
 				options: { 
                                             legendCallback: function(chart) {
-                                                var queryLabel = chart.data.datasets[1].label;
-                                                var queryColor = chart.data.datasets[1].backgroundColor;
-                                                var queryBorder = chart.data.datasets[1].borderColor;
-                                                var suggestionLabel = chart.data.datasets[0].label;
-                                                var suggestionColor = chart.data.datasets[0].backgroundColor;
-                                                var suggestionBorder = chart.data.datasets[0].borderColor;
+                                                var queryLabel = chart.data.datasets[0].label;
+                                                var queryColor = chart.data.datasets[0].backgroundColor;
+                                                var queryBorder = chart.data.datasets[0].borderColor;
+                                                var suggestionLabel = chart.data.datasets[1].label;
+                                                var suggestionColor = chart.data.datasets[1].backgroundColor;
+                                                var suggestionBorder = chart.data.datasets[1].borderColor;
                                                 var text = 
                                                 '<label class="fancy-checkbox">' +
                                                      '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
@@ -1080,11 +1081,16 @@
                                 }
                             },
                                             tooltips: {
+                                                footerFontStyle: 'normal',
                                                 callbacks: {
+                                                    footer: function(tooltipItem, data) {
+                                                        var label = data.labels[tooltipItem[0].index];
+                                                        return ['Click to add "' + label + '" to search bar'];
+                                                    },
                                                     label: function(tooltipItem, data) {
                                                     var datasetLabel = '';
-                                                    var label = data.labels[tooltipItem.index];
-                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                                    var label = data.datasets[tooltipItem.datasetIndex].label;
+                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " " + label;
                                                     }
                                                 },
                                                 enabled: true,
@@ -1140,76 +1146,84 @@
             $('#vis').attr("width", bb.width);
         };
         var resizeStatistics = function() {
-            var bb = document.querySelector("#feature-score").getBoundingClientRect();
-            $('.anime-statistics').css("height", bb.height - 82 + "px");
-            $('.anime-statistics').css("max-height", bb.height - 82 + "px");
-        };
-        var resizeInfo = function() {
-            var display = document.querySelector("#feature-display").getBoundingClientRect();
-            var score = document.querySelector("#feature-score").getBoundingClientRect();
-            var picture = document.querySelector("#feature-picture").getBoundingClientRect();
-            $('#feature-info').css("width", display.width - score.width - picture.width + "px");
+            var statistics = document.querySelector("#feature-score").getBoundingClientRect();
+            var similarity = document.querySelector("#similarity-score").getBoundingClientRect();
+            var legends = document.querySelector("#chart-legends").getBoundingClientRect();
+            var height = statistics.height - similarity.height - legends.height - 2;
+            console.log(height);
+            $('.anime-statistics').css("height", height + "px");
+            $('.anime-statistics').css("max-height", height + "px");
+	};
+		var resizeInfo = function() {
+		    var display = document.querySelector("#feature-display").getBoundingClientRect();
+		    var score = document.querySelector("#feature-score").getBoundingClientRect();
+		    var picture = document.querySelector("#feature-picture").getBoundingClientRect();
+		    $('#feature-info').css("width", display.width - score.width - picture.width + "px");
 
-            var title = document.querySelector("#synopsis-title").getBoundingClientRect();
-            var info = document.querySelector("#feature-info").getBoundingClientRect();
-            var words = document.querySelector("#info-tags").getBoundingClientRect();
-            $('#media-synopsis').css("height", info.height - title.height - words.height + "px");
-        };
-        var resizeTags = function() {
-            var words = document.querySelector(".anime-words").getBoundingClientRect();
-            var topTags = document.querySelector(".anime-words .synopsis-header").getBoundingClientRect();
-            $('#anime-tags').css("width", words.right - topTags.right - 15 + "px");
-        };
-        function toggle(source) {
-            var checkboxes = document.querySelectorAll('#sfwgenre');
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i] != source) {
-                    checkboxes[i].checked = source.checked;
-                };
-            };
-            if (!(document.querySelector('#sfw-button').checked)) {
-                var checkboxes = document.querySelectorAll('#nsfwgenre');
-                for (var i = 0; i < checkboxes.length; i++) {
-                    checkboxes[i].checked = source.checked;
-                }
-            };
-        };
-        function clearnsfw(source) {
-            if (source.checked) {
-                var genres = document.querySelectorAll('#nsfwgenre');
-                for (var i = 0; i < genres.length; i++) {
-                    genres[i].checked = false;
-                };
-                var ratings = document.querySelectorAll('#nsfwrating');
-                for (var i = 0; i < ratings.length; i++) {
-                    ratings[i].checked = false;
-                };
-            };
-        };
-        function toggleLegendQuery(source) {
-            anime_scores.data.datasets[1].hidden = !(source.checked);
+		    var title = document.querySelector("#synopsis-title").getBoundingClientRect();
+		    var info = document.querySelector("#feature-info").getBoundingClientRect();
+		    var words = document.querySelector("#info-tags").getBoundingClientRect();
+		    $('#media-synopsis').css("height", info.height - title.height - words.height + "px");
+		};
+		var resizeTags = function() {
+		    var words = document.querySelector(".anime-words").getBoundingClientRect();
+		    var topTags = document.querySelector(".anime-words .synopsis-header").getBoundingClientRect();
+		    $('#anime-tags').css("width", words.right - topTags.right - 15 + "px");
+		};
+		function toggle(source) {
+		    var checkboxes = document.querySelectorAll('#sfwgenre');
+		    for (var i = 0; i < checkboxes.length; i++) {
+			if (checkboxes[i] != source) {
+			    checkboxes[i].checked = source.checked;
+			};
+		    };
+		    if (!(document.querySelector('#sfw-button').checked)) {
+			var checkboxes = document.querySelectorAll('#nsfwgenre');
+			for (var i = 0; i < checkboxes.length; i++) {
+			    checkboxes[i].checked = source.checked;
+			}
+		    };
+		};
+		function clearnsfw(source) {
+		    if (source.checked) {
+			var genres = document.querySelectorAll('#nsfwgenre');
+			for (var i = 0; i < genres.length; i++) {
+			    genres[i].checked = false;
+			};
+			var ratings = document.querySelectorAll('#nsfwrating');
+			for (var i = 0; i < ratings.length; i++) {
+			    ratings[i].checked = false;
+			};
+		    };
+		};
+		function toggleLegendQuery(source) {
+		    anime_scores.data.datasets[0].hidden = !(source.checked);
+		    anime_scores.update();
+		};
+		function toggleLegendSuggestion(source) {
+		    anime_scores.data.datasets[1].hidden = !(source.checked);
+		    anime_scores.update();
+		};
+		$(document).on("mouseenter", "#anime-tags span", function() {
+		    var bb = document.querySelector("#anime-tags").getBoundingClientRect();
+		    width = bb.right - bb.left;
+		    if (width < document.querySelector("#anime-tags span").getBoundingClientRect().width) {
+			$("#anime-tags span").css("transform", "translateX(calc(" + width+"px - 100%))");
+		    };
+		});
+		$(document).on("mouseleave", "#anime-tags span", function() {
+		    $(".anime-tags span").css("transform", "translate(0)");
+		});
+		$(window).resize(function() {
+		    resizeInfo();
+		    resizeTags();
+		    resizeStatistics();
             anime_scores.update();
-        };
-        function toggleLegendSuggestion(source) {
-            anime_scores.data.datasets[0].hidden = !(source.checked);
-            anime_scores.update();
-        };
-        $(document).on("mouseenter", "#anime-tags span", function() {
-            var bb = document.querySelector("#anime-tags").getBoundingClientRect();
-            width = bb.right - bb.left;
-            if (width < document.querySelector("#anime-tags span").getBoundingClientRect().width) {
-                $("#anime-tags span").css("transform", "translateX(calc(" + width+"px - 100%))");
-            };
         });
-        $(document).on("mouseleave", "#anime-tags span", function() {
-            $(".anime-tags span").css("transform", "translate(0)");
-        });
-        $(window).resize(function() {
-            resizeInfo();
-            resizeTags();
-            resizeStatistics();
-            anime_scores.resize();
-        });
+       $('[data-toggle="collapse"]').click(function(e) {
+            if($($(this).data('target')).hasClass('collapsing'))
+            return false;
+    });
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>
 </body>
