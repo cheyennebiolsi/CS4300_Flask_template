@@ -128,7 +128,7 @@
                     <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch" placeholder="Words..."/>
                     <div class="input-group-append">
                         <button id="filter-btn" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
-                            <i class="fa fa-filter"></i>Filter
+                            <i class="fa fa-filter" style="margin-right: 3px"></i>Filter
                         </button>
                     </div>
                 </div>
@@ -671,6 +671,18 @@
                         <div class="container anime-statistics">
                         <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas>
                         </div>
+                        <div id="chart-legends" class="d-flex flex-column">
+                                <label class="fancy-checkbox">
+                                    <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
+                                    <div class="legend-tag checked"><div class="legend-button"></div></div>
+                                    <div class="legend-tag unchecked"><div class="legend-button"></div></div>
+                                </label>
+                                <label class="fancy-checkbox">
+                                    <input type="checkbox" onclick="toggleLegendQuery(this)" checked/>
+                                    <div class="legend-tag checked"><div class="legend-button"></div></div>
+                                    <div class="legend-tag unchecked"><div class="legend-button"></div></div>
+                                </label>
+                        </div>
                     </div>
                 </div>
                 <div class="media-footer"> 
@@ -695,15 +707,15 @@
                                             {
                                                 label: "{{data[0]["anime_english_title"]}}",
                                                 fill: true,
-                                                backgroundColor: "rgba(255,99,132,0.2)",
-                                                borderColor: "rgba(255,99,132,1)",
+                                                backgroundColor: "rgba(219,112,147,0.2)",
+                                                borderColor: "rgba(219,112,147,1)",
                                                 pointBorderColor: "#fff",
-                                                pointBackgroundColor: "rgba(255,99,132,1)",
+                                                pointBackgroundColor: "rgba(219,112,147,1)",
                                                 pointBorderColor: "#fff",
                                                 data: {{data[0]["graph_value"]}}
                                             },
                                             {
-                                                label: "Query(s)",
+                                                label: "Query",
                                                 fill: true,
                                                 backgroundColor: "rgba(152,251,152,0.2)",
                                                 borderColor: "rgba(152,251,152,1)",
@@ -720,6 +732,32 @@
                                         data: data_chart,
                                         draggable: true,
                                         options: {
+                                            legendCallback: function(chart) {
+                                                var queryLabel = chart.data.datasets[1].label;
+                                                var queryColor = chart.data.datasets[1].backgroundColor;
+                                                var queryBorder = chart.data.datasets[1].borderColor;
+                                                var suggestionLabel = chart.data.datasets[0].label;
+                                                var suggestionColor = chart.data.datasets[0].backgroundColor;
+                                                var suggestionBorder = chart.data.datasets[0].borderColor;
+                                                var text = 
+                                                '<label class="fancy-checkbox">' +
+                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
+                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
+                                                     '</div>' + queryLabel + '</div>' + 
+                                                     '<div class="legend-tag unchecked">' + 
+                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
+                                                     '</div>' + queryLabel + '</div></label>' + 
+                                                '<label class="fancy-checkbox">' +
+                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
+                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
+                                                     '</div>' + suggestionLabel + '</div>' + 
+                                                     '<div class="legend-tag unchecked">' +
+                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
+                                                     '</div>' + suggestionLabel + '</div></label>';
+                                                return text;
+                                            },
                                             hover: {
                                                 onHover: function(e) {
                                                     var activePoints = this.getElementAtEvent(e);
@@ -737,7 +775,7 @@
                                                 fontSize: 14
                                             },
                                             legend: {
-                                                display: true,
+                                                display: false,
                                                 position: 'bottom',
                                                 boxWidth: 20
 
@@ -953,15 +991,15 @@
                         {
                             label: title,
                             fill: true,
-                            backgroundColor: "rgba(255,99,132,0.2)",
-                            borderColor: "rgba(255,99,132,1)",
+                            backgroundColor: "rgba(219,112,147,0.2)",
+                            borderColor: "rgba(219,112,147,1)",
                             pointBorderColor: "#fff",
-                            pointBackgroundColor: "rgba(255,99,132,1)",
+                            pointBackgroundColor: "rgba(219,112,147,1)",
                             pointBorderColor: "#fff",
                             data: thevalues
                         },
                         {
-                            label: "Query(s)",
+                            label: "Query",
                             fill: true,
                             backgroundColor: "rgba(152,251,152,0.2)",
                             borderColor: "rgba(152,251,152,1)",
@@ -975,11 +1013,37 @@
 
 
 
-                    anime_scores = new Chart(document.getElementById("vis"), {
-                        type: 'radar',
-                        data: data_chart,
-                        draggable: true,
-                        options: {
+			    anime_scores = new Chart(document.getElementById("vis"), {
+				type: 'radar',
+				data: data_chart,
+				draggable: true,
+				options: { 
+                                            legendCallback: function(chart) {
+                                                var queryLabel = chart.data.datasets[1].label;
+                                                var queryColor = chart.data.datasets[1].backgroundColor;
+                                                var queryBorder = chart.data.datasets[1].borderColor;
+                                                var suggestionLabel = chart.data.datasets[0].label;
+                                                var suggestionColor = chart.data.datasets[0].backgroundColor;
+                                                var suggestionBorder = chart.data.datasets[0].borderColor;
+                                                var text = 
+                                                '<label class="fancy-checkbox">' +
+                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
+                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
+                                                     '</div>' + queryLabel + '</div>' + 
+                                                     '<div class="legend-tag unchecked">' + 
+                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
+                                                     '</div>' + queryLabel + '</div></label>' + 
+                                                '<label class="fancy-checkbox">' +
+                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
+                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
+                                                     '</div>' + suggestionLabel + '</div>' + 
+                                                     '<div class="legend-tag unchecked">' +
+                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
+                                                     '</div>' + suggestionLabel + '</div></label>';
+                                                return text;
+                                            },
                                             hover: {
                                                 onHover: function(e) {
                                                     var activePoints = this.getElementAtEvent(e);
@@ -997,7 +1061,7 @@
                                 fontSize: 14
                             },
                             legend: {
-                                display: true,
+                                display: false,
                                 position: 'bottom',
                                 boxWidth: 20
 
@@ -1030,6 +1094,7 @@
                             maintainAspectRatio: false,
                         }
                     });
+                  createLegend();
 
                 });
                   </script>
@@ -1076,8 +1141,8 @@
         };
         var resizeStatistics = function() {
             var bb = document.querySelector("#feature-score").getBoundingClientRect();
-            $('.anime-statistics').css("height", bb.height - 30 + "px");
-            $('.anime-statistics').css("max-height", bb.height - 30 + "px");
+            $('.anime-statistics').css("height", bb.height - 82 + "px");
+            $('.anime-statistics').css("max-height", bb.height - 82 + "px");
         };
         var resizeInfo = function() {
             var display = document.querySelector("#feature-display").getBoundingClientRect();
@@ -1121,6 +1186,14 @@
                 };
             };
         };
+        function toggleLegendQuery(source) {
+            anime_scores.data.datasets[1].hidden = !(source.checked);
+            anime_scores.update();
+        };
+        function toggleLegendSuggestion(source) {
+            anime_scores.data.datasets[0].hidden = !(source.checked);
+            anime_scores.update();
+        };
         $(document).on("mouseenter", "#anime-tags span", function() {
             var bb = document.querySelector("#anime-tags").getBoundingClientRect();
             width = bb.right - bb.left;
@@ -1134,6 +1207,7 @@
         $(window).resize(function() {
             resizeInfo();
             resizeTags();
+            resizeStatistics();
             anime_scores.resize();
         });
     </script>

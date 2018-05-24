@@ -240,6 +240,58 @@ hr {
     color: lightslategray;
 }
 
+#chart-legends.flex-column {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+#chart-legends label {
+    padding: 0;
+    margin: 0;
+}
+
+.legend-button {
+    border: 2px solid black;
+    display: inline-block;
+    height: 12px;
+    width: 30px;
+    margin-right: 6px;
+}
+
+.legend-tag {
+    overflow-x: scroll;
+    color: #666;
+    font-size: 12;
+}
+
+.legend-tag.unchecked {
+    text-decoration: line-through;
+}
+
+.legend-checkbox {
+    font-style: normal;
+    cursor: pointer;
+}
+
+.legend-checkbox input[type="checkbox"],
+.legend-checkbox .checked {
+    display: none;
+}
+
+.legend-checkbox .unchecked {
+    display: block;
+}
+
+.legend-checkbox input[type="checkbox"]:checked ~ .checked
+{
+    display: block;
+}
+
+.legend-checkbox input[type="checkbox"]:checked ~ .unchecked
+{
+    display: none;
+}
+
 .genre-button-inner {
    border: 1px solid rgb(219, 112, 147);
    display: inline-block;
@@ -450,6 +502,7 @@ hr {
     background-color: white;
     border: 1px solid grey;
     border-left: 0.5px solid grey;
+    font-size: 14;
 }
 
 .wordinput .input-group-append button {

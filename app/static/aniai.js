@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    createLegend();
     $(document).on("click", ".wordinput .tag", function() {
         $('#wordinput').tagsinput('remove', {word: $(this).text()});
     });
@@ -38,6 +39,11 @@ $(document).ready(function() {
     //     delimiter: ','
     // });
 });
+
+function createLegend() { 
+    console.log(anime_scores.data.datasets[0]);
+    document.getElementById('chart-legends').innerHTML = anime_scores.generateLegend();
+};
 
 function initializeWordSearch(wordList) {
     var word = new Bloodhound({
