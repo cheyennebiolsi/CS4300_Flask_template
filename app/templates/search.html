@@ -64,7 +64,7 @@
                     initializeWordSearch([]);
                 {% endif %}
                 {% if prevsearch %}
-                    var prevwords = '{{prevsearch}}';
+                    var prevwords = '{{prevsearch}}'.replace("&amp;","&");
                     var words = prevwords.split('|');
                     initializeAnimeSearch(words);
                 {% else %}

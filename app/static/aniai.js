@@ -47,7 +47,7 @@ function setAnimeExplanation() {
 }
 
 function setWordExplanation() {
-    var text = "Enter keywords into the search bar to receive suggestions based on how closely the<br>themes of the anime are to the keyword.<br><br>" + 
+    var text = "Enter keywords into the search bar to receive suggestions based on how closely<br>related the themes of the anime are to the keyword.<br><br>" + 
                "<b>Note:</b> clicking on tags changes their functionality<br>" +
                "A <span class='tag label label-primary'>GREEN</span> background returns results whose themes are closely related to the keyword<br>" +
                "A <span class='tag label label-danger'>RED</span> background returns results whose themes are unrelated to the keyword<br>"
