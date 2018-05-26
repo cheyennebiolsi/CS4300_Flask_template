@@ -89,23 +89,35 @@ def search():
 	else:
 		anime_names = query.split('|')
 		anime_set=set(anime_names)
-		id_set=get_anime_set(anime_set,allanimelite) 
+		pos_id_set, neg_id_set =get_anime_set_pn(anime_set,allanimelite) 
 		query_words = words.split('|')
+                pos_query_words = [word for word in query_words if len(word) > 0 and word[0] != "!"]
+                neg_query_words = [word[1:] for word in query_words if len(word) > 0 and word[0] == "!"]
 		output_message = ''
+                
 		if(not query=='None'):
-			positive = np.zeros((len(id_set)),dtype=int)
-			for index,anim_ind in enumerate(id_set):
+			positive = np.zeros((len(pos_id_set)),dtype=int)
+			for index,anim_ind in enumerate(pos_id_set):
 				positive[index]=int(anim_ind)
+			negative = np.zeros((len(neg_id_set)),dtype=int)
+			for index,anim_ind in enumerate(neg_id_set):
+				negative[index]=int(anim_ind)
 		else:
 			positive= np.zeros((0))
+                        negative = np.zeros((0))
 			set_anime_ids=set()
 	
 		if(not words=='None'):
-			positive_words=np.zeros((len(query_words)),dtype=int)
-			for index,word in enumerate(query_words):
+			positive_words=np.zeros((len(pos_query_words)),dtype=int)
+			for index,word in enumerate(pos_query_words):
 				positive_words[index]=word_to_ind.get(word,-1)
-			positive_words=positive_words[positive_words>=0]     
+			positive_words=positive_words[positive_words>=0]
+                        negative_words = np.zeros((len(neg_query_words)),dtype=int)
+                        for index, word in enumerate(neg_query_words):
+                                negative_words[index]=word_to_ind.get(word, -1)
+                        negative_words = negative_words[negative_words>=0]
 		else:
+                        negative_words = np.zeros((0))
 			positive_words= np.zeros((0))
 
  
@@ -113,11 +125,18 @@ def search():
 		if(len(positive)>0):
 			positive_show_vectors = review_array[positive,:]
 			show_result=np.sum(positive_show_vectors,axis=0)
+                if(len(negative)>0):
+                        negative_show_vectors = review_array[negative,:]
+                        negative_show_result = np.sum(negative_show_vectors, axis=0)
+                        show_result = show_result - negative_show_result 
 
 		word_result=np.zeros((review_array.shape[1]))
 		if(len(positive_words)>0):           
 			positive_word_vectors = word_array[positive_words,:]
 			word_result=np.sum(positive_word_vectors,axis=0)
+                if(len(negative_words)>0):
+                        negative_word_vectors = word_array[negative_words,:]
+                        word_result = word_result - np.sum(negative_word_vectors, axis=0)
                 
 		result=show_result+word_result    
 		result=result/np.linalg.norm(result)       
@@ -167,7 +186,7 @@ def search():
 			jsonfile = get_anime(anim_ind, allanimelite)
 			wordvec = get_top_words(anim_ind)   
 			concat="|".join(wordvec)                
-			if anim_ind not in id_set and jsonfile != "not found":
+			if anim_ind not in pos_id_set and anim_ind not in neg_id_set and jsonfile != "not found":
 				jsonfile['score'] =str(round(score*100, 2))
 				show_word_result=np.matmul(word_array,review_array[anim_ind])
 				new_results=show_word_result+word_scores.flatten('F')
@@ -207,7 +226,6 @@ def get_top_words(anime_index,howmany=10):
 	top_n_words=word_list[top_n_words_ind]
 	return top_n_words.flatten(order="F")
 
-
 def get_anime_set(anime_set, jsonfile):
 	# print(anime_id)
 	id_set=set()    
@@ -220,6 +238,19 @@ def get_anime_set(anime_set, jsonfile):
 			if(len(anime_set)==0):
 				break
 	return id_set
+
+def get_anime_set_pn(anime_set, jsonfile):
+    dictionary = {ele["anime_english_title"]: ele["anime_index"] for ele in jsonfile}
+    positive_ids = set()
+    negative_ids = set()
+    for title in anime_set:
+        if len(title) <= 0:
+            continue
+        if title[0] == "!":
+            negative_ids.add(int((dictionary[title[1:]])))
+        else:
+            positive_ids.add(int(dictionary[title]))
+    return positive_ids, negative_ids
 
 def get_anime(anime_index, jsonfile):
 	# print(anime_id)

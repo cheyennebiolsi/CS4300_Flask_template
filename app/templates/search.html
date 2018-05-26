@@ -22,14 +22,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
-        $(window).on("load", function() {
+        $(window).on("load", function()  {
+            setAnimeExplanation();
             {% if data %}
 		document.querySelector("#vis").onclick = function(evt){
 			var activePoints = anime_scores.getElementsAtEvent(evt);
 			var firstPoint = activePoints[0];
 			if (firstPoint !== undefined) {
 			        var label = anime_scores.data.labels[firstPoint._index];
-                                $('#wordinput').tagsinput('add', {word: label});
+                                $('#wordinput').tagsinput('add', {word: label, sign: 'positive'});
                         };
 		};
             {% endif %}
@@ -51,7 +52,10 @@
             });
         });
         document.addEventListener("DOMContentLoaded", function(event) {
+            initializeSearchBars();
+            resizeSearchBar();
             {% if data %}
+                createLegend();
                 {% if prevwords %}
                     var prevwords = '{{prevwords}}';
                     var words = prevwords.split('|');
@@ -79,7 +83,8 @@
                $('#collapsensfwrating').collapse('toggle');
                $('#collapsensfw').collapse('toggle');
             {% endif %}
-            $('[data-toggle="tooltip"]').tooltip();
+            $('.fa[data-toggle="tooltip"]').tooltip();
+//            $('.tt_input[data-toggle="tooltip"]').tooltip({trigger: "manual"});
         }
         );
     </script>    
@@ -113,19 +118,23 @@
         </h1>
         <!--tag line-->
         <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
-        <form id="myform"> <!--class = "form-inline global-search" id="myform"> -->
+        <form id="myform" autocomplete="off"> <!--class = "form-inline global-search" id="myform"> -->
             <div class="form-group">
                 <!-- style:"height:30px vertical-align:bottom"> -->
                 <div class="input-group mb-3 animeinput">
-                    <input id="animeinput" class="tagsinput-typeahead" type="text" name="animesearch" placeholder="Similar anime..."/>
+                    <div class="input-group-prepend"><span>anime<i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="top" data-html="true" title=""></i></span>
+                    </div>
+                    <input id="animeinput" class="tagsinput-typeahead" type="text" name="animesearch"/>
                     <div class="input-group-append">
-                        <button type="submit" id="search-btn"><i class="fa fa-search"></i></button>
+                        <button type="submit" id="submit"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
             </div> <!--class = "form-inline global-search" id="myform"> -->
             <div class="form-group"> 
                 <div class="input-group mb-3 wordinput">
-                    <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch" placeholder="Words..."/>
+                    <div class="input-group-prepend"><span>keywords<i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="bottom" data-html="true" title=""></i></span>
+                    </div>
+                    <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch"/>
                     <div class="input-group-append">
                         <button id="filter-btn" type = "button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
                             <i class="fa fa-filter" style="margin-right: 3px"></i>Filter
@@ -139,11 +148,11 @@
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
                             <span>Choose As Many Flavors As You Like</span>
-                                <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
+                            <label class="fancy-checkbox" style="color:white;margin: 0">
                                 <input type="checkbox" onclick="toggle(this);" checked/>
                                 <i class="fa fa-check-square-o checked" data-toggle="tooltip" data-placement="right" title="Deselect all genres?" style="font-size:30px; margin-left:10px; color:green"></i>
                                 <i class="fa fa-square-o unchecked" data-toggle="tooltip" data-placement="right" title="Select all genres?" style="font-size:30px; margin-left:10px; padding-right:5px; color:green"></i>
-                                </label>
+                            </label>
                         </div>
                         <hr>
                         <div class="form-check">
@@ -1145,6 +1154,10 @@
             var bb = document.querySelector("#anime-statistics").getBoundingClientRect();
             $('#vis').attr("width", bb.width);
         };
+        var resizeSearchBar = function() {
+            var form = document.querySelector("#myform").getBoundingClientRect();
+            $('.bootstrap-tagsinput').css("width", form.width - 88*2);
+        };
         var resizeStatistics = function() {
             var statistics = document.querySelector("#feature-score").getBoundingClientRect();
             var similarity = document.querySelector("#similarity-score").getBoundingClientRect();
@@ -1215,6 +1228,9 @@
 		    $(".anime-tags span").css("transform", "translate(0)");
 		});
 		$(window).resize(function() {
+                    resizeSearchBar();
+                    resizeAnimeSearchBar();
+                    resizeWordSearchBar();
 		    resizeInfo();
 		    resizeTags();
 		    resizeStatistics();

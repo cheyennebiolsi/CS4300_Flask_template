@@ -268,7 +268,10 @@ hr {
 }
 
 .legend-tag {
-    overflow-x: scroll;
+    overflow:hidden;
+    width: 290px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     color: #666;
     font-size: 12;
 }
@@ -335,13 +338,44 @@ hr {
     border-color: lightslategrey;
 }
 
-.tooltip > .tooltip-inner {
-    background-color: rgb(159, 74, 103);
-    color: white;
+.tooltip.show {
+    opacity: 1 !important;
 }
 
-.tooltip .arrow:before {
-    border-right-color: rgb(159, 74, 103) !important;
+.tooltip > .tooltip-inner {
+    max-width: 500px;
+    background-color: rgba(159, 74, 103, 0.9);
+    color: white;
+    font-size: 12px;
+    text-align: left;
+}
+
+.bs-tooltip-right .arrow::before {
+    border-right-color: rgba(159, 74, 103, 0.9) !important;
+/*    border-top-color: rgb(159, 74, 103) !important; */
+}
+
+.bs-tooltip-top .arrow::before {
+    border-top-color: rgba(159, 74, 103, 0.9) !important;
+}
+
+.bs-tooltip-top {
+    top: -2px !important;
+}
+
+.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: rgba(159, 74, 103, 0.9) !important;
+}
+
+.bs-tooltip-bottom {
+    top: 2px !important;
+}
+
+.tooltip .tag.label {
+    padding-top: 1.5px;
+    padding-bottom: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
 }
 
 .sfw-button {
@@ -409,36 +443,89 @@ hr {
     z-index: auto !important;
 }
 
+.wordinput, .animeinput {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
 .bootstrap-tagsinput {
     height: 36px;
-    width: 90%;
+    width: 80%;
     background-color: white;
     border: 1px solid grey;
     border-radius: 0px;
     border-right: 0.5px solid grey;
+    border-left: 0.5px solid grey;
     padding: 6.5;
 }
 
 .wordinput .bootstrap-tagsinput {
     border-top: 0.5px solid grey;
-    border-bottom-left-radius: 4px;
 }
 
 .animeinput .bootstrap-tagsinput{
     border-bottom: 0.5px solid grey;
+}
+
+.wordinput .input-group-prepend {
+    border-top: 0.5px solid grey;
+    border-bottom-left-radius: 4px;
+}
+
+.animeinput .input-group-prepend {
+    border-bottom: 0.5px solid grey;
     border-top-left-radius: 4px;
 }
 
-.input-group-append {
-    width: 10%;
+.input-group-prepend .fa {
+    margin-left: 4px;
+    color: royalblue;
+    cursor: pointer;
 }
 
-.tag.label.label-info {
+.input-group-prepend {
+    background-color: gainsboro;
+    border: 1px solid grey;
+    width: 88px;
+    border-right: 0.5px solid grey;
+    font-size: 14px;
+    line-height: 34px;
+    vertical-align: middle;
+}
+
+.input-group-prepend span {
+    text-align: right;
+    margin-right: 6px;
+    width: 100%;
+}
+
+.input-group-append {
+    width: 88px;
+    font-size: 14px;
+}
+
+.tag.label {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 10;
     font-weight: 300;
     padding: 6px; 
-    background-color: grey;
+    display: inline-block;
+    margin-bottom: 6px;
+}
+
+.tag.label.label-primary {
+    background-color: rgb(60, 179, 113);
+}
+
+.tag.label.label-primary:hover {
+    background-color: rgba(60, 179, 113, 0.7);
+}
+
+.tag.label.label-danger {
+    background-color: rgb(178, 34, 34);
+}
+
+.tag.label.label-danger:hover {
+    background-color: rgba(178, 34, 34, 0.7);
 }
 
 .tt-suggestion.tt-selectable img{
@@ -493,17 +580,18 @@ hr {
 }
 
 .bootstrap-tagsinput .tag [data-role="remove"] {
-    color: red;
     font-weight: 700;
-    display: none;
+/*    color: red;
+    display: none; */
 }
 
 .bootstrap-tagsinput .tag {
     cursor: pointer;
 }
 
-.bootstrap-tagsinput .tag:hover {
-    background-color: darkgrey;
+.tt-suggestion.tt-selectable:hover {
+    cursor: pointer;
+/*    background-color: darkgrey; */
 }
 
 .input-group-append button {
@@ -540,7 +628,20 @@ hr {
     border: 1px solid lightgray;
     z-index: 10;
     margin-top: 6px;
+    display: inline-block;
     /*border-radius: 4px;*/
+}
+
+.tt-hint {
+    width: 3px !important;
+}
+
+.animeinput .tt-input {
+    min-width: 150px;
+}
+
+.wordinput .tt-input {
+    min-width: 100px;
 }
 
 .wordinput .tt-hint, .wordinput .tt-input, .wordinput .tt-menu {
