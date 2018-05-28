@@ -8,6 +8,7 @@ import operator
 import gensim.models
 import re
 from scipy.sparse.linalg import svds
+from flask import redirect
 # from sklearn.preprocessing import normalize
 # import html
 
@@ -21,7 +22,7 @@ weight_title = 6
 
 allanimelite = json.load(open('app/static/data/anime_info.json'))
 for index, element in enumerate(allanimelite):
-	element["anime_index"] = index
+	assert int(element["anime_index"]) == index
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')
@@ -54,32 +55,81 @@ for index,word in enumerate(word_list):
 
 
 # Tags and Jaccard Similarity
-filter_array = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
+FILTER_ORDER = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
+
+
+import requests
+@irsystem.route('/searchx', methods=['POST'])
+def search2():
+    print("IN TEST")
+    print(request)
+    r = requests.post(request.url_root + "search/animesearch=Naruto")
+    return r 
 
 @irsystem.route('/', methods=['GET'])
+def index():
+    return render_template('search.html', name=project_name, netid=net_id, output_message='', data=[], \
+                           prevsearch=keep(None), prevwords=keep(None), prevhide_ss=None, prevtv=None, prevfilters2=None, filtertrue = False, sfw_on = True, original_value=[])
 
+
+
+class FilterManager:
+    def __init__(self, filterBoolDataFile):
+        self.bools = np.load(filterBoolDataFile)
+        self.filterMapping = {val:index for index, val in enumerate(FILTER_ORDER)}
+
+    def getHotEncodedFilterFromRequest(self, request):
+        filterString = request.args.get('filters').decode('base64')
+        filters = filterString.split('&')
+        desiredAttributes = np.zeros((len(FILTER_ORDER)), dtype=bool)
+        for attributeName in filters:
+            if (attributeName in self.filterMapping):
+                filterIndex = self.filterMapping[attributeName]
+                desiredAttributes[filterIndex] = True
+            else:
+                print('Skipping filter: {}'.format(attributeName))
+        return (1 - desiredAttributes).astype(bool)
+
+    def getFilteredShowIndices(self, request):
+        filterArray = self.getHotEncodedFilterFromRequest(request)
+        matchingFilters = self.bools[:, filterArray]
+        removedShowIndices = np.where(matchingFilters.any(axis=1))[0]
+        return removedShowIndices
+
+filterManager = FilterManager("data/filterArray.npy")
+
+@irsystem.route('/search', methods=['GET'])
 def search():
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
+        print("query: {}".format(query))
 	filtered_true = False
+        filteredShowIndices = filterManager.getFilteredShowIndices(request)
 	if query or words: 
 		filtered_true = True
         sfw_on = request.args.get('sfw') == "on"
-	filter_out=np.zeros((len(filter_array)),dtype=bool)
+	filter_out=np.zeros((len(FILTER_ORDER)),dtype=bool)
 	filter_dictionary2=dict()
-	for index, filters in enumerate(filter_array):
+	for index, filters in enumerate(FILTER_ORDER):
 		switch=request.args.get(filters)
 		# if switch == None:
 		# 	filter_dictionary[filters] = 'off'
 		# else:
 		# 	filter_dictionary[filters] = None
 		filter_dictionary2[filters] = switch
+                if filters=="filter same series":
+                    print('here')
+                    if switch == 'on':
+                        switch = None
+                    elif not switch:
+                        switch = 'on'
 		if(not (switch == 'on') and not (filters=='filter same series')):
 			filter_out[index]=True  
 		if((switch == 'on') and (filters=='filter same series')):
 			filter_out[index]=True
 	rel_filters=filter_bools[:, filter_out]   
-	shows_removed=np.where(rel_filters.any(axis=1))[0]
+#	shows_removed=np.where(rel_filters.any(axis=1))[0]
+        shows_removed = filteredShowIndices
 	# Option 1: No Anime or Tags
 	if not query and not words:
 		data = []

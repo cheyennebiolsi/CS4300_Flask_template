@@ -274,9 +274,30 @@ function initializeSearchBars() {
             wordInput.push(((query.sign == "positive") ? "" : "!") + query.word);
         });
         $('#wordinput').val(wordInput.join("|"));
+        console.log($(this));
+        $(this).children('#animeinput').remove();
+        processFilters();
         return true;
     });
 //    $('[data-toggle="tooltip"]').tooltip().tooltip('hide');
+};
+
+function processFilters() {
+    alert('here');
+    var filterVals = []
+    $('input[type="checkbox"]').each(function(index) {
+        let name = $(this).attr('name');
+        let checked = $(this).is(":checked");
+        if (name !== undefined) {
+            if (checked) {filterVals.push(name)};
+        };
+    });
+    var encodedFilter = window.btoa(filterVals.join("&"));
+    $('<input/>').attr('type', 'hidden')
+                 .attr('name', 'filters')
+                 .attr('value', encodedFilter)
+                 .appendTo('#myform');
+    return
 };
 
 function initializeWordSearch(wordList) {

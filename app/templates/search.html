@@ -109,7 +109,7 @@
         </h1>
         <!--tag line-->
         <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
-        <form id="myform" autocomplete="off"> <!--class = "form-inline global-search" id="myform"> -->
+        <form id="myform" autocomplete="off" action = "{{ url_for('irsystem.search') }}" method='get'> <!--class = "form-inline global-search" id="myform"> -->
             <div class="form-group">
                 <!-- style:"height:30px vertical-align:bottom"> -->
                 <div class="input-group mb-3 animeinput">
@@ -555,8 +555,8 @@
                                 <span> Filter Same Series </span>
                                 <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
                                 <input type="checkbox" name="filter same series" {% if prevfilters2['filter same series'] is not none %} checked {% else %} unchecked {% endif%}/>
-                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
-                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-check-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
                                 </label>
                             </div>
                             {% else %}
@@ -564,8 +564,8 @@
                                 <span> Filter Same Series </span>
                                 <label class="fancy-checkbox" style="color:white; position:absolute; top:10px">
                                 <input type="checkbox" name="filter same series" unchecked/>
-                                <i class="fa fa-check-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
-                                <i class="fa fa-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-check-square-o unchecked" style="font-size:30px; margin-left:10px; color:green"></i>
+                                <i class="fa fa-square-o checked" style="font-size:30px; margin-left:10px; color:green"></i>
                                 </label>
                             </div>
                             {% endif %}
