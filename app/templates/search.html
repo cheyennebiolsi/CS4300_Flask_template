@@ -34,15 +34,6 @@
                         };
 		};
             {% endif %}
-            $("#recommended-carousel").owlCarousel( {
-                items: 4,
-                stagePadding: 100,
-                loop: true,
-                margin: 30,
-                autoWidth: false,
-                nav: true,
-                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
-            });
             $("#suggestion-carousel").owlCarousel( {
                 items: 6,
                 loop: true,
@@ -147,8 +138,8 @@
                 <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
                     <div class="col-md-6" style="text-align:center">
                         <div class="filter-header">
-                            <span>Choose As Many Flavors As You Like</span>
-                            <label class="fancy-checkbox" style="color:white;margin: 0">
+                            <span style="padding: 0px 30px">Allowed Anime Genres</span>
+                            <label class="fancy-checkbox" style="color:white;position: absolute; right: 30px">
                                 <input type="checkbox" onclick="toggle(this);" checked/>
                                 <i class="fa fa-check-square-o checked" data-toggle="tooltip" data-placement="right" title="Deselect all genres?" style="font-size:30px; margin-left:10px; color:green"></i>
                                 <i class="fa fa-square-o unchecked" data-toggle="tooltip" data-placement="right" title="Select all genres?" style="font-size:30px; margin-left:10px; padding-right:5px; color:green"></i>
@@ -579,12 +570,10 @@
                             </div>
                             {% endif %}
                         </div>
-                        <hr hidden>
+                        <br>
                     </div>
-
                 </div>             
-            </div>
-            
+            </div> 
         </form>
 </div>
         <p style="text-align: center; color: white">{{output_message}} <p>
@@ -1141,6 +1130,15 @@
               $(document).on("click", ".flip", function() {
                   $(this).find('.recommend-card').toggleClass('flipped');
               });
+            $("#recommended-carousel").owlCarousel( {
+                items: 4,
+                stagePadding: 100,
+                loop: true,
+                margin: 30,
+                autoWidth: false,
+                nav: true,
+                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
+            });
                 
         });
         };
@@ -1231,10 +1229,12 @@
                     resizeSearchBar();
                     resizeAnimeSearchBar();
                     resizeWordSearchBar();
-		    resizeInfo();
-		    resizeTags();
-		    resizeStatistics();
-            anime_scores.update();
+                    {% if data %}
+                        resizeInfo();
+                        resizeTags();
+                        resizeStatistics();
+                        anime_scores.update();
+                    {% endif %}
         });
        $('[data-toggle="collapse"]').click(function(e) {
             if($($(this).data('target')).hasClass('collapsing'))
