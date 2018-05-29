@@ -21,8 +21,8 @@ weight_tags = 1
 weight_title = 6
 
 allanimelite = json.load(open('app/static/data/anime_info.json'))
-for index, element in enumerate(allanimelite):
-	assert int(element["anime_index"]) == index
+#for index, element in enumerate(allanimelite):
+#	assert int(element["anime_index"]) == index
 
 tags_data = np.load('data/tags.npy')
 alltags_data = np.load('data/alltags.npy')
@@ -53,7 +53,64 @@ word_to_ind=dict()
 for index,word in enumerate(word_list):
 	word_to_ind[word]=index
 
+animeJsonFile = 'app/static/data/anime_info.json'
+animeReviewVectorRepresentationsFile = "data/doc2vecreviewArray2.npy"
+filterBoolsFile = "data/filterArray.npy"
+wordListFile = "data/wordList2.npy"
+wordRepresentationsFile = "data/wordArray2.npy"
+animeRatingsFile = "data/ratArray.npy"
 
+class DataManager:
+    def __init__(self, animeJsonFile, animeReviewVectorRepresentationsFile, filterBoolsFile, 
+                       wordListFile, wordRepresentationsFile, animeRatingsFile):
+        with open(animeJsonFile, 'r') as jsonFile:
+            self.animeJson = json.load(jsonFile)
+        self.animeReviewVectors = np.load(animeReviewVectorRepresentationsFile)
+        self.titleToIndexDictionary = {ele["anime_english_title"]: int(ele["anime_index"]) for ele in self.animeJson}
+        self.filterBoolVectors = np.load(filterBoolsFile)
+        self.wordList = np.load(wordListFile).flatten()
+        self.wordReverseLookup = {word:index for index, word in enumerate(self.wordList)}
+        self.wordVectors = np.load(wordRepresentationsFile)
+        self.ratingsValues = np.load(animeRatingsFile).flatten()
+
+    def getAnimeVectors(self, animeIndices):
+        return np.take(self.animeReviewVectors, animeIndices, axis=0)
+
+    def getAnimeIndices(self, animeTitles):
+        if type(animeTitles) == str or type(animeTitles) == unicode:
+            return self.titleToIndexDictionary[animeTitles]
+        return np.asarray([self.titleToIndexDictionary[title] for title in animeTitles])
+
+    def getAnimeJson(self, animeIndices):
+        if isinstance(animeIndices, int):
+            return self.animeJson[animeIndices]
+        else:
+            return [self.animeJson[index] for index in animeIndices]
+
+    def getWordVectors(self, wordIndices):
+        return np.take(self.wordVectors, wordIndices, axis=0)
+
+    def getWords(self, wordIndices):
+        return np.take(self.wordList, wordIndices)
+
+    def getWordIndices(self, wordStrings):
+        if type(wordStrings) == str or type(wordStrings) == unicode:
+            return self.wordReverseLookup[wordStrings]
+        return np.asarray([self.wordReverseLookup[word] for word in wordStrings])
+
+    def getRatings(self, animeIndices):
+        return np.take(self.ratingsValues, animeIndices)
+
+animeJsonFile = 'app/static/data/anime_info.json'
+animeReviewVectorRepresentationsFile = "data/doc2vecreviewArray2.npy"
+filterBoolsFile = "data/filterArray.npy"
+wordListFile = "data/wordList2.npy"
+wordRepresentationsFile = "data/wordArray2.npy"
+animeRatingsFile = "data/ratArray.npy"
+
+dataManager = DataManager(animeJsonFile, animeReviewVectorRepresentationsFile,
+                          filterBoolsFile, wordListFile, wordRepresentationsFile,
+                          animeRatingsFile)
 # Tags and Jaccard Similarity
 FILTER_ORDER = ['action','adventure','cars','comedy','dementia','demons','mystery','drama','ecchi','fantasy','game','hentai','historical','horror','kids','magic','martial_arts','mecha','music','parody','samurai','romance','school','sci-fi','shoujo','shoujo-ai','shounen','shounen-ai','space','sports','super_power','vampire','yaoi','yuri','harem','slice_of_life','supernatural','military','police','psychological','thriller','seinen','josei','displayTv', 'displayMovie', 'displayOva', 'displayOna', 'displaySpecial','streamCrunchy', 'streamHulu', 'streamYahoo', 'streamNone',"gRating", "pgRating", "pg13Rating", "r17Rating","rPlusRating","rxRating",'filter same series']
 
@@ -74,8 +131,8 @@ def index():
 
 
 class FilterManager:
-    def __init__(self, filterBoolDataFile):
-        self.bools = np.load(filterBoolDataFile)
+    def __init__(self, dataManager):
+        self.dataManager = dataManager
         self.filterMapping = {val:index for index, val in enumerate(FILTER_ORDER)}
 
     def getHotEncodedFilterFromRequest(self, request):
@@ -90,21 +147,197 @@ class FilterManager:
                 print('Skipping filter: {}'.format(attributeName))
         return (1 - desiredAttributes).astype(bool)
 
-    def getFilteredShowIndices(self, request):
+    def getFilteredShowIndices(self, request, animeTitles):
         filterArray = self.getHotEncodedFilterFromRequest(request)
-        matchingFilters = self.bools[:, filterArray]
+        matchingFilters = self.dataManager.filterBoolVectors[:, filterArray]
         removedShowIndices = np.where(matchingFilters.any(axis=1))[0]
-        return removedShowIndices
+        queryShows = np.asarray([title.index for title in animeTitles])
+        return np.append(removedShowIndices, queryShows)
 
-filterManager = FilterManager("data/filterArray.npy")
+filterManager = FilterManager(dataManager)
+
+class AnimeManager:
+    def __init__(self, animeJsonFile):
+        with open(animeJsonFile, 'r') as jsonFile:
+            self.animeJson =  json.load(jsonFile)
+
+class AnimeTitle:
+    def __init__(self, index, sign):
+        self.index = index
+        self.sign = sign
+
+class AnimeTitleFactory:
+    def __init__(self, dataManager):
+        self.dataManager = dataManager
+
+    def buildAnimeTitles(self, request):
+        animeStringTitles = set(request.args.get('animesearch').split('|'))
+        animeTitles = []
+        for title in animeStringTitles:
+            if len(title) <= 0:
+                continue
+            if title[0] == "!":
+                index = self.dataManager.getAnimeIndices(title[1:])
+                animeTitles.append(AnimeTitle(index, False))
+            else:
+                index = self.dataManager.getAnimeIndices(title)
+                animeTitles.append(AnimeTitle(index, True))
+        return animeTitles
+
+class AnimeRequestManager:
+    def __init__(self, animeTitleFactory, dataManager):
+        self.animeTitleFactory = animeTitleFactory
+        self.dataManager = dataManager
+
+    def getAnimeEncodings(self, animeTitles, sign=True):
+        return np.asarray([title.index for title in animeTitles if title.sign == sign])
+
+    def getAnimeQueryVectorizedRepresentation(self, request):
+        animeTitles = self.animeTitleFactory.buildAnimeTitles(request)
+        positiveAnimeIndices = self.getAnimeEncodings(animeTitles, sign=True)
+        negativeAnimeIndices = self.getAnimeEncodings(animeTitles, sign=False)
+        vectorizedRepresentation = np.zeros((self.dataManager.animeReviewVectors.shape[1]))
+        if positiveAnimeIndices.shape[0]:
+            positiveAnimeRepresentations = self.dataManager.animeReviewVectors[positiveAnimeIndices, :]
+            vectorizedRepresentation = vectorizedRepresentation + np.sum(positiveAnimeRepresentations, axis=0)
+        if negativeAnimeIndices.shape[0]:
+            negativeAnimeRepresentations = self.dataManager.animeReviewVectors[negativeAnimeIndices, :]
+            vectorizedRepresentation = vectorizedRepresentation - np.sum(negativeAnimeRepresentations, axis=0)
+        return vectorizedRepresentation
+
+animeManager = AnimeManager('app/static/data/anime_info.json')
+animeTitleFactory = AnimeTitleFactory(dataManager)
+animeRequestManager = AnimeRequestManager(animeTitleFactory, dataManager)
+
+class Word:
+    def __init__(self, index, word, sign):
+        self.index = index
+        self.word = word
+        self.sign = sign
+
+class WordFactory:
+    def __init__(self, dataManager):
+        self.dataManager = dataManager
+
+    def buildWords(self, request):
+        wordStrings = set(request.args.get('wordsearch').split('|'))
+        words = []
+        for word in wordStrings:
+            if len(word) <= 0:
+                continue
+            if word[0] == "!":
+                word = word[1:]
+                index = self.dataManager.getWordIndices(word)
+                words.append(Word(index, word, False))
+            else:
+                index = self.dataManager.getWordIndices(word)
+                words.append(Word(index, word, True))
+        return words 
+
+class WordRequestManager:
+    def __init__(self, wordFactory, dataManager):
+        self.wordFactory = wordFactory
+        self.dataManager = dataManager
+
+    def getWordEncodings(self, words, sign=True):
+        return np.asarray([word.index for word in words if word.sign == sign])
+
+    def getWordQueryVectorizedRepresentation(self, request):
+        words = self.wordFactory.buildWords(request)
+        positiveWordIndices = self.getWordEncodings(words, sign=True)
+        negativeWordIndices = self.getWordEncodings(words, sign=False)
+        vectorizedRepresentation = np.zeros((self.dataManager.wordVectors.shape[1]))
+        if positiveWordIndices.shape[0]:
+            positiveWordRepresentations = self.dataManager.wordVectors[positiveWordIndices, :]
+            vectorizedRepresentation += np.sum(positiveWordRepresentations, axis=0)
+        if negativeWordIndices.shape[0]:
+            negativeWordRepresentations = self.dataManager.wordVectors[negativeWordIndices, :]
+            vectorizedRepresentation -= np.sum(negativeWordRepresentations, axis=0)
+        return vectorizedRepresentation
+
+wordFactory = WordFactory(dataManager)
+wordRequestManager = WordRequestManager(wordFactory, dataManager)
+
+class SuggestionFactory:
+    def __init__(self, dataManager, animeRequestManager, wordRequestManager, ratingsDataFile):
+        self.dataManager = dataManager
+        self.animeRequestManager = animeRequestManager
+        self.wordRequestManager = wordRequestManager
+        self.ratingsData = np.load(ratingsDataFile)
+
+    def buildSuggestions(self, animeQueryRepresentation, wordQueryRepresentation, filteredShowIndices, numSuggestions = 20):
+        vectorizedQuery = wordQueryRepresentation + animeQueryRepresentation
+        suggestedIndices, animeScores = self.buildSuggestedIndices(vectorizedQuery, filteredShowIndices, numSuggestions)
+        jsonList = []
+        for index in range(len(suggestedIndices)):
+            if len(jsonList) == numSuggestions:
+                return jsonList
+            jsonList.append(self.buildSuggestion(suggestedIndices[index], vectorizedQuery, animeScores[index]))
+        return jsonList
+
+    def buildSuggestedIndices(self, vectorizedQuery, filteredShowIndices, numSuggestions):
+	scores=self.cossim(self.dataManager.animeReviewVectors,vectorizedQuery)
+        adjustedScores = scores.flatten("F") + (0.1)*self.ratingsData
+        suggestionIndices = np.argsort(-adjustedScores, axis=0)
+        mask = np.isin(suggestionIndices, filteredShowIndices, invert=True)
+        filteredSuggestionIndices = suggestionIndices[mask][:numSuggestions].flatten()
+        return filteredSuggestionIndices, np.take(adjustedScores, filteredSuggestionIndices).flatten()
+
+    def topRelatedWords(self, query, number = 10):
+        similarities = self.cossim(self.dataManager.wordVectors, query).flatten()
+        topIndices = np.argsort(-similarities)[:number]
+        topScores = np.take(similarities, topIndices)
+        topWords = self.dataManager.getWords(topIndices)
+        return zip(topWords, topIndices, topScores)
+
+    def cossim(self, vectorized, query):
+        query = query.flatten()
+        if vectorized.ndim == 1:
+            return np.matmul(vectorized,query)/(np.linalg.norm(vectorized) * np.linalg.norm(query))
+        return np.matmul(vectorized, query)/(np.linalg.norm(vectorized, axis=1) * np.linalg.norm(query))
+
+    def getTopWordsInCommon(self, query, animeVectorRepresentation, number=10): 
+        queryToWordsSim = self.cossim(self.dataManager.wordVectors, query)
+        animeToWordsSim = self.cossim(self.dataManager.wordVectors, animeVectorRepresentation)
+        similarities = (queryToWordsSim * animeToWordsSim) / (np.linalg.norm(queryToWordsSim) * np.linalg.norm(animeToWordsSim))
+        topIndicesInCommon = np.argsort(-similarities)[:3*number]
+        topScoresInCommon = np.take(similarities, topIndicesInCommon)
+        topWordsInCommon = self.dataManager.getWords(topIndicesInCommon)
+        queryVals = np.take(queryToWordsSim, topIndicesInCommon)
+        animeVals = np.take(animeToWordsSim, topIndicesInCommon)
+        positiveIndices = (queryVals > 0) * (animeVals > 0)
+        topWordsInCommon = topWordsInCommon[positiveIndices][:number]
+        queryScoresInCommon = queryVals[positiveIndices][:number]
+        animeScoresInCommon = animeVals[positiveIndices][:number]
+        return zip(topWordsInCommon, queryScoresInCommon, animeScoresInCommon)
+        
+    def buildSuggestion(self, animeIndex, query, score):
+        animeJson = self.dataManager.getAnimeJson(animeIndex)
+	animeVectorRepresentation=self.dataManager.getAnimeVectors(animeIndex)
+        topWordTagsForAnime = zip(*self.topRelatedWords(animeVectorRepresentation))[0]
+        topWordsInCommon, queryScoresInCommon, animeScoresInCommon = zip(*self.getTopWordsInCommon(query, animeVectorRepresentation, 10))
+        animeJson['words'] = "|".join(topWordTagsForAnime)
+        animeJson['graph_words'] = "|".join(topWordsInCommon)
+        animeJson['graph_value'] = list(np.round(queryScoresInCommon, 3))
+        animeJson['original_value'] = list(np.round(animeScoresInCommon, 3))
+        animeJson['score'] = str(round(score*100, 2))
+        return animeJson
+    
+suggestionFactory = SuggestionFactory(dataManager, animeRequestManager, wordRequestManager, "data/ratArray.npy")
 
 @irsystem.route('/search', methods=['GET'])
 def search():
+        animeTitles = animeTitleFactory.buildAnimeTitles(request)
+        filteredShowIndices = filterManager.getFilteredShowIndices(request, animeTitles)
+        animeQueryRepresentation = animeRequestManager.getAnimeQueryVectorizedRepresentation(request)
+        wordQueryRepresentation = wordRequestManager.getWordQueryVectorizedRepresentation(request)
+        data = suggestionFactory.buildSuggestions(animeQueryRepresentation, wordQueryRepresentation, filteredShowIndices)
+
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
         print("query: {}".format(query))
 	filtered_true = False
-        filteredShowIndices = filterManager.getFilteredShowIndices(request)
+        shows_removed = filteredShowIndices
 	if query or words: 
 		filtered_true = True
         sfw_on = request.args.get('sfw') == "on"
@@ -112,24 +345,7 @@ def search():
 	filter_dictionary2=dict()
 	for index, filters in enumerate(FILTER_ORDER):
 		switch=request.args.get(filters)
-		# if switch == None:
-		# 	filter_dictionary[filters] = 'off'
-		# else:
-		# 	filter_dictionary[filters] = None
 		filter_dictionary2[filters] = switch
-                if filters=="filter same series":
-                    print('here')
-                    if switch == 'on':
-                        switch = None
-                    elif not switch:
-                        switch = 'on'
-		if(not (switch == 'on') and not (filters=='filter same series')):
-			filter_out[index]=True  
-		if((switch == 'on') and (filters=='filter same series')):
-			filter_out[index]=True
-	rel_filters=filter_bools[:, filter_out]   
-#	shows_removed=np.where(rel_filters.any(axis=1))[0]
-        shows_removed = filteredShowIndices
 	# Option 1: No Anime or Tags
 	if not query and not words:
 		data = []
@@ -187,8 +403,9 @@ def search():
                 if(len(negative_words)>0):
                         negative_word_vectors = word_array[negative_words,:]
                         word_result = word_result - np.sum(negative_word_vectors, axis=0)
-                
+                print("Equal: {}".format(show_result - animeQueryRepresentation))
 		result=show_result+word_result    
+                result = wordQueryRepresentation + animeQueryRepresentation
 		result=result/np.linalg.norm(result)       
 		scores=np.matmul((review_array),(result[:,np.newaxis]))
 		word_scores=np.matmul((word_array),(result[:,np.newaxis]))
@@ -229,9 +446,10 @@ def search():
 		top_n_words=top_words[:10]
         
         
-		json_array = []       
+		json_array = []      
+#                top_n_shows = suggestedIndices 
             #returns most similar anime ids and similarity scores
-		for anim_ind in (top_n_shows):
+		for anim_ind in []:
 			score = adjust[anim_ind]
 			jsonfile = get_anime(anim_ind, allanimelite)
 			wordvec = get_top_words(anim_ind)   
@@ -258,7 +476,7 @@ def search():
 		#wordflatscores=np.round(newwordscores.flatten('F'),3)
 		#originalValue=list(wordflatscores)
 
-		data = json_array
+#		data = json_array
 	# print(data)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, 
 		prevsearch=keep(query), prevwords=keep(words), prevhide_ss=not(filter_out[-1]), prevtv=filter_out[43], prevfilters2=filter_dictionary2, filtertrue = filtered_true, sfw_on = sfw_on, original_value=[])
