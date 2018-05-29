@@ -55,7 +55,7 @@
                     initializeWordSearch([]);
                 {% endif %}
                 {% if prevsearch %}
-                    var prevwords = '{{prevsearch}}'.replace("&amp;","&");
+                    var prevwords = '{{prevsearch}}';
                     var words = prevwords.split('|');
                     initializeAnimeSearch(words);
                 {% else %}
@@ -70,7 +70,7 @@
                 initializeAnimeSearch([]);
                 loadrecommended();
             {% endif %}
-            {% if ((filtertrue) and (not sfw_on)) %}
+            {% if (prevfilters2 and prevfilters2['sfw']) %}
                $('#collapsensfwrating').collapse('toggle');
                $('#collapsensfw').collapse('toggle');
             {% endif %}
@@ -304,7 +304,7 @@
                             <div class="filter-header">
                                 <span> Rated </span>
                                 <label id="sfw-collapse" class="genre-checkbox" style="color:white; position:absolute; top:10px">
-                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw" {% if prevfilters2['sfw'] %} unchecked {% else %} checked {%endif%}/>
+                                    <input type="checkbox" name="sfw" id="sfw-button" onclick="clearnsfw(this)" data-toggle="collapse" data-target="#collapsensfw, #collapsensfwrating" aria-expanded="false" aria-controls="collapsensfw" {% if prevfilters2 and prevfilters2['sfw'] %} checked {% else %} unchecked {%endif%}/>
                                     <div class="sfw-button checked">NSFW ON</div>
                                     <div class="sfw-button active unchecked">SFW ON</div>
                                 </label>

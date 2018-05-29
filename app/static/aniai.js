@@ -213,7 +213,7 @@ function initializeSearchBars() {
             templates: {
                 suggestion: function (data) {
                     return '<div class="d-flex">' +
-                               '<img class="align-self-center mr-3" src="' + data.anime_image_url + '" alt="Generic placeholder image">' +
+                               '<img class="align-self-center mr-3" src="' + data.anime_image_url + '">' +
                                '<div class="align-self-center">' +
                                    '<div class="d-flex">' +
                                       '<span class="align-self-center search-anime-title">' + data.anime_english_title + '</span>' + 
@@ -283,13 +283,13 @@ function initializeSearchBars() {
 };
 
 function processFilters() {
-    alert('here');
     var filterVals = []
     $('input[type="checkbox"]').each(function(index) {
         let name = $(this).attr('name');
         let checked = $(this).is(":checked");
         if (name !== undefined) {
             if (checked) {filterVals.push(name)};
+            $(this).removeAttr('name');
         };
     });
     var encodedFilter = window.btoa(filterVals.join("&"));
@@ -314,7 +314,7 @@ function initializeWordSearch(wordList) {
 
 function initializeAnimeSearch(animeList) {
     for (var anime in animeList) {
-        let tag = animeList[anime];
+        let tag = $("<div/>").html(animeList[anime]).text();
         let sign = "positive"
         if (tag.slice(0, 1) == "!") {
             tag = tag.slice(1,);

@@ -339,12 +339,24 @@ suggestionFactory = SuggestionFactory(dataManager, animeRequestManager, wordRequ
 @irsystem.route('/search', methods=['GET'])
 def search():
         animeTitles = animeTitleFactory.buildAnimeTitles(request)
+        filterDictionary = filterManager.getFilterDictionaryFromRequest(request)
+        animesearch = request.args.get('animesearch')
+        wordsearch = request.args.get('wordsearch')
+        if not (animesearch or wordsearch):
+            return render_template('search.html', output_message='', data=None, \
+                   prevsearch=None, prevwords = None, prevfilters2=filterDictionary)
         filteredShowIndices = filterManager.getFilteredShowIndices(request, animeTitles)
         filterDictionary = filterManager.getFilterDictionaryFromRequest(request)
         animeQueryRepresentation = animeRequestManager.getAnimeQueryVectorizedRepresentation(request)
         wordQueryRepresentation = wordRequestManager.getWordQueryVectorizedRepresentation(request)
         data = suggestionFactory.buildSuggestions(animeQueryRepresentation, wordQueryRepresentation, filteredShowIndices)
-
+        if len(data) == 0:
+            output_message = "Filters are too strict.  Please change filters."
+        else:
+            output_message = ""
+        return render_template('search.html', output_message=output_message, data=data, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
+#        return render_template('search.html', name=project_name, netid=net_id, output_message='', data=[], \
+#                           prevsearch=keep(None), prevwords=keep(None), prevhide_ss=None, prevtv=None, prevfilters2=None, filtertrue = False, sfw_on = True, original_value=[])
 	query = request.args.get('animesearch')
 	words = request.args.get('wordsearch')
         print("query: {}".format(query))
