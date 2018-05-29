@@ -145,7 +145,18 @@ class FilterManager:
                 desiredAttributes[filterIndex] = True
             else:
                 print('Skipping filter: {}'.format(attributeName))
-        return (1 - desiredAttributes).astype(bool)
+        return desiredAttributes
+
+    def getFilterDictionaryFromRequest(self, request):
+        filterString = request.args.get('filters').decode('base64')
+        filters = filterString.split('&')
+        filterDictionary = {}
+        for attributeName in filters:
+            filterDictionary[attributeName] = True
+        for attributeName in FILTER_ORDER:
+            if not attributeName in filterDictionary:
+                filterDictionary[attributeName] = False
+        return filterDictionary
 
     def getFilteredShowIndices(self, request, animeTitles):
         filterArray = self.getHotEncodedFilterFromRequest(request)
@@ -329,6 +340,7 @@ suggestionFactory = SuggestionFactory(dataManager, animeRequestManager, wordRequ
 def search():
         animeTitles = animeTitleFactory.buildAnimeTitles(request)
         filteredShowIndices = filterManager.getFilteredShowIndices(request, animeTitles)
+        filterDictionary = filterManager.getFilterDictionaryFromRequest(request)
         animeQueryRepresentation = animeRequestManager.getAnimeQueryVectorizedRepresentation(request)
         wordQueryRepresentation = wordRequestManager.getWordQueryVectorizedRepresentation(request)
         data = suggestionFactory.buildSuggestions(animeQueryRepresentation, wordQueryRepresentation, filteredShowIndices)
@@ -347,6 +359,7 @@ def search():
 		switch=request.args.get(filters)
 		filter_dictionary2[filters] = switch
 	# Option 1: No Anime or Tags
+        filter_dictionary2 = filterDictionary
 	if not query and not words:
 		data = []
 		output_message = ''
