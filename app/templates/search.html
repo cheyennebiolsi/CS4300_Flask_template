@@ -479,7 +479,7 @@
                              <div class="align-self-start" id="anime-tags">
                                  {% set words = data[0]["words"].split('|') %}
                                  {% for word in words %}
-                                     <span class="tag label label-info">{{word}}</span>
+                                     <span onclick="addWord(this)" class="tag label label-info">{{word}}</span>
                                  {% endfor %}
                              </div>
                         </div>                      
@@ -643,7 +643,8 @@
                         {% for d in data%}
                         {% set image_url = d['anime_image_url'] %}
                         <div class="owl-item" style="height:100%">
-                            <div class="view overlay" id="suggestionCard" style="cursor:pointer" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
+                            <div class="view overlay" id="suggestionCard"
+                                 data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
                                  data-labels='{{ d["graph_words"]}}'
                                  data-values= "{{d['graph_value']}}"
@@ -659,7 +660,7 @@
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
                                  data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
                                  data-words="{{d['words']}}" style="height:100%">
-                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
+                                <div {%if loop.index == 1%} class="well suggestion active" {% else %} class="well suggestion" {% endif %} style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
                                 <div class="mask flex-center rgba-stylish-strong">
                                     <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
                                  </div>
@@ -686,6 +687,14 @@
  
             <script>
                 $("#suggestion-carousel").on('click', '.view', function() {
+	            var active = (document.querySelectorAll('.well.suggestion.active'));
+                    active.forEach(function(well) {
+                        well.classList.remove('active');
+                    });
+                    var children = $(this).find('.well.suggestion');
+                    children.each(function(index) {
+                        this.classList.add('active');
+                    });
                     var anime_index = $(this).attr('data-index');
                     var anime_image_url = $(this).data("image");
                     var title = $(this).data("title");
@@ -730,7 +739,7 @@
                     var words = words.split("|");
                     var wordStr = "";
                     for (var word in words) {
-                        wordStr += '<span class="tag label label-info">' + words[word] + "</span>";
+                        wordStr += '<span class="tag label label-info" onclick="addWord(this)">' + words[word] + "</span>";
                     };
                     $('#anime-tags').replaceWith(
                         '<div class="align-self-start" id="anime-tags">' + wordStr + '</div>'

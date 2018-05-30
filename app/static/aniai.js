@@ -315,6 +315,10 @@ function initializeWordSearch(wordList) {
     ;}
 };
 
+function addWord(tag) {
+    $('#wordinput').tagsinput('add', {word: $(tag).text(), sign: "positive"});
+};
+
 function initializeAnimeSearch(animeList) {
     for (var anime in animeList) {
         let tag = $("<div/>").html(animeList[anime]).text();
