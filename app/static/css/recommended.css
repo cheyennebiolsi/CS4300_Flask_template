@@ -8,6 +8,24 @@
     border:0px solid black;
 }
 
+.recommendations {
+    padding: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background: radial-gradient(darkgrey, black);
+    border-radius: 20px;
+    border: 1px solid white;
+}
+
+.recommendations h1 {
+    font-family: Raleway; Futura; sans-serif;
+    font-size: 35px;
+}
+
+#recommended-carousel {
+    height: 400px;
+}
+
 #suggestion-carousel {
     height: 300px;
     padding: 60px 40px;
@@ -34,19 +52,34 @@
 .recommend-card {
     height: 300px;
     max-width: 300px;
+    font-family: Raleway; Futura; sans-serif;
 }
 
 .face.back .well {
     padding: 1px;
+    overflow-y: hidden;
+    display: flex;
+    flex-flow: column;
+}
+
+.face.back .well .recommendation-synopsis {
+    flex: 2;
+    padding: 8px 20px;
+    text-align: justify;
+    font-size: 12;
+}
+
+.face.back .well .recommendation-synopsis:hover {
     overflow-y: scroll;
+    padding-right: 4px;
 }
 
 .recommendation-header {
     text-align: center;
     background-color: #CCC;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px 20px;
     font-size: 18;
+    font-weight: 800;
 }
 
 .face.front {
@@ -64,7 +97,10 @@
     width: 100%;
     height: 100%;
     cursor: pointer;
+    border-radius: 20px;
+    border: 0;
 }
+
 .flip {
     -webkit-perspective: 800;
     perspective: 800;

@@ -124,6 +124,11 @@ html, body {
     border: 1px solid white;
 }
 
+.logo-main {
+    display: inline-block;
+    padding: 60px 80px !important;
+}
+
 .aniai{
     cursor: pointer;
     border: 1px solid white;

@@ -126,8 +126,11 @@
         <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
         <form id="myform" autocomplete="off" action = "{{ url_for('irsystem.search') }}" method='get'> <!--class = "form-inline global-search" id="myform"> -->
             <div class="row">
-                <div class="col-12 col-sm-12 col-md-auto col-lg-auto align-self-center">
-                    <div class="aniai" onclick="redirectHomepage()"> &ensp;Aniai &#24859 </div>
+                <div class="d-flex col-12 col-sm-12 col-md-12 col-lg-12 align-self-center justify-content-center">
+                    <div class="aniai logo-main" onclick="redirectHomepage()">
+                        <span>&ensp;Aniai &#24859&ensp;</span>
+                        <hr>
+                    </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md col-lg searchbars">
                 <div class="form-group animeinput">
@@ -418,278 +421,17 @@
         </form>
 </div>
         <p style="text-align: center; color: white">{{output_message}} <p>
-        {% if data %}
-<!--            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br> -->
-            <div class="container-fluid feature-display">
-                <div class="row">
-                <div class="col-md-12 col-lg-6" style="height: 400px">
-                    <div class="feature-anime-info">
-                        <div class ="d-flex flex-column">
-                            <div class="feature-icon align-self-end" style="height: 30px; margin-bottom: 10px">
-                                <img src="/static/images/yahoo_view_icon.png" id="yahoo-provider" 
-                                {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                                <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
-                                {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
-                                <img src="/static/images/crunchyroll_icon.png" id="crunchyroll-provider"
-                                {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                                <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
-                                {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
-                            </div>
-                            <div id="media-title" style="display: inline-block">
-                                <span>{{data[0]["anime_english_title"]}}</span>
-                            </div>
-                            <div style="display: inline-block" id="media-genres">
-                                 {% set genrelist = data[0]["anime_tags"].split('|') %} 
-                                 {% for tag in genrelist %}
-                                 <span class="genre">{{tag}}</span>
-                                 {% endfor %}
-                            </div>
-                            <div style="display: inline-block">
-                            <hr style='width: 10%; margin-right: 45% !important; margin-left: 45% !important; border: none; height: 3px; background-color: black;'>
-                            </div>
-                        </div>
-                        <div class="row adjustable">
-                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
-                                <div class="row info-header">Type:</div>
-                                <div class="row" id="media-type"> 
-                                    <span>{{data[0]["anime_type"]}}</span>
-                                </div>
-                                <div class="row info-header">Rating:</div>
-                                <div class="row" id="media-rating">
-                                    <span>{{data[0]["anime_rating"]}}</span>
-                                </div>
-                                <div class="row info-header">Duration:</div>
-                                <div class="row" id="media-duration">
-                                    <span>{{data[0]["anime_duration"]}}</span>
-                                </div>
-                                <div class="row info-header">Number of episodes:</div>
-                                <div class="row" id="episode-count">
-                                    <span>{{data[0]["anime_number_of_episodes"]}}</span>
-                                </div>
-                            </div>
-                            <div class="col-9 col-sm-9 col-md-9 col-lg-9 synopsis">
-                                <div id="media-synopsis"><span>{{data[0]['anime_synopsis']}}</span><br><br><br><br></div>
-                            </div>
-                        </div>
-                        <div class="d-flex tag-info">
-                             <div class="align-self-center"><span>Top Tags:</span></div>
-                             <div class="align-self-start" id="anime-tags">
-                                 {% set words = data[0]["words"].split('|') %}
-                                 {% for word in words %}
-                                     <span class="tag label label-info">{{word}}</span>
-                                 {% endfor %}
-                             </div>
-                        </div>                      
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 feature-segment">
-                    <div class="adjustable">
-                        <div class="container" style="width: 100%">
-                            <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas> 
-                        </div>
-                    </div>
-                        <div id="chart-legends" unselectable="on" class="unselectable">
-                                <label class="fancy-checkbox">
-                                    <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
-                                    <div class="legend-tag checked"><div class="legend-button"></div></div>
-                                    <div class="legend-tag unchecked"><div class="legend-button"></div></div>
-                                </label>
-                                <label class="fancy-checkbox">
-                                    <input type="checkbox" onclick="toggleLegendQuery(this)" checked/>
-                                    <div class="legend-tag checked"><div class="legend-button"></div></div>
-                                    <div class="legend-tag unchecked"><div class="legend-button"></div></div>
-                                </label>
-                        </div>
-                </div>
-                <div class="col-md-6 col-lg-3 feature-segment" style="height: 400px">
-                    <div class="container" style="background-color: black; width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row; background-image: linear-gradient(black, grey)">
-                        <img id="media-image" src={{data[0]["anime_image_url"]}} style="object-fit: contain; flex: 1">
-                    </div>
-                </div>
-                </div>
-            </div>
-                                <script>
-                                    var labels = '{{data[0]["graph_words"]}}';
-                                    // for (i = 0; i < labels.length; i++) { 
-                                    //     arr.push(decodeEntities(labels[i]))
-                                    // }
-                                    // console.log(arr
-                                    var labels_words = labels.split("|");
-                                    console.log(labels_words)
 
-                                    var data_chart = {
-                                        labels: labels_words,
-                                        datasets: [
-                                            {
-                                                label: "Query",
-                                                fill: true,
-                                                backgroundColor: "rgba(152,251,152,0.2)",
-                                                borderColor: "rgba(152,251,152,1)",
-                                                pointBorderColor: "#fff",
-                                                pointBackgroundColor: "rgba(152,251,152,0.2)",
-                                                pointBorderColor: "#fff",
-                                                data: {{data[0]["original_value"]}}
-                                            },
-                                            {
-                                                label: "{{data[0]["anime_english_title"]}}",
-                                                fill: true,
-                                                backgroundColor: "rgba(219,112,147,0.2)",
-                                                borderColor: "rgba(219,112,147,1)",
-                                                pointBorderColor: "#fff",
-                                                pointBackgroundColor: "rgba(219,112,147,1)",
-                                                pointBorderColor: "#fff",
-                                                data: {{data[0]["graph_value"]}}
-                                            }
-                                        ]
-                                    };
-                                    Chart.defaults.global.defaultFontColor = 'white';
-                                    anime_scores = new Chart(document.getElementById("vis"), {
-                                        type: 'radar',
-                                        data: data_chart,
-                                        draggable: true,
-                                        options: {
-                                            legendCallback: function(chart) {
-                                                var queryLabel = chart.data.datasets[0].label;
-                                                var queryColor = chart.data.datasets[0].backgroundColor;
-                                                var queryBorder = chart.data.datasets[0].borderColor;
-                                                var suggestionLabel = chart.data.datasets[1].label;
-                                                var suggestionColor = chart.data.datasets[1].backgroundColor;
-                                                var suggestionBorder = chart.data.datasets[1].borderColor;
-                                                var text = 
-                                                '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
-                                                     '<div class="legend-tag checked" id="query-checked">' + 
-                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
-                                                     '</div>' + queryLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked" id="query-unchecked">' + 
-                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
-                                                     '</div>' + queryLabel + '</div></label>' + 
-                                                '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
-                                                     '<div class="legend-tag checked" id="suggestion-checked">' + 
-                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
-                                                     '</div>' + suggestionLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked" id=suggestion-unchecked">' +
-                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
-                                                     '</div>' + suggestionLabel + '</div></label>';
-                                                return text;
-                                            },
-                                            hover: {
-                                                onHover: function(e) {
-                                                    var activePoints = this.getElementAtEvent(e);
-                                                    if (activePoints[0] !== undefined) {
-                                                        e.target.style.cursor = "pointer";
-                                                    } else {
-                                                       e.target.style.cursor = "default";
-                                                    }
-                                                }
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Most Similar Words to Query',
-                                                fontColor: "#FFFFFF",
-                                                fontSize: 14
-                                            },
-                                            legend: {
-                                                display: false,
-                                                position: 'bottom',
-                                                boxWidth: 20,
-                                                labels: {
-                                                    fontColor: '#FFFFFF'
-                                                },
-
-                                            },
-                                            scale: {
-                                                ticks: {
-                                                    maxTicksLimit: 5,
-                                                    backdropColor: 'black',
-                                                    max: Math.min(1, Math.max.apply(Math, {{data[0]["original_value"]}}.concat({{data[0]["graph_value"]}})) + 0.1),
-                                                    min: 0, 
-                                                    fontSize: 6,
-                                                    color: '#FFFFFF'
-                                                },
-                                                gridLines: {
-                                                    color: "#FFFFFF"
-                                                }
-                                            },
-                                            tooltips: {
-                                                footerFontStyle: 'normal',
-                                                callbacks: {
-                                                    footer: function(tooltipItem, data) {
-                                                        var label = data.labels[tooltipItem[0].index];
-                                                        return ['Click to add "' + label + '" to search bar'];
-                                                    },
-                                                    label: function(tooltipItem, data) {
-                                                        var datasetLabel = '';
-                                                        var label = data.datasets[tooltipItem.datasetIndex].label;
-                                                        return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " " + label;
-                                                    }
-                                                },
-                                                enabled: true,
-                                                mode: 'index'
-                                            },
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                        }
-                                    });
-
-                                </script>
-            <div class="owl-carousel owl-theme owl-loaded" id="suggestion-carousel">
-                <div class="owl-stage-outer">
-                    <div class="owl-stage">
-                        {% for d in data%}
-                        {% set image_url = d['anime_image_url'] %}
-                        <div class="owl-item" style="height:100%">
-                            <div class="view overlay" id="suggestionCard" style="cursor:pointer" data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
-                                 data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
-                                 data-labels='{{ d["graph_words"]}}'
-                                 data-values= "{{d['graph_value']}}"
-                                 data-overallreview = '{{d["anime_review_overall_average"]}}' 
-                                 data-storyreview = '{{d["anime_review_story_average"]}}'
-                                 data-enjoyment = '{{d["anime_review_enjoyment_average"]}}'
-                                 data-character = '{{d["anime_review_character_average"]}}'
-                                 data-sound= '{{d["anime_review_sound_average"]}}'
-                                 data-animation= '{{d["anime_review_animation_average"]}}'
-                                 data-positive_words = '{{d["positive_words"]}}' 
-                                 data-original_value = '{{d["original_value"]}}' 
-                                 data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}"  
-                                 data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
-                                 data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
-                                 data-words="{{d['words']}}" style="height:100%">
-                                <div class="well suggestion" style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
-                                <div class="mask flex-center rgba-stylish-strong">
-                                    <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
-                                 </div>
-                            </div>
-                         </div>
-                         {% endfor %}
-                    </div>
-                 </div>
-           </div>
-
-{% else %}
+<div class="recommendations">
 <h1 style="color: white"> Editors' Choice Anime to Search </h1>
 
-<div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
+<div class="owl-carousel owl-theme owl-loaded" id="recommended-carousel">
     <div class="owl-stage-outer">
         <div class="owl-stage" id="recommendation-stage">
-<!--            <div class="owl-item">
-            </div> -->
         </div>
     </div>
-<!--    <div class="owl-nav">
-        <div class="owl-prev">prev</div>
-        <div class="owl-next">next</div>
-    </div> -->
 </div>
-        {% endif %}
-    </div>
-
+</div>
 <div class="footer">
    CS4300 Final Project: Aniai | Built by Cheyenne Biolsi (ckb59), Gary Gao (gg392), Arthur Chen (ac2266), Henry Levine (hal59), Kelley Zhang (kz53) | <a href="http://aniai.herokuapp.com/" target="_blank">Prototype1</a> | <a href="http://aniai2.herokuapp.com/" target="_blank">Prototype 2</a> |
 </div>
@@ -952,7 +694,7 @@
                                 '<div class="well well-sm inner">' + 
                                     '<div class="recommendation-header">' + anime.anime_english_title +
                                     '</div>' + 
-                                    '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
+                                    '<div class="recommendation-synopsis">' + anime.anime_synopsis + '</div>' + 
                                 '</div>' +
                            ' </div>' + 
                         '</div>' +

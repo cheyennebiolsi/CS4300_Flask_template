@@ -125,7 +125,7 @@ def search2():
 
 @irsystem.route('/', methods=['GET'])
 def index():
-    return render_template('search.html', name=project_name, netid=net_id, output_message='', data=[], \
+    return render_template('index.html', name=project_name, netid=net_id, output_message='', data=[], \
                            prevsearch=keep(None), prevwords=keep(None), prevhide_ss=None, prevtv=None, prevfilters2=None, filtertrue = False, sfw_on = True, original_value=[])
 
 
