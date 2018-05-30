@@ -9,7 +9,7 @@
 }
 
 .recommendations {
-    padding: 40px;
+    padding: 40px 20px;
     margin-left: 20px;
     margin-right: 20px;
     background: radial-gradient(darkgrey, black);
@@ -20,10 +20,16 @@
 .recommendations h1 {
     font-family: Raleway; Futura; sans-serif;
     font-size: 35px;
+    padding-left: 40px;
 }
 
 #recommended-carousel {
     height: 400px;
+    padding: 0px 40px;
+}
+
+#recommended-carousel .fa {
+    font-size: 30px;
 }
 
 #suggestion-carousel {
@@ -56,7 +62,7 @@
 }
 
 .face.back .well {
-    padding: 1px;
+    padding: 0;
     overflow-y: hidden;
     display: flex;
     flex-flow: column;
@@ -91,6 +97,10 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+}
+
+.face .well {
+   border: 2px solid gold;
 }
 
 .well {

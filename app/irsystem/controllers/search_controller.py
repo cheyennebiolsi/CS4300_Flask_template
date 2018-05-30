@@ -311,7 +311,7 @@ class SuggestionFactory:
         queryToWordsSim = self.cossim(self.dataManager.wordVectors, query)
         animeToWordsSim = self.cossim(self.dataManager.wordVectors, animeVectorRepresentation)
         similarities = (queryToWordsSim * animeToWordsSim) / (np.linalg.norm(queryToWordsSim) * np.linalg.norm(animeToWordsSim))
-        topIndicesInCommon = np.argsort(-similarities)[:3*number]
+        topIndicesInCommon = np.argsort(-similarities)
         topScoresInCommon = np.take(similarities, topIndicesInCommon)
         topWordsInCommon = self.dataManager.getWords(topIndicesInCommon)
         queryVals = np.take(queryToWordsSim, topIndicesInCommon)
@@ -352,9 +352,10 @@ def search():
         data = suggestionFactory.buildSuggestions(animeQueryRepresentation, wordQueryRepresentation, filteredShowIndices)
         if len(data) == 0:
             output_message = "Filters are too strict.  Please change filters."
+            return render_template('index.html', output_message=output_message, data=data, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
         else:
             output_message = ""
-        return render_template('search.html', output_message=output_message, data=data, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
+            return render_template('search.html', output_message=output_message, data=data, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
 #        return render_template('search.html', name=project_name, netid=net_id, output_message='', data=[], \
 #                           prevsearch=keep(None), prevwords=keep(None), prevhide_ss=None, prevtv=None, prevfilters2=None, filtertrue = False, sfw_on = True, original_value=[])
 	query = request.args.get('animesearch')

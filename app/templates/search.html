@@ -24,7 +24,6 @@
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(window).on("load", function()  {
-            setAnimeExplanation();
             {% if data %}
 		document.querySelector("#vis").onclick = function(evt){
 			var activePoints = anime_scores.getElementsAtEvent(evt);
@@ -35,6 +34,9 @@
                         };
 		};
             {% endif %}
+        });
+        document.addEventListener("DOMContentLoaded", function(event) {
+            initializeSearchBars();
             $("#suggestion-carousel").owlCarousel( {
                 items: 4,
                 loop: true,
@@ -56,9 +58,6 @@
                 },
                 navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
             });
-        });
-        document.addEventListener("DOMContentLoaded", function(event) {
-            initializeSearchBars();
             //resizeSearchBar();
             {% if data %}
                 createLegend();
@@ -83,7 +82,6 @@
             {% else %}
                 initializeWordSearch([]);
                 initializeAnimeSearch([]);
-                loadrecommended();
             {% endif %}
             {% if (prevfilters2 and prevfilters2['sfw']) %}
                $('#collapsensfwrating').collapse('toggle');
@@ -132,7 +130,7 @@
                 <div class="col-12 col-sm-12 col-md col-lg searchbars">
                 <div class="form-group animeinput">
                 <!-- style:"height:30px vertical-align:bottom"> -->
-                    <div class="input-group-prepend"><span>anime<i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="top" data-html="true" title=""></i></span>
+                    <div class="input-group-prepend"><span>anime<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" data-html="true" title=""></i></span>
                     </div>
                     <input id="animeinput" class="tagsinput-typeahead" type="text" name="animesearch"/>
                     <div class="input-group-append">
@@ -140,7 +138,7 @@
                     </div>
                 </div> <!--class = "form-inline global-search" id="myform"> -->
                 <div class="form-group wordinput"> 
-                    <div class="input-group-prepend"><span>keywords<i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="bottom" data-html="true" title=""></i></span>
+                    <div class="input-group-prepend"><span>keywords<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" data-html="true" title=""></i></span>
                     </div>
                     <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch"/>
                     <div class="input-group-append">
@@ -656,7 +654,7 @@
                                  data-sound= '{{d["anime_review_sound_average"]}}'
                                  data-animation= '{{d["anime_review_animation_average"]}}'
                                  data-positive_words = '{{d["positive_words"]}}' 
-                                 data-original_value = '{{d["original_value"]}}' 
+                                 data-original_value = '{{d["original_value"]}}'
                                  data-episodes="{{d['anime_number_of_episodes']}}" data-tags="{{d['anime_tags']}}" data-synopsis="{{d['anime_synopsis']}}"  
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
                                  data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
@@ -671,22 +669,6 @@
                     </div>
                  </div>
            </div>
-
-{% else %}
-<h1 style="color: white"> Editors' Choice Anime to Search </h1>
-
-<div class="owl-carousel owl-theme owl-loaded" style="height: 400px" id="recommended-carousel">
-    <div class="owl-stage-outer">
-        <div class="owl-stage" id="recommendation-stage">
-<!--            <div class="owl-item">
-            </div> -->
-        </div>
-    </div>
-<!--    <div class="owl-nav">
-        <div class="owl-prev">prev</div>
-        <div class="owl-next">next</div>
-    </div> -->
-</div>
         {% endif %}
     </div>
 
@@ -788,32 +770,6 @@
                     };
 
                     anime_scores.destroy(); //delete charts
-                    // var oldchart = document.getElementById("vis")
-                    // if (oldchart !== undefined)
-                    //     oldchart.destroy(); //delete charts
-
-                    // var data_chart = {
-                    // labels: ["Overall", "Story", "Enjoyment", "Characters", "Sound", "Animation"],
-                    // datasets: [
-                    //     {
-                    //         label: title,
-                    //         fill: true,
-                    //         backgroundColor: "rgba(255,99,132,0.2)",
-                    //         borderColor: "rgba(255,99,132,1)",
-                    //         pointBorderColor: "#fff",
-                    //         pointBackgroundColor: "rgba(255,99,132,1)",
-                    //         pointBorderColor: "#fff",
-                    //         data: [
-                    //             Math.round(overall*100)/100, 
-                    //             Math.round(story*100)/100, 
-                    //             Math.round(enjoyment*100)/100,
-                    //             Math.round(character*100)/100, 
-                    //             Math.round(sound*100)/100,
-                    //             Math.round(animation*100)/100
-                    //         ]
-                    //     }
-                    // ]
-                    // };
                     var thelabels2 = thelabels.split("|");
 
                     var data_chart = {
@@ -938,55 +894,6 @@
                 });
                   </script>
     <script>
-        var loadrecommended = function() {
-            $.getJSON("/static/data/anime_recommended.json", function(data) {
-                var str = "";
-                data.forEach(function(anime) {
-                str += '<div class="owl-item">' + 
-                            '<div class="flip">' + 
-                                '<div class="recommend-card">' + 
-                                    '<div class="face front">' + 
-                                        '<div class="well well-sm inner" style="background-image: url(' + encodeURI(anime.anime_image_url) + '); background-size: cover; background-position: center"></div>' + 
-                            '</div>' + 
-                            '<div class="face back">' +
-                                '<div class="well well-sm inner">' + 
-                                    '<div class="recommendation-header">' + anime.anime_english_title +
-                                    '</div>' + 
-                                    '<p id="recommendation-synopsis">' + anime.anime_synopsis + '</p>' + 
-                                '</div>' +
-                           ' </div>' + 
-                        '</div>' +
-                    '</div>' +
-            '</div>'
-                });
-              $('#recommendation-stage').replaceWith(
-                  '<div class="owl-stage" id="recommendation-stage">' + str + '</div>');
-              
-              $(document).on("click", ".flip", function() {
-                  $(this).find('.recommend-card').toggleClass('flipped');
-              });
-            $("#recommended-carousel").owlCarousel( {
-                items: 4,
-                stagePadding: 100,
-                loop: true,
-                margin: 30,
-                autoWidth: false,
-                nav: true,
-                navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>']
-            });
-                
-        });
-        };
-    </script>
-
-    <script>
-        $('.flip').click(function() {
-            $(this).find('.recommend-card').toggleClass('flipped');
-        });
-        var resizeChart = function() {
-            var bb = document.querySelector("#anime-statistics").getBoundingClientRect();
-            $('#vis').attr("width", bb.width);
-        };
 		function toggle(source) {
 		    var checkboxes = document.querySelectorAll('#sfwgenre');
 		    for (var i = 0; i < checkboxes.length; i++) {
