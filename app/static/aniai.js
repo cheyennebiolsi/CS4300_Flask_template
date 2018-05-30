@@ -336,3 +336,120 @@ function initializeAnimeSearch(animeList) {
         $('#animeinput').tagsinput('add', {anime_english_title: tag, sign: sign});
     ;}
 };
+
+function createChart(title, thelabels2, original_value, thevalues) {
+    Chart.defaults.global.defaultFontColor = "white";
+    var data_chart = {
+    labels: thelabels2,
+                    datasets: [
+                        {
+                            label: "Query",
+                            fill: true,
+                            backgroundColor: "rgba(152,251,152,0.2)",
+                            borderColor: "rgba(152,251,152,1)",
+                            pointBorderColor: "#fff",
+                            pointBackgroundColor: "rgba(152,251,152,0.2)",
+                            pointBorderColor: "#fff",
+                            data: original_value
+                        },
+                        {
+                            label: title,
+                            fill: true,
+                            backgroundColor: "rgba(219,112,147,0.2)",
+                            borderColor: "rgba(219,112,147,1)",
+                            pointBorderColor: "#fff",
+                            pointBackgroundColor: "rgba(219,112,147,1)",
+                            pointBorderColor: "#fff",
+                            data: thevalues
+                        }
+                    ]
+                    };
+			    anime_scores = new Chart(document.getElementById("vis"), {
+				type: 'radar',
+				data: data_chart,
+				draggable: true,
+				options: { 
+                                            legendCallback: function(chart) {
+                                                var queryLabel = chart.data.datasets[0].label;
+                                                var queryColor = chart.data.datasets[0].backgroundColor;
+                                                var queryBorder = chart.data.datasets[0].borderColor;
+                                                var suggestionLabel = chart.data.datasets[1].label;
+                                                var suggestionColor = chart.data.datasets[1].backgroundColor;
+                                                var suggestionBorder = chart.data.datasets[1].borderColor;
+                                                var text = 
+                                                '<label class="fancy-checkbox">' +
+                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
+                                                     '<div class="legend-tag checked" id="query-unchecked">' + 
+                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
+                                                     '</div>' + queryLabel + '</div>' + 
+                                                     '<div class="legend-tag unchecked" id="query-checked">' + 
+                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
+                                                     '</div>' + queryLabel + '</div></label>' + 
+                                                '<label class="fancy-checkbox">' +
+                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
+                                                     '<div class="legend-tag checked" id="suggestion-checked">' + 
+                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
+                                                     '</div>' + suggestionLabel + '</div>' + 
+                                                     '<div class="legend-tag unchecked" id="suggestion-unchecked">' +
+                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
+                                                     '</div>' + suggestionLabel + '</div></label>';
+                                                return text;
+                                            },
+                                            hover: {
+                                                onHover: function(e) {
+                                                    var activePoints = this.getElementAtEvent(e);
+                                                    if (activePoints[0] !== undefined) {
+                                                        e.target.style.cursor = "pointer";
+                                                    } else {
+                                                       e.target.style.cursor = "default";
+                                                    }
+                                                }
+                                            },
+                            title: {
+                                display: true,
+                                text: 'Most Similar Words to Query',
+                                fontColor: "#FFFFFF",
+                                fontSize: 14
+                            },
+                            legend: {
+                                display: false,
+                                position: 'bottom',
+                                boxWidth: 20,
+                                labels: {
+                                    fontColor: '#FFFFFF'
+                                },
+                            },
+                            scale: {
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    backdropColor: 'black',
+                                    max: Math.min(10*(Math.max.apply(Math, original_value.concat(thevalues)) + 0.1), 10)/10,
+                                    min: 0, 
+                                    fontSize: 6,
+                                    color: '#FFFFFF'
+                                },
+                                gridLines: {
+                                    color: "#FFFFFF"
+                                }
+                            },
+                                            tooltips: {
+                                                footerFontStyle: 'normal',
+                                                callbacks: {
+                                                    footer: function(tooltipItem, data) {
+                                                        var label = data.labels[tooltipItem[0].index];
+                                                        return ['Click to add "' + label + '" to search bar'];
+                                                    },
+                                                    label: function(tooltipItem, data) {
+                                                    var datasetLabel = '';
+                                                    var label = data.datasets[tooltipItem.datasetIndex].label;
+                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " " + label;
+                                                    }
+                                                },
+                                                enabled: true,
+                                                mode: 'index'
+                                            },
+                            responsive: true,
+                            maintainAspectRatio: false,
+                        }
+                    });
+};

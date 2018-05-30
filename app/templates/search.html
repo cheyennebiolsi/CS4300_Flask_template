@@ -60,6 +60,7 @@
             });
             //resizeSearchBar();
             {% if data %}
+                drawInitialChart();
                 createLegend();
                 {% if prevwords %}
                     var prevwords = '{{prevwords}}';
@@ -514,132 +515,6 @@
                 </div>
                 </div>
             </div>
-                                <script>
-                                    var labels = '{{data[0]["graph_words"]}}';
-                                    // for (i = 0; i < labels.length; i++) { 
-                                    //     arr.push(decodeEntities(labels[i]))
-                                    // }
-                                    // console.log(arr
-                                    var labels_words = labels.split("|");
-                                    console.log(labels_words)
-
-                                    var data_chart = {
-                                        labels: labels_words,
-                                        datasets: [
-                                            {
-                                                label: "Query",
-                                                fill: true,
-                                                backgroundColor: "rgba(152,251,152,0.2)",
-                                                borderColor: "rgba(152,251,152,1)",
-                                                pointBorderColor: "#fff",
-                                                pointBackgroundColor: "rgba(152,251,152,0.2)",
-                                                pointBorderColor: "#fff",
-                                                data: {{data[0]["original_value"]}}
-                                            },
-                                            {
-                                                label: "{{data[0]["anime_english_title"]}}",
-                                                fill: true,
-                                                backgroundColor: "rgba(219,112,147,0.2)",
-                                                borderColor: "rgba(219,112,147,1)",
-                                                pointBorderColor: "#fff",
-                                                pointBackgroundColor: "rgba(219,112,147,1)",
-                                                pointBorderColor: "#fff",
-                                                data: {{data[0]["graph_value"]}}
-                                            }
-                                        ]
-                                    };
-                                    Chart.defaults.global.defaultFontColor = 'white';
-                                    anime_scores = new Chart(document.getElementById("vis"), {
-                                        type: 'radar',
-                                        data: data_chart,
-                                        draggable: true,
-                                        options: {
-                                            legendCallback: function(chart) {
-                                                var queryLabel = chart.data.datasets[0].label;
-                                                var queryColor = chart.data.datasets[0].backgroundColor;
-                                                var queryBorder = chart.data.datasets[0].borderColor;
-                                                var suggestionLabel = chart.data.datasets[1].label;
-                                                var suggestionColor = chart.data.datasets[1].backgroundColor;
-                                                var suggestionBorder = chart.data.datasets[1].borderColor;
-                                                var text = 
-                                                '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
-                                                     '<div class="legend-tag checked" id="query-checked">' + 
-                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
-                                                     '</div>' + queryLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked" id="query-unchecked">' + 
-                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
-                                                     '</div>' + queryLabel + '</div></label>' + 
-                                                '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
-                                                     '<div class="legend-tag checked" id="suggestion-checked">' + 
-                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
-                                                     '</div>' + suggestionLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked" id=suggestion-unchecked">' +
-                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
-                                                     '</div>' + suggestionLabel + '</div></label>';
-                                                return text;
-                                            },
-                                            hover: {
-                                                onHover: function(e) {
-                                                    var activePoints = this.getElementAtEvent(e);
-                                                    if (activePoints[0] !== undefined) {
-                                                        e.target.style.cursor = "pointer";
-                                                    } else {
-                                                       e.target.style.cursor = "default";
-                                                    }
-                                                }
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Most Similar Words to Query',
-                                                fontColor: "#FFFFFF",
-                                                fontSize: 14
-                                            },
-                                            legend: {
-                                                display: false,
-                                                position: 'bottom',
-                                                boxWidth: 20,
-                                                labels: {
-                                                    fontColor: '#FFFFFF'
-                                                },
-
-                                            },
-                                            scale: {
-                                                ticks: {
-                                                    maxTicksLimit: 5,
-                                                    backdropColor: 'black',
-                                                    max: Math.min(10*(Math.max.apply(Math, {{data[0]["original_value"]}}.concat({{data[0]["graph_value"]}})) + 0.1), 10)/10,
-                                                    min: 0, 
-                                                    fontSize: 6,
-                                                    color: '#FFFFFF'
-                                                },
-                                                gridLines: {
-                                                    color: "#FFFFFF"
-                                                }
-                                            },
-                                            tooltips: {
-                                                footerFontStyle: 'normal',
-                                                callbacks: {
-                                                    footer: function(tooltipItem, data) {
-                                                        var label = data.labels[tooltipItem[0].index];
-                                                        return ['Click to add "' + label + '" to search bar'];
-                                                    },
-                                                    label: function(tooltipItem, data) {
-                                                        var datasetLabel = '';
-                                                        var label = data.datasets[tooltipItem.datasetIndex].label;
-                                                        return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " " + label;
-                                                    }
-                                                },
-                                                enabled: true,
-                                                mode: 'index'
-                                            },
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                        }
-                                    });
-
-                                </script>
             <div class="owl-carousel owl-theme owl-loaded" id="suggestion-carousel">
                 <div class="owl-stage-outer">
                     <div class="owl-stage">
@@ -783,125 +658,8 @@
 
                     anime_scores.destroy(); //delete charts
                     var thelabels2 = thelabels.split("|");
-
-                    var data_chart = {
-                    labels: thelabels2,
-                    datasets: [
-                        {
-                            label: "Query",
-                            fill: true,
-                            backgroundColor: "rgba(152,251,152,0.2)",
-                            borderColor: "rgba(152,251,152,1)",
-                            pointBorderColor: "#fff",
-                            pointBackgroundColor: "rgba(152,251,152,0.2)",
-                            pointBorderColor: "#fff",
-                            data: original_value
-                        },
-                        {
-                            label: title,
-                            fill: true,
-                            backgroundColor: "rgba(219,112,147,0.2)",
-                            borderColor: "rgba(219,112,147,1)",
-                            pointBorderColor: "#fff",
-                            pointBackgroundColor: "rgba(219,112,147,1)",
-                            pointBorderColor: "#fff",
-                            data: thevalues
-                        }
-                    ]
-                    };
-
-
-
-			    anime_scores = new Chart(document.getElementById("vis"), {
-				type: 'radar',
-				data: data_chart,
-				draggable: true,
-				options: { 
-                                            legendCallback: function(chart) {
-                                                var queryLabel = chart.data.datasets[0].label;
-                                                var queryColor = chart.data.datasets[0].backgroundColor;
-                                                var queryBorder = chart.data.datasets[0].borderColor;
-                                                var suggestionLabel = chart.data.datasets[1].label;
-                                                var suggestionColor = chart.data.datasets[1].backgroundColor;
-                                                var suggestionBorder = chart.data.datasets[1].borderColor;
-                                                var text = 
-                                                '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
-                                                     '<div class="legend-tag checked" id="query-unchecked">' + 
-                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
-                                                     '</div>' + queryLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked" id="query-checked">' + 
-                                                     '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
-                                                     '</div>' + queryLabel + '</div></label>' + 
-                                                '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
-                                                     '<div class="legend-tag checked" id="suggestion-checked">' + 
-                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
-                                                     '</div>' + suggestionLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked" id="suggestion-unchecked">' +
-                                                     '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
-                                                     '</div>' + suggestionLabel + '</div></label>';
-                                                return text;
-                                            },
-                                            hover: {
-                                                onHover: function(e) {
-                                                    var activePoints = this.getElementAtEvent(e);
-                                                    if (activePoints[0] !== undefined) {
-                                                        e.target.style.cursor = "pointer";
-                                                    } else {
-                                                       e.target.style.cursor = "default";
-                                                    }
-                                                }
-                                            },
-                            title: {
-                                display: true,
-                                text: 'Most Similar Words to Query',
-                                fontColor: "#FFFFFF",
-                                fontSize: 14
-                            },
-                            legend: {
-                                display: false,
-                                position: 'bottom',
-                                boxWidth: 20,
-                                labels: {
-                                    fontColor: '#FFFFFF'
-                                },
-
-                            },
-                            scale: {
-                                ticks: {
-                                    maxTicksLimit: 5,
-                                    backdropColor: 'black',
-                                    max: Math.min(10*(Math.max.apply(Math, original_value.concat(thevalues)) + 0.1), 10)/10,
-                                    min: 0, 
-                                    fontSize: 6,
-                                    color: '#FFFFFF'
-                                },
-                                gridLines: {
-                                    color: "#FFFFFF"
-                                }
-                            },
-                                            tooltips: {
-                                                footerFontStyle: 'normal',
-                                                callbacks: {
-                                                    footer: function(tooltipItem, data) {
-                                                        var label = data.labels[tooltipItem[0].index];
-                                                        return ['Click to add "' + label + '" to search bar'];
-                                                    },
-                                                    label: function(tooltipItem, data) {
-                                                    var datasetLabel = '';
-                                                    var label = data.datasets[tooltipItem.datasetIndex].label;
-                                                    return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + " " + label;
-                                                    }
-                                                },
-                                                enabled: true,
-                                                mode: 'index'
-                                            },
-                            responsive: true,
-                            maintainAspectRatio: false,
-                        }
-                    });
-                  createLegend();
+                    createChart(title, thelabels2, original_value, thevalues);
+                    createLegend();
 
                 });
                   </script>
@@ -972,6 +730,14 @@
             if($($(this).data('target')).hasClass('collapsing'))
             return false;
     });
+    function drawInitialChart() {
+        var labels = '{{data[0]["graph_words"]}}';
+        var labels_words = labels.split("|");
+        var title = "{{data[0]['anime_english_title']}}";
+        var original_value = {{data[0]['original_value']}};
+        var graph_value = {{data[0]['graph_value']}};
+        createChart(title, labels_words, original_value, graph_value);
+    };
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>
 </body>
