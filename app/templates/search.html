@@ -59,7 +59,7 @@
         });
         document.addEventListener("DOMContentLoaded", function(event) {
             initializeSearchBars();
-            resizeSearchBar();
+            //resizeSearchBar();
             {% if data %}
                 createLegend();
                 {% if prevwords %}
@@ -78,7 +78,7 @@
                 {% endif %}
              //   resizeInfo();
               //  resizeStatistics();
-                //resizeTags();
+                //izeesizeTags();
                 anime_scores.update();
             {% else %}
                 initializeWordSearch([]);
@@ -119,25 +119,27 @@
     </div>
     <div>
         <!--title-->
-        <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:#efe9e8; text-align:center">
+        <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:#efe9e8; text-align:center" hidden>
             &ensp;Aniai &#24859
         </h1>
         <!--tag line-->
         <!-- <h1 style="padding-top:20%; font-size: 85px; font-family:Futura; color:white; text-align:center">Let's Find Some Good Anime</h1> -->
         <form id="myform" autocomplete="off" action = "{{ url_for('irsystem.search') }}" method='get'> <!--class = "form-inline global-search" id="myform"> -->
-            <div class="form-group">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-auto col-lg-auto align-self-center">
+                    <div class="aniai" onclick="redirectHomepage()"> &ensp;Aniai &#24859 </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md col-lg searchbars">
+                <div class="form-group animeinput">
                 <!-- style:"height:30px vertical-align:bottom"> -->
-                <div class="input-group mb-3 animeinput">
                     <div class="input-group-prepend"><span>anime<i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="top" data-html="true" title=""></i></span>
                     </div>
                     <input id="animeinput" class="tagsinput-typeahead" type="text" name="animesearch"/>
                     <div class="input-group-append">
                         <button type="submit" id="submit"><i class="fa fa-search"></i></button>
                     </div>
-                </div>
-            </div> <!--class = "form-inline global-search" id="myform"> -->
-            <div class="form-group"> 
-                <div class="input-group mb-3 wordinput">
+                </div> <!--class = "form-inline global-search" id="myform"> -->
+                <div class="form-group wordinput"> 
                     <div class="input-group-prepend"><span>keywords<i class="fa fa-question-circle-o" data-toggle="tooltip" data-placement="bottom" data-html="true" title=""></i></span>
                     </div>
                     <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch"/>
@@ -146,11 +148,11 @@
                             <i class="fa fa-filter" style="margin-right: 3px"></i>Filter
                         </button>
                     </div>
-                </div>
-             </div>
-
+                 </div>
+                 </div>
+            </div>
             <div class="collapse" id="collapseForm">
-                <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
+                <div class="form-group row justify-content-md-around">
                     <div class="col-md-12 col-lg-6" style="text-align:center">
                         <div class="filter-header">
                             <span style="padding: 0px 30px">Allowed Anime Genres</span>
@@ -415,8 +417,6 @@
             </div> 
         </form>
 </div>
-
-<br><br>
         <p style="text-align: center; color: white">{{output_message}} <p>
         {% if data %}
 <!--            <br>
@@ -453,7 +453,7 @@
                             <hr style='width: 10%; margin-right: 45% !important; margin-left: 45% !important; border: none; height: 3px; background-color: black;'>
                             </div>
                         </div>
-                        <div class="row adjustable" style="background-color: red">
+                        <div class="row adjustable">
                             <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
                                 <div class="row info-header">Type:</div>
                                 <div class="row" id="media-type"> 
@@ -563,18 +563,18 @@
                                                 var text = 
                                                 '<label class="fancy-checkbox">' +
                                                      '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
-                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-tag checked" id="query-checked">' + 
                                                      '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
                                                      '</div>' + queryLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked">' + 
+                                                     '<div class="legend-tag unchecked" id="query-unchecked">' + 
                                                      '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
                                                      '</div>' + queryLabel + '</div></label>' + 
                                                 '<label class="fancy-checkbox">' +
                                                      '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
-                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-tag checked" id="suggestion-checked">' + 
                                                      '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
                                                      '</div>' + suggestionLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked">' +
+                                                     '<div class="legend-tag unchecked" id=suggestion-unchecked">' +
                                                      '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
                                                      '</div>' + suggestionLabel + '</div></label>';
                                                 return text;
@@ -859,18 +859,18 @@
                                                 var text = 
                                                 '<label class="fancy-checkbox">' +
                                                      '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
-                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-tag checked" id="query-unchecked">' + 
                                                      '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
                                                      '</div>' + queryLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked">' + 
+                                                     '<div class="legend-tag unchecked" id="query-checked">' + 
                                                      '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
                                                      '</div>' + queryLabel + '</div></label>' + 
                                                 '<label class="fancy-checkbox">' +
                                                      '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
-                                                     '<div class="legend-tag checked">' + 
+                                                     '<div class="legend-tag checked" id="suggestion-checked">' + 
                                                      '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
                                                      '</div>' + suggestionLabel + '</div>' + 
-                                                     '<div class="legend-tag unchecked">' +
+                                                     '<div class="legend-tag unchecked" id="suggestion-unchecked">' +
                                                      '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' + 
                                                      '</div>' + suggestionLabel + '</div></label>';
                                                 return text;
@@ -987,39 +987,6 @@
             var bb = document.querySelector("#anime-statistics").getBoundingClientRect();
             $('#vis').attr("width", bb.width);
         };
-        var resizeSearchBar = function() {
-            var form = document.querySelector("#myform").getBoundingClientRect();
-            $('.bootstrap-tagsinput').css("width", form.width - 88*2);
-        };
-        var resizeStatistics = function() {
-            return;
-            alert("resize statistics");
-            var statistics = document.querySelector("#feature-score").getBoundingClientRect();
-            var similarity = document.querySelector("#similarity-score").getBoundingClientRect();
-            var legends = document.querySelector("#chart-legends").getBoundingClientRect();
-            var height = statistics.height - similarity.height - legends.height - 2;
-            console.log(height);
-            $('.anime-statistics').css("height", height + "px");
-            $('.anime-statistics').css("max-height", height + "px");
-	};
-		var resizeInfo = function() {
-                    return;
-                    alert("resize info");
-		    var display = document.querySelector("#feature-display").getBoundingClientRect();
-		    var score = document.querySelector("#feature-score").getBoundingClientRect();
-		    var picture = document.querySelector("#feature-picture").getBoundingClientRect();
-		    $('#feature-info').css("width", display.width - score.width - picture.width + "px");
-
-		    var title = document.querySelector("#synopsis-title").getBoundingClientRect();
-		    var info = document.querySelector("#feature-info").getBoundingClientRect();
-		    var words = document.querySelector("#info-tags").getBoundingClientRect();
-		    $('#media-synopsis').css("height", info.height - title.height - words.height + "px");
-		};
-		var resizeTags = function() {
-		    var words = document.querySelector(".anime-words").getBoundingClientRect();
-		    var topTags = document.querySelector(".anime-words .synopsis-header").getBoundingClientRect();
-		    $('#anime-tags').css("width", words.right - topTags.right - 15 + "px");
-		};
 		function toggle(source) {
 		    var checkboxes = document.querySelectorAll('#sfwgenre');
 		    for (var i = 0; i < checkboxes.length; i++) {
@@ -1034,6 +1001,9 @@
 			}
 		    };
 		};
+                function redirectHomepage() {
+                    window.location.href = "/";
+                };
 		function clearnsfw(source) {
 		    if (source.checked) {
 			var genres = document.querySelectorAll('#nsfwgenre');
@@ -1065,10 +1035,11 @@
 		    $(".anime-tags span").css("transform", "translate(0)");
 		});
 		$(window).resize(function() {
-                    resizeSearchBar();
+                    //resizeSearchBar();
                     resizeAnimeSearchBar();
                     resizeWordSearchBar();
                     {% if data %}
+                      createLegend();
                       //  resizeInfo();
                       //  resizeTags();
                       //  resizeStatistics();

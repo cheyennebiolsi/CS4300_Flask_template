@@ -57,6 +57,9 @@ function setWordExplanation() {
 
 function createLegend() { 
     document.getElementById('chart-legends').innerHTML = anime_scores.generateLegend();
+    var width = document.querySelector("#chart-legends").getBoundingClientRect().width;
+    $('.legend-tag').css('width', width+ "px");
+    
 };
 
 function toggleClass(selector, tag) {
