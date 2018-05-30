@@ -315,6 +315,11 @@ function initializeWordSearch(wordList) {
     ;}
 };
 
+function addAnime() {
+   var title = $('#media-title span').text();
+   $('#animeinput').tagsinput('add', {anime_english_title: title, sign: "positive"});
+}
+
 function addWord(tag) {
     $('#wordinput').tagsinput('add', {word: $(tag).text(), sign: "positive"});
 };

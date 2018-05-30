@@ -428,20 +428,23 @@
                 <div class="col-md-12 col-lg-6" style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
-                            <div class="feature-icon align-self-end" style="height: 30px; margin-bottom: 10px">
-                                <img src="/static/images/yahoo_view_icon.png" id="yahoo-provider" 
-                                {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                                <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
-                                {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
-                                <img src="/static/images/crunchyroll_icon.png" id="crunchyroll-provider"
-                                {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                                <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
-                                {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                            <div class="d-flex justify-content-between anime-info-bar">
+                                <div class="align-self-start"><i onclick="addAnime()" class="fa fa-plus"></i></div>
+                                <div class="feature-icon align-self-end">
+                                    <img src="/static/images/yahoo_view_icon.png" id="yahoo-provider" 
+                                    {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                                    <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
+                                    {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
+                                    <img src="/static/images/crunchyroll_icon.png" id="crunchyroll-provider"
+                                    {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                                    <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
+                                    {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                                </div>
                             </div>
                             <div id="media-title" style="display: inline-block">
                                 <span>{{data[0]["anime_english_title"]}}</span>
                             </div>
-                            <div style="display: inline-block" id="media-genres">
+                            <div style="display: inline-block" id="media-genres" class="unselectable">
                                  {% set genrelist = data[0]["anime_tags"].split('|') %} 
                                  {% for tag in genrelist %}
                                  <span class="genre">{{tag}}</span>
@@ -476,7 +479,7 @@
                         </div>
                         <div class="d-flex tag-info">
                              <div class="align-self-center"><span>Top Tags:</span></div>
-                             <div class="align-self-start" id="anime-tags">
+                             <div class="align-self-start unselectable" id="anime-tags">
                                  {% set words = data[0]["words"].split('|') %}
                                  {% for word in words %}
                                      <span onclick="addWord(this)" class="tag label label-info">{{word}}</span>
