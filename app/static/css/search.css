@@ -538,6 +538,10 @@ hr {
     font-size: 12;
 }
 
+.tt-suggestion.tt-selectable:not(.tt-cursor):hover span.search-anime-title {
+    font-weight: 700;
+}
+
 .tt-cursor span.search-anime-title {
     color: rgb(159, 74, 103);
     font-weight: 1000;
@@ -549,6 +553,10 @@ hr {
 }
 
 .tt-suggestion.tt-selectable.tt-cursor img {
+    height: 80px;
+}
+
+.tt-suggestion.tt-selectable:hover img {
     height: 80px;
 }
 
@@ -569,14 +577,27 @@ hr {
     display: none;
 }
 
+.tt-suggestion.tt-selectable:hover p.search-anime-aired {
+    display: inherit;
+}
+
+.tt-suggestion.tt-selectable:hover p.search-anime-type {
+    display: none;
+}
+
 .tt-suggestion.tt-selectable span.search-anime-type {
     display: none;
+    font-weight: 700;
 }
 
 .tt-suggestion.tt-selectable.tt-cursor span.search-anime-type {
     display: inline-block;
     margin-left: 4px;
-    font-weight: 700;
+}
+
+.tt-suggestion.tt-selectable:hover span.search-anime-type {
+    display: inline-block;
+    margin-left: 4px;
 }
 
 .bootstrap-tagsinput .tag [data-role="remove"] {
