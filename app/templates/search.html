@@ -137,7 +137,7 @@
 
             <div class="collapse" id="collapseForm">
                 <div class="form-group row justify-content-md-around" style="color:white;margin:0; border-bottom-right-radius:10px; border-bottom-left-radius:10px; width:100%">
-                    <div class="col-md-6" style="text-align:center">
+                    <div class="col-md-12 col-lg-6" style="text-align:center">
                         <div class="filter-header">
                             <span style="padding: 0px 30px">Allowed Anime Genres</span>
                             <label class="fancy-checkbox" style="color:white;position: absolute; right: 30px">
@@ -184,7 +184,7 @@
                         </div> 
                     </div>
 
-                    <div class="col-md-auto">
+                    <div class="col-md-6 col-lg-auto">
                         <div class="filter-header">
                             <span>Type</span>
                         </div>
@@ -300,7 +300,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-md-auto">
+                    <div class="col-md-6 col-lg-auto">
                         <div class="form-check filter">
                             <div class="filter-header">
                                 <span> Rated </span>
@@ -401,6 +401,8 @@
             </div> 
         </form>
 </div>
+
+<br><br>
         <p style="text-align: center; color: white">{{output_message}} <p>
         {% if data %}
 <!--            <br>
@@ -414,7 +416,7 @@
                 <div class="col-md-12 col-lg-6" style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
-                            <div class="feature-icon align-self-end">
+                            <div class="feature-icon align-self-end" style="height: 30px; margin-bottom: 10px">
                                 <img src="/static/images/yahoo_view_icon.png" id="yahoo-provider" 
                                 {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
                                 <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
@@ -438,7 +440,7 @@
                             </div>
                         </div>
                         <div class="row adjustable" style="background-color: red">
-                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 show-info">
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
                                 <div class="row info-header">Type:</div>
                                 <div class="row" id="media-type"> 
                                     <span>{{data[0]["anime_type"]}}</span>
@@ -456,13 +458,13 @@
                                     <span>{{data[0]["anime_number_of_episodes"]}}</span>
                                 </div>
                             </div>
-                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 synopsis">
+                            <div class="col-9 col-sm-9 col-md-9 col-lg-9 synopsis">
                                 <div id="media-synopsis"><span>{{data[0]['anime_synopsis']}}</span><br><br><br><br></div>
                             </div>
                         </div>
                         <div class="d-flex tag-info">
                              <div class="align-self-center"><span>Top Tags:</span></div>
-                             <div class="align-self-start">
+                             <div class="align-self-start" id="anime-tags">
                                  {% set words = data[0]["words"].split('|') %}
                                  {% for word in words %}
                                      <span class="tag label label-info">{{word}}</span>
@@ -719,7 +721,7 @@
                     $('#media-count span').text(episode_count);
                     $('#media-duration span').text(duration);
                     $('#media-synopsis span').text(synopsis);
-                    $('#episode-count span').text(episode_count + " episodes");
+                    $('#episode-count span').text(episode_count);
                     $('#similarity-score span').text("Aniai Score: " + similarity);
                     $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
                     $('#rater-number span').text("Number of Raters: " + raternumber);
@@ -732,9 +734,11 @@
                     var words = words.split("|");
                     var wordStr = "";
                     for (var word in words) {
-                        wordStr += words[word] + " ";
+                        wordStr += '<span class="tag label label-info">' + words[word] + "</span>";
                     };
-                    $('#anime-tags span').text(wordStr);
+                    $('#anime-tags').replaceWith(
+                        '<div class="align-self-start" id="anime-tags">' + wordStr + '</div>'
+                        );
                     $('#media-genres').replaceWith(
                         '<div id="media-genres">' + str + '</div>'
                         );
