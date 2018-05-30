@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/static/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="/static/css/search.css" type="text/css">
     <link rel="stylesheet" href="/static/css/featuredisplay.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/featuredisplay2.css" type="text/css">
     <link rel="stylesheet" href="/static/css/recommended.css" type="text/css">
     <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
     <script src="/static/typeahead.bundle.js"></script>
@@ -61,9 +62,9 @@
                 {% else %}
                     initializeAnimeSearch([]);
                 {% endif %}
-                resizeInfo();
-                resizeStatistics();
-                resizeTags();
+             //   resizeInfo();
+              //  resizeStatistics();
+                //resizeTags();
                 anime_scores.update();
             {% else %}
                 initializeWordSearch([]);
@@ -408,87 +409,74 @@
             <br>
             <br>
             <br> -->
-            <hr>
-
-            <div class="d-flex flex-column">
-                <div class="media-header">
-                    <div class="d-flex justify-content-between" id="title-header">
-                        <div id="media-title" class="title">
-                            <span>{{data[0]["anime_english_title"]}}</span>
-                        </div>
-                        <div class="col-auto icon" style="font-style:normal">
-                            <img src="/static/images/yahoo-view.png" id="yahoo-provider" 
-                            {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                            <span style="font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
-                            {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
-                            <img src="/static/images/Crunchyroll_24x24.png" style="vertical-align:0" id="crunchyroll-provider-image"
-                            {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                            <div style="display:inline-block; vertical-align: top" id="crunchyroll-provider"
+            <div class="container-fluid feature-display">
+                <div class="row">
+                <div class="col-md-12 col-lg-6" style="height: 400px">
+                    <div class="feature-anime-info">
+                        <div class ="d-flex flex-column">
+                            <div class="feature-icon align-self-end">
+                                <img src="/static/images/yahoo_view_icon.png" id="yahoo-provider" 
+                                {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                                <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
+                                {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
+                                <img src="/static/images/crunchyroll_icon.png" id="crunchyroll-provider"
                                 {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
-                                <span style="font-family:Maven pro; font-size:24; display:inline-block; color:white" >crunchyroll </span>
+                                <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
+                                {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
                             </div>
-                            <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
-                            {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                            <div id="media-title" style="display: inline-block">
+                                <span>{{data[0]["anime_english_title"]}}</span>
+                            </div>
+                            <div style="display: inline-block" id="media-genres">
+                                 {% set genrelist = data[0]["anime_tags"].split('|') %} 
+                                 {% for tag in genrelist %}
+                                 <span class="genre">{{tag}}</span>
+                                 {% endfor %}
+                            </div>
+                            <div style="display: inline-block">
+                            <hr style='width: 10%; margin-right: 45% !important; margin-left: 45% !important; border: none; height: 3px; background-color: black;'>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" id="episodeinfo">
-                        <div class="col type" id="media-type">
-                            <span> {{data[0]["anime_type"]}}</span>
-                        </div>
-                       <div class="col-dot">
-                           <div> &#9670 </div>
-                       </div>
-                       <div class="col rating" id="media-rating">
-                           <span> {{data[0]["anime_rating"]}}</span>               
-                       </div>
-                       <div class="col-dot">
-                           <div> &#9670 </div>
-                       </div>
-                       <div class="col duration" id="media-duration">
-                           <span> {{data[0]["anime_duration"]}}</span>
-                       </div>
-                       <div class="col-dot">
-                           <div> &#9670 </div>
-                       </div>
-                       <div class="col episodes" id="episode-count">
-                           <span> {{data[0]["anime_number_of_episodes"]}} episodes</span>
-                        </div>
-                    </div>
-
-                    <div class="row genres">
-                        <div class="col genres" id="media-genres">
-                             {% set genrelist = data[0]["anime_tags"].split('|') %} 
-                             {% for tag in genrelist %}
-                             <span class="genre">{{tag}}</span>
-                             {% endfor %}
-                        </div>
-                    </div>                    
-                </div>
-                <div class="d-flex justify-content-between" id="feature-display" style="height: 50%">
-                    <div id="feature-picture">
-                        <div class="container anime-picture">
-                            <img src={{data[0]["anime_image_url"]}} class="anime-picture" id="media-image">
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column" style="width: 100%" id="feature-info">
-                        <div class="feature-header synopsis-header" id="synopsis-title">Synopsis</div>
-                        <div id="media-synopsis"><span>{{data[0]["anime_synopsis"]}}</span></div>
-                        <div class="feature-header" id="info-tags">
-                            <div class="container anime-words" id="anime-words">
-                               <div class="container synopsis-header" id="top-tags"> Top Tags: </div> 
-                               <div class="container anime-tags" id="anime-tags">
-<!--                                <div class = "container anime-tags" id="anime-tags"> -->
-                                    {% set word = " ".join(data[0]["words"].split('|')) %}
-                                    <span>{{word}}</span>
+                        <div class="row adjustable" style="background-color: red">
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 show-info">
+                                <div class="row info-header">Type:</div>
+                                <div class="row" id="media-type"> 
+                                    <span>{{data[0]["anime_type"]}}</span>
+                                </div>
+                                <div class="row info-header">Rating:</div>
+                                <div class="row" id="media-rating">
+                                    <span>{{data[0]["anime_rating"]}}</span>
+                                </div>
+                                <div class="row info-header">Duration:</div>
+                                <div class="row" id="media-duration">
+                                    <span>{{data[0]["anime_duration"]}}</span>
+                                </div>
+                                <div class="row info-header">Number of episodes:</div>
+                                <div class="row" id="episode-count">
+                                    <span>{{data[0]["anime_number_of_episodes"]}}</span>
                                 </div>
                             </div>
+                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 synopsis">
+                                <div id="media-synopsis"><span>{{data[0]['anime_synopsis']}}</span><br><br><br><br></div>
+                            </div>
+                        </div>
+                        <div class="d-flex tag-info">
+                             <div class="align-self-center"><span>Top Tags:</span></div>
+                             <div class="align-self-start">
+                                 {% set words = data[0]["words"].split('|') %}
+                                 {% for word in words %}
+                                     <span class="tag label label-info">{{word}}</span>
+                                 {% endfor %}
+                             </div>
+                        </div>                      
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 feature-segment">
+                    <div class="adjustable">
+                        <div class="container" style="width: 100%">
+                            <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas> 
                         </div>
                     </div>
-                    <div class="d-flex flex-column" style="width: 350px" id="feature-score">
-                        <div id="similarity-score" class="feature-header synopsis-header"><span>Aniai Score: {{data[0]["score"]}}</span></div>
-                        <div class="container anime-statistics">
-                        <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas>
-                        </div>
                         <div id="chart-legends" unselectable="on" class="unselectable">
                                 <label class="fancy-checkbox">
                                     <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
@@ -501,13 +489,12 @@
                                     <div class="legend-tag unchecked"><div class="legend-button"></div></div>
                                 </label>
                         </div>
+                </div>
+                <div class="col-md-6 col-lg-3 feature-segment" style="height: 400px">
+                    <div class="container" style="background-color: black; width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row; background-image: linear-gradient(black, grey)">
+                        <img id="media-image" src={{data[0]["anime_image_url"]}} style="object-fit: contain; flex: 1">
                     </div>
                 </div>
-                <div class="media-footer"> 
-                    <div class="container">
-                        <div class="row">
-                        </div>
-                    </div>
                 </div>
             </div>
                                 <script>
@@ -544,7 +531,7 @@
                                             }
                                         ]
                                     };
-
+                                    Chart.defaults.global.defaultFontColor = 'white';
                                     anime_scores = new Chart(document.getElementById("vis"), {
                                         type: 'radar',
                                         data: data_chart,
@@ -595,7 +582,10 @@
                                             legend: {
                                                 display: false,
                                                 position: 'bottom',
-                                                boxWidth: 20
+                                                boxWidth: 20,
+                                                labels: {
+                                                    fontColor: '#FFFFFF'
+                                                },
 
                                             },
                                             scale: {
@@ -746,7 +736,7 @@
                     };
                     $('#anime-tags span').text(wordStr);
                     $('#media-genres').replaceWith(
-                        '<div class="col genres" id="media-genres">' + str + '</div>'
+                        '<div id="media-genres">' + str + '</div>'
                         );
                     var anime_video_url = $(this).data("video");
                     if (anime_video_url.includes('crunchyroll')) {
@@ -886,7 +876,10 @@
                             legend: {
                                 display: false,
                                 position: 'bottom',
-                                boxWidth: 20
+                                boxWidth: 20,
+                                labels: {
+                                    fontColor: '#FFFFFF'
+                                },
 
                             },
                             scale: {
@@ -981,6 +974,8 @@
             $('.bootstrap-tagsinput').css("width", form.width - 88*2);
         };
         var resizeStatistics = function() {
+            return;
+            alert("resize statistics");
             var statistics = document.querySelector("#feature-score").getBoundingClientRect();
             var similarity = document.querySelector("#similarity-score").getBoundingClientRect();
             var legends = document.querySelector("#chart-legends").getBoundingClientRect();
@@ -990,6 +985,8 @@
             $('.anime-statistics').css("max-height", height + "px");
 	};
 		var resizeInfo = function() {
+                    return;
+                    alert("resize info");
 		    var display = document.querySelector("#feature-display").getBoundingClientRect();
 		    var score = document.querySelector("#feature-score").getBoundingClientRect();
 		    var picture = document.querySelector("#feature-picture").getBoundingClientRect();
@@ -1054,9 +1051,9 @@
                     resizeAnimeSearchBar();
                     resizeWordSearchBar();
                     {% if data %}
-                        resizeInfo();
-                        resizeTags();
-                        resizeStatistics();
+                      //  resizeInfo();
+                      //  resizeTags();
+                      //  resizeStatistics();
                         anime_scores.update();
                     {% endif %}
         });
