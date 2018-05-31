@@ -30,11 +30,8 @@ $(document).ready(function() {
     //     freeInput: false,
     //     delimiter: ','
     // });
-    $('.animeinput .tt-input').focusin(function() {
-//        console.log('called');
-        console.log($(this).position());
- //       console.log($('#wordinput').offset());
-    });
+//    var width = document.querySelector(".feature-segment-padded").getBoundingClientRect().width - 80;
+//    $('.legend-tag').css('width', width+ "px");
 });
 
 function setAnimeExplanation() {
@@ -57,10 +54,6 @@ function setWordExplanation() {
 
 function createLegend(chart_legends_id, chartName) { 
     document.getElementById(chart_legends_id).innerHTML = chartName.generateLegend();
-    console.log(chartName.generateLegend());
-    console.log(document.getElementById(chart_legends_id));
-    var width = document.querySelector("#" + chart_legends_id).getBoundingClientRect().width;
-    $('.legend-tag').css('width', width+ "px");
     
 };
 
@@ -81,14 +74,10 @@ function resizeAnimeSearchBar() {
         if (tags.length == 0) {return};
         var firstPosition = $(tags.get(0)).position().top;
         var lastPosition = $(tags.get(-1)).position().top;
-        console.log("Last position " + lastPosition);
-        console.log("First position " + firstPosition);
         var mod = Math.floor((lastPosition - firstPosition)/28);
         $('.animeinput .bootstrap-tagsinput').css("height", 36 + 28*mod + "px");
         var input = document.querySelector(".animeinput .bootstrap-tagsinput").getBoundingClientRect();
         var lastTag = tags.get(-1).getBoundingClientRect();
-        console.log(input);
-        console.log(lastTag);
         if (input.right - lastTag.right < 150) {
             $('.animeinput .bootstrap-tagsinput').css("height", 36 + 28*(mod+1) + "px");
         };
@@ -101,14 +90,10 @@ function resizeWordSearchBar() {
         if (tags.length == 0) {return};
         var firstPosition = $(tags.get(0)).position().top;
         var lastPosition = $(tags.get(-1)).position().top;
-        console.log("Last position " + lastPosition);
-        console.log("First position " + firstPosition);
         var mod = Math.floor((lastPosition - firstPosition)/28);
         $('.wordinput .bootstrap-tagsinput').css("height", 36 + 30*mod + "px");
         var input = document.querySelector(".wordinput .bootstrap-tagsinput").getBoundingClientRect();
         var lastTag = tags.get(-1).getBoundingClientRect();
-        console.log(input);
-        console.log(lastTag);
         if (input.right - lastTag.right < 100) {
             $('.wordinput .bootstrap-tagsinput').css("height", 36 + 30*(mod+1) + "px");
         };
@@ -139,7 +124,6 @@ function initializeSearchBars() {
                 
             }
         });
-        console.log(animeTags);
 //        $('#animeinput').tagsinput('remove', {anime_english_title: $(this).text()});
     });
 
@@ -247,7 +231,6 @@ function initializeSearchBars() {
         animeTags.push(event.item);
     });
     $('.animeinput').on('beforeItemAdd', function(event) {
-        console.log("here " + animeTags.length)
         if (animeTags.length >= 3) {
             event.cancel = true;
             $('.animeinput .tt-hint').tooltip({trigger: "manual", placement: "right"});
@@ -279,7 +262,6 @@ function initializeSearchBars() {
             wordInput.push(((query.sign == "positive") ? "" : "!") + query.word);
         });
         $('#wordinput').val(wordInput.join("|"));
-        console.log($(this));
         $(this).children('#animeinput').remove();
         processFilters();
         return true;
@@ -317,8 +299,8 @@ function initializeWordSearch(wordList) {
     ;}
 };
 
-function addAnime() {
-   var title = $('#media-title span').text();
+function addAnime(title) {
+   console.log(title);
    $('#animeinput').tagsinput('add', {anime_english_title: title, sign: "positive"});
 }
 
@@ -334,7 +316,6 @@ function initializeAnimeSearch(animeList) {
             tag = tag.slice(1,);
             sign = "negative";
         };
-        console.log("Initializing anime search with " + tag);
         $('#animeinput').tagsinput('add', {anime_english_title: tag, sign: sign});
     ;}
 };

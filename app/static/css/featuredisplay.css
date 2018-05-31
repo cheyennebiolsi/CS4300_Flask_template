@@ -165,6 +165,10 @@
     object-fit: contain;
 }
 
+.multi-collapse.collapse.show {
+    transition: opacity 1s ease-in-out;
+}
+
 .media-self-center.media-left.anime-synopsis {
     width: 30%;
     height: 50%;

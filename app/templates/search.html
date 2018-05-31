@@ -24,18 +24,28 @@
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(window).on("load", function()  { 
+                drawInitialChart();
+                createLegend('chart-legends', anime_scores);
+                    drawSimilarityCharts();
             {% if similarityData %}
                 {% for d in similarityData %}
-                    var id = "#" + "{{d['chart_id']}}";
-                    var name = {{d['chart_name']}};
-       	            document.querySelector(id).onclick = function(evt){
+                    {% for index in [0, 1] %}
+                       {% if loop.index == 1 %}
+                           {% set id = "#" + d['chart_id_a'] %}
+                           {% set name = d['chart_name_a'] %}
+                       {% else %}
+                           {% set id = "#" + d['chart_id_b'] %}
+                           {% set name = d['chart_name_b'] %}
+                       {% endif %}
+       	            document.querySelector("{{id}}").onclick = function(evt){
 	                var activePoints = name.getElementsAtEvent(evt);
 			var firstPoint = activePoints[0];
 			if (firstPoint !== undefined) {
 			        var label = name.data.labels[firstPoint._index];
                                 $('#wordinput').tagsinput('add', {word: label, sign: 'positive'});
                         };
-		};
+		     };
+                     {% endfor %}
                 {% endfor %}
             {% endif %}
             {% if data %}
@@ -74,8 +84,6 @@
             });
             //resizeSearchBar();
             {% if data %}
-                drawInitialChart();
-                createLegend('chart-legends', anime_scores);
                 {% if prevwords %}
                     var prevwords = '{{prevwords}}';
                     var words = prevwords.split('|');
@@ -86,7 +94,6 @@
                 {% if prevsearch %}
                     var prevwords = '{{prevsearch}}';
                     var words = prevwords.split('|');
-                    drawSimilarityCharts(words.length);
                     initializeAnimeSearch(words);
                 {% else %}
                     initializeAnimeSearch([]);
@@ -432,14 +439,22 @@
         </form>
 </div>
         {% if similarityData %}
+        <p>
         {% for d in similarityData %}
-             <div class={% if d['inverted'] %} "container-fluid feature-display inverted" {% else %} "container-fluid feature-display" {% endif %}>
+       <a class="btn btn-primary" data-toggle="collapse" href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}">{{d['anime_english_title']}}</a>
+        {% endfor %}
+        </p>
+        {% for d in similarityData %}
+         <div id="{{d['collapse_id']}}" class="collapse multi-collapse"}>
+             {% for index in [0, 1] %}
+             {% set title = d['anime_english_title']%}
+             <div class={% if loop.index == 1 %} "container-fluid feature-display inverted" {% else %} "container-fluid feature-display" {% endif %} hidden>
                 <div class="row">
-                <div class={% if d['inverted'] %} "col-md-12 col-lg-6 order-lg-3" {% else %} "col-md-12 col-lg-6" {% endif %} style="height: 400px">
+                <div class={% if loop.index==1 %} "col-md-12 col-lg-6 order-lg-3" {% else %} "col-md-12 col-lg-6" {% endif %} style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
                             <div class="d-flex justify-content-between anime-info-bar">
-                                <div class="align-self-start"><i onclick="addAnime()" class="fa fa-plus"></i></div>
+                                <div class={% if loop.index==1 %}"align-self-start order-last" {% else%}"align-self-start" {% endif %}><i onclick="addAnime('{{title}}')" class="fa fa-plus"></i></div>
                                 <div class="feature-icon align-self-end">
                                     <img src="/static/images/yahoo_view_icon.png"
                                     {% if not 'yahoo' in d['anime_video_url'] %} hidden {% endif %}>
@@ -470,7 +485,7 @@
                             <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
                                 <div class="container text-container">
                                 <div class="row info-header">Query similarity:</div>
-                                <div class="row" id="media-type"> 
+                                <div class="row"> 
                                     <span>{{d["score"]}} %</span>                                 
                                 </div>
                                 <div class="row info-header">Type:</div>
@@ -505,14 +520,16 @@
                         </div>                      
                     </div>
                 </div>
-                <div class={% if d['inverted'] %} "col-md-6 col-lg-3 order-lg-2 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
+                <div class={% if loop.index == 1 %} "col-md-6 col-lg-3 order-lg-2 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
                     <div class="container feature-segment-padded">
                     <div class="adjustable">
                         <div class="container" style="width: 100%">
-                            <canvas class="data-visualization" id="{{d['chart_id']}}" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas> 
+                            <canvas class="data-visualization"
+                            {% if loop.index == 1 %} id="{{d['chart_id_a']}}" {% else %} id="{{d['chart_id_b']}}" {% endif %} 
+                            width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas> 
                         </div>
                     </div>
-                        <div id="{{d['chart_legend_id']}}" unselectable="on" class="chart-legends unselectable">
+                        <div id={% if loop.index == 1 %} "{{d['chart_legend_id_a']}}" {% else %} "{{d['chart_legend_id_b']}}" {% endif %} unselectable="on" class="chart-legends unselectable">
                                 <label class="fancy-checkbox">
                                     <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
                                     <div class="legend-tag checked"><div class="legend-button"></div></div>
@@ -526,7 +543,7 @@
                         </div>
                     </div>
                 </div>
-                <div class={% if d['inverted'] %} "col-md-6 col-lg-3 order-lg-1 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
+                <div class={% if loop.index == 1 %} "col-md-6 col-lg-3 order-lg-1 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
                     <div class="container feature-segment-padded">
                     <div class="container" style="width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row">
                         <img src={{d["anime_image_url"]}} style="object-fit: contain; flex: 1">
@@ -535,6 +552,8 @@
                 </div>
                 </div>
             </div>
+            {% endfor %}
+        </div>
         {% endfor %}
         {% endif %}
         {% if data %}
@@ -544,13 +563,14 @@
             <br>
             <br>
             <br> -->
+            {% set title = data[0]['anime_english_title'] %}
             <div class="container-fluid feature-display">
                 <div class="row">
                 <div class="col-md-12 col-lg-6" style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
                             <div class="d-flex justify-content-between anime-info-bar">
-                                <div class="align-self-start"><i onclick="addAnime()" class="fa fa-plus"></i></div>
+                                <div class="align-self-start" id="plus-icon"><i onclick="addAnime('{{title}}')" class="fa fa-plus"></i></div>
                                 <div class="feature-icon align-self-end">
                                     <img src="/static/images/yahoo_view_icon.png" id="yahoo-provider" 
                                     {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
@@ -614,7 +634,8 @@
                                      <span onclick="addWord(this)" class="tag label label-info">{{word}}</span>
                                  {% endfor %}
                              </div>
-                        </div>                      
+                        </div>
+                        <div class="d-flex justify-content-between anime-footer-bar"></div>  
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 feature-segment">
@@ -729,6 +750,7 @@
                     var original_value = $(this).data("original_value");
                     $('#media-image').attr('src', anime_image_url);
                     $('#media-title span').text(title);
+                    document.getElementById('plus-icon').innerHTML = "<i onclick='addAnime(" + '"' + title + '"' + ")' class='fa fa-plus'></i>";
                     $('#media-type span').text(type);
                     $('#media-rating span').text(rating);
                     $('#media-count span').text(episode_count);
@@ -860,24 +882,42 @@
             if($($(this).data('target')).hasClass('collapsing'))
             return false;
     });
-    function createSimilarityLegends() {
-        {% for d in similarityData %}
-            var chart_legend_id = "{{d['chart_legend_id']}}"
-            createLegend(chart_legend_id);
-        {% endfor %}
-    }
 
-    function drawSimilarityCharts(length) {
+    function drawSimilarityCharts() {
         {% for d in similarityData %}
             var labels = "{{d['graph_words']}}";
             var labels_words = labels.split("|");
             var title = "{{d['anime_english_title']}}";
             var original_value = {{d['original_value']}};
             var graph_value = {{d['graph_value']}};
-            var chartId = "{{d['chart_id']}}";
-            {{d['chart_name']}} = createChart(chartId, "{{d['chart_name']}}", title, labels_words, original_value, graph_value);
-            var chart_legend_id="{{d['chart_legend_id']}}"
-            createLegend(chart_legend_id, {{d['chart_name']}});
+            var chartId = "{{d['chart_id_a']}}";
+            {{d['chart_name_a']}} = createChart(chartId, "{{d['chart_name_a']}}", title, labels_words, original_value, graph_value);
+            var chart_legend_id="{{d['chart_legend_id_a']}}"
+            createLegend(chart_legend_id, {{d['chart_name_a']}});
+            var chartId = "{{d['chart_id_b']}}";
+            {{d['chart_name_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
+            var chart_legend_id="{{d['chart_legend_id_b']}}"
+            createLegend(chart_legend_id, {{d['chart_name_b']}});
+        {% endfor %} 
+    };
+
+    function drawSimilarityCharts2() {
+        {% for d in similarityData %}
+            var labels = "{{d['graph_words']}}";
+            var labels_words = labels.split("|");
+            var title = "{{d['anime_english_title']}}";
+            var original_value = {{d['original_value']}};
+            var graph_value = {{d['graph_value']}};
+            var chartId = "{{d['chart_id_a']}}";
+            {{d['chart_name_a']}}.destroy()
+            {{d['chart_name_a']}} = createChart(chartId, "{{d['chart_name_a']}}", title, labels_words, original_value, graph_value);
+            var chart_legend_id="{{d['chart_legend_id_a']}}"
+            createLegend(chart_legend_id, {{d['chart_name_a']}});
+            var chartId = "{{d['chart_id_b']}}";
+            {{d['chart_name_b']}}.destroy()
+            {{d['chart_name_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
+            var chart_legend_id="{{d['chart_legend_id_b']}}"
+            createLegend(chart_legend_id, {{d['chart_name_b']}});
         {% endfor %} 
     };
     function drawInitialChart() {
@@ -888,6 +928,43 @@
         var graph_value = {{data[0]['graph_value']}};
         anime_scores = createChart("vis", "anime_scores", title, labels_words, original_value, graph_value);
     };
+    function styleCollapsable(collapsable, invert) {
+        console.log(collapsable);
+        var rightInversion = $($(collapsable.find('.container-fluid.feature-display')).get(invert));
+        if (!(rightInversion.prop('hidden'))) { return };
+        collapsable.css('opacity', 0);
+        setTimeout(function() {
+            $(collapsable.find('.container-fluid.feature-display').get(1 - invert)).prop('hidden', true);
+            rightInversion.prop('hidden', false);
+            collapsable.css('opacity', 1); 
+            drawSimilarityCharts2();
+        }, 1000);
+    };
+
+    function fixInversions() {
+        var shownDivs = document.querySelectorAll('.multi-collapse.collapse.show');
+        shownDivs.forEach(function(collapsable, index) {
+            styleCollapsable($(collapsable), 1 - ((shownDivs.length - index) % 2));
+        });
+ 
+    };
+    {% for d in similarityData %}
+        {% set collapse_id = "#" + d['collapse_id'] %}
+        $("{{collapse_id}}").on('show.bs.collapse', function() {
+            var children =  $(this).find('.container-fluid.feature-display');
+            if ($($(children).get(0)).prop('hidden') && $($(children).get(1)).prop('hidden')) {
+                $($(children).get(0)).prop('hidden', false);
+            };
+        });
+        $("{{collapse_id}}").on('shown.bs.collapse', function() {
+            fixInversions();
+            drawSimilarityCharts2();
+        });
+        $("{{collapse_id}}").on('hidden.bs.collapse', function() {
+            fixInversions();
+            drawSimilarityCharts2();
+        });
+    {% endfor %}
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>
 </body>
