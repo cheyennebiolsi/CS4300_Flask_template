@@ -423,7 +423,7 @@ function createChart(title, thelabels2, original_value, thevalues) {
                                 ticks: {
                                     maxTicksLimit: 5,
                                     backdropColor: 'black',
-                                    max: Math.min(10*(Math.max.apply(Math, original_value.concat(thevalues)) + 0.1), 10)/10,
+                                    max: Math.floor(Math.min(10*(Math.max.apply(Math, original_value.concat(thevalues)) + 0.1), 10))/10,
                                     min: 0, 
                                     fontSize: 6,
                                     color: '#FFFFFF'

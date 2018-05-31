@@ -620,10 +620,10 @@
                         wordStr += '<span class="tag label label-info" onclick="addWord(this)">' + words[word] + "</span>";
                     };
                     $('#anime-tags').replaceWith(
-                        '<div class="align-self-start" id="anime-tags">' + wordStr + '</div>'
+                        '<div class="align-self-start unselectable" id="anime-tags">' + wordStr + '</div>'
                         );
                     $('#media-genres').replaceWith(
-                        '<div id="media-genres">' + str + '</div>'
+                        '<div class="unselectable" id="media-genres">' + str + '</div>'
                         );
                     var anime_video_url = $(this).data("video");
                     if (anime_video_url.includes('crunchyroll')) {
