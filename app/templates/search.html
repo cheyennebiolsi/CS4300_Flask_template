@@ -23,7 +23,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
-        $(window).on("load", function()  {
+        $(window).on("load", function()  { 
+            {% if similarityData %}
+                {% for d in similarityData %}
+                    var id = "#" + "{{d['chart_id']}}";
+                    var name = {{d['chart_name']}};
+       	            document.querySelector(id).onclick = function(evt){
+	                var activePoints = name.getElementsAtEvent(evt);
+			var firstPoint = activePoints[0];
+			if (firstPoint !== undefined) {
+			        var label = name.data.labels[firstPoint._index];
+                                $('#wordinput').tagsinput('add', {word: label, sign: 'positive'});
+                        };
+		};
+                {% endfor %}
+            {% endif %}
             {% if data %}
 		document.querySelector("#vis").onclick = function(evt){
 			var activePoints = anime_scores.getElementsAtEvent(evt);
@@ -61,7 +75,7 @@
             //resizeSearchBar();
             {% if data %}
                 drawInitialChart();
-                createLegend();
+                createLegend('chart-legends', anime_scores);
                 {% if prevwords %}
                     var prevwords = '{{prevwords}}';
                     var words = prevwords.split('|');
@@ -72,6 +86,7 @@
                 {% if prevsearch %}
                     var prevwords = '{{prevsearch}}';
                     var words = prevwords.split('|');
+                    drawSimilarityCharts(words.length);
                     initializeAnimeSearch(words);
                 {% else %}
                     initializeAnimeSearch([]);
@@ -416,7 +431,112 @@
             </div> 
         </form>
 </div>
-        <p style="text-align: center; color: white">{{output_message}} <p>
+        {% if similarityData %}
+        {% for d in similarityData %}
+             <div class={% if d['inverted'] %} "container-fluid feature-display inverted" {% else %} "container-fluid feature-display" {% endif %}>
+                <div class="row">
+                <div class={% if d['inverted'] %} "col-md-12 col-lg-6 order-lg-3" {% else %} "col-md-12 col-lg-6" {% endif %} style="height: 400px">
+                    <div class="feature-anime-info">
+                        <div class ="d-flex flex-column">
+                            <div class="d-flex justify-content-between anime-info-bar">
+                                <div class="align-self-start"><i onclick="addAnime()" class="fa fa-plus"></i></div>
+                                <div class="feature-icon align-self-end">
+                                    <img src="/static/images/yahoo_view_icon.png"
+                                    {% if not 'yahoo' in d['anime_video_url'] %} hidden {% endif %}>
+                                    <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen"
+                                    {% if not 'hulu' in d['anime_video_url'] %} hidden {% endif %}>hulu</span>
+                                    <img src="/static/images/Crunchyroll_24x24.png"
+                                    {% if not 'crunchyroll' in d['anime_video_url'] %} hidden {% endif %}>
+                                    <span style="color: darkorange; font-size: 26px; line-height: 30px; font-weight: 600; margin-top: -3px; margin-left: 4px" 
+                                    {%if not 'crunchyroll' in d['anime_video_url'] %} hidden {% endif %}>crunchyroll</span>
+                                    <a href="{{d['anime_video_url']}}" role="button" target="_blank" 
+                                    {% if 'none' == d['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
+                                </div>
+                            </div>
+                            <div class="media-title" style="display: inline-block">
+                                <span>{{d["anime_english_title"]}}</span>
+                            </div>
+                            <div id="media-genres" class="media-genres unselectable">
+                                 {% set genrelist = d["anime_tags"].split('|') %} 
+                                 {% for tag in genrelist %}
+                                 <span class="genre">{{tag}}</span>
+                                 {% endfor %}
+                            </div>
+                            <div style="display: inline-block">
+                            <hr style='width: 10%; margin-right: 45% !important; margin-left: 45% !important; border: none; height: 3px; background-color: black;'>
+                            </div>
+                        </div>
+                        <div class="row adjustable">
+                            <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
+                                <div class="container text-container">
+                                <div class="row info-header">Query similarity:</div>
+                                <div class="row" id="media-type"> 
+                                    <span>{{d["score"]}} %</span>                                 
+                                </div>
+                                <div class="row info-header">Type:</div>
+                                <div class="row"> 
+                                    <span>{{d["anime_type"]}}</span>
+                                </div>
+                                <div class="row info-header">Rating:</div>
+                                <div class="row">
+                                    <span>{{d["anime_rating"]}}</span>
+                                </div>
+                                <div class="row info-header">Duration:</div>
+                                <div class="row">
+                                    <span>{{d["anime_duration"]}}</span>
+                                </div>
+                                <div class="row info-header">Number of episodes:</div>
+                                <div class="row">
+                                    <span>{{d["anime_number_of_episodes"]}}</span>
+                                </div>
+                            </div></div>
+                            <div class="col-9 col-sm-9 col-md-9 col-lg-9 synopsis">
+                                <div class="media-synopsis"><span>{{d['anime_synopsis']}}</span><br><br><br><br></div>
+                            </div>
+                        </div>
+                        <div class="d-flex tag-info">
+                             <div class="align-self-center"><span>Top Tags:</span></div>
+                             <div class="align-self-start unselectable">
+                                 {% set words = d["words"].split('|') %}
+                                 {% for word in words %}
+                                     <span onclick="addWord(this)" class="tag label label-info">{{word}}</span>
+                                 {% endfor %}
+                             </div>
+                        </div>                      
+                    </div>
+                </div>
+                <div class={% if d['inverted'] %} "col-md-6 col-lg-3 order-lg-2 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
+                    <div class="container feature-segment-padded">
+                    <div class="adjustable">
+                        <div class="container" style="width: 100%">
+                            <canvas class="data-visualization" id="{{d['chart_id']}}" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas> 
+                        </div>
+                    </div>
+                        <div id="{{d['chart_legend_id']}}" unselectable="on" class="chart-legends unselectable">
+                                <label class="fancy-checkbox">
+                                    <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
+                                    <div class="legend-tag checked"><div class="legend-button"></div></div>
+                                    <div class="legend-tag unchecked"><div class="legend-button"></div></div>
+                                </label>
+                                <label class="fancy-checkbox">
+                                    <input type="checkbox" onclick="toggleLegendQuery(this)" checked/>
+                                    <div class="legend-tag checked"><div class="legend-button"></div></div>
+                                    <div class="legend-tag unchecked"><div class="legend-button"></div></div>
+                                </label>
+                        </div>
+                    </div>
+                </div>
+                <div class={% if d['inverted'] %} "col-md-6 col-lg-3 order-lg-1 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
+                    <div class="container feature-segment-padded">
+                    <div class="container" style="width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row">
+                        <img src={{d["anime_image_url"]}} style="object-fit: contain; flex: 1">
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% endif %}
         {% if data %}
 <!--            <br>
             <br>
@@ -436,16 +556,18 @@
                                     {% if not 'yahoo' in data[0]['anime_video_url'] %} hidden {% endif %}>
                                     <span style="margin-top: -4px; font-family:FuturaMedium; font-weight: bold; font-size:25; color:lawngreen" id="hulu-provider" 
                                     {% if not 'hulu' in data[0]['anime_video_url'] %} hidden {% endif %}>hulu</span>
-                                    <img src="/static/images/crunchyroll_icon.png" id="crunchyroll-provider"
+                                    <img src="/static/images/Crunchyroll_24x24.png" id="crunchyroll-provider"
                                     {% if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>
+                                    <span style="color: darkorange; font-size: 26px; line-height: 30px; font-weight: 600; margin-top: -3px; margin-left: 4px" id="crunchyroll-provider"
+                                    {%if not 'crunchyroll' in data[0]['anime_video_url'] %} hidden {% endif %}>crunchyroll</span>
                                     <a href="{{data[0]['anime_video_url']}}" role="button" id="video-link" target="_blank" 
                                     {% if 'none' == data[0]['anime_video_url'] %} hidden {% endif %}><i class="fa fa-external-link"></i></a>
                                 </div>
                             </div>
-                            <div id="media-title" style="display: inline-block">
+                            <div class="media-title" id="media-title">
                                 <span>{{data[0]["anime_english_title"]}}</span>
                             </div>
-                            <div style="display: inline-block" id="media-genres" class="unselectable">
+                            <div class="media-genres unselectable">
                                  {% set genrelist = data[0]["anime_tags"].split('|') %} 
                                  {% for tag in genrelist %}
                                  <span class="genre">{{tag}}</span>
@@ -457,25 +579,31 @@
                         </div>
                         <div class="row adjustable">
                             <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
-                                <div class="row info-header">Type:</div>
-                                <div class="row" id="media-type"> 
-                                    <span>{{data[0]["anime_type"]}}</span>
-                                </div>
-                                <div class="row info-header">Rating:</div>
-                                <div class="row" id="media-rating">
-                                    <span>{{data[0]["anime_rating"]}}</span>
-                                </div>
-                                <div class="row info-header">Duration:</div>
-                                <div class="row" id="media-duration">
-                                    <span>{{data[0]["anime_duration"]}}</span>
-                                </div>
-                                <div class="row info-header">Number of episodes:</div>
-                                <div class="row" id="episode-count">
-                                    <span>{{data[0]["anime_number_of_episodes"]}}</span>
+                                <div class="container text-container">
+                                    <div class="row info-header">Aniai Score:</div>
+                                    <div class="row" id="similarity-score"> 
+                                        <span>{{data[0]["score"]}}</span>
+                                    </div>
+                                    <div class="row info-header">Type:</div>
+                                    <div class="row" id="media-type"> 
+                                        <span>{{data[0]["anime_type"]}}</span>
+                                    </div>
+                                    <div class="row info-header">Rating:</div>
+                                    <div class="row" id="media-rating">
+                                        <span>{{data[0]["anime_rating"]}}</span>
+                                    </div>
+                                    <div class="row info-header">Duration:</div>
+                                    <div class="row" id="media-duration">
+                                        <span>{{data[0]["anime_duration"]}}</span>
+                                    </div>
+                                    <div class="row info-header">Number of episodes:</div>
+                                    <div class="row" id="episode-count">
+                                        <span>{{data[0]["anime_number_of_episodes"]}}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-9 col-sm-9 col-md-9 col-lg-9 synopsis">
-                                <div id="media-synopsis"><span>{{data[0]['anime_synopsis']}}</span><br><br><br><br></div>
+                                <div class="media-synopsis" id="media-synopsis"><span>{{data[0]['anime_synopsis']}}</span><br><br><br><br></div>
                             </div>
                         </div>
                         <div class="d-flex tag-info">
@@ -490,12 +618,13 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 feature-segment">
+                    <div class="container feature-segment-padded">
                     <div class="adjustable">
                         <div class="container" style="width: 100%">
                             <canvas class="data-visualization" id="vis" width="300" height="300" style="max-height: 100%, max-width: 100%"></canvas> 
                         </div>
                     </div>
-                        <div id="chart-legends" unselectable="on" class="unselectable">
+                        <div id="chart-legends" unselectable="on" class="chart-legends unselectable">
                                 <label class="fancy-checkbox">
                                     <input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>
                                     <div class="legend-tag checked"><div class="legend-button"></div></div>
@@ -507,12 +636,13 @@
                                     <div class="legend-tag unchecked"><div class="legend-button"></div></div>
                                 </label>
                         </div>
-                </div>
-                <div class="col-md-6 col-lg-3 feature-segment" style="height: 400px">
-                    <div class="container" style="background-color: black; width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row; background-image: linear-gradient(black, grey)">
+                </div></div>
+                <div class="col-md-6 col-lg-3 feature-segment">
+                    <div class="container feature-segment-padded">
+                    <div class="container" style="width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row">
                         <img id="media-image" src={{data[0]["anime_image_url"]}} style="object-fit: contain; flex: 1">
                     </div>
-                </div>
+                </div></div>
                 </div>
             </div>
             <div class="owl-carousel owl-theme owl-loaded" id="suggestion-carousel">
@@ -605,7 +735,7 @@
                     $('#media-duration span').text(duration);
                     $('#media-synopsis span').text(synopsis);
                     $('#episode-count span').text(episode_count);
-                    $('#similarity-score span').text("Aniai Score: " + similarity);
+                    $('#similarity-score span').text(similarity);
                     $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
                     $('#rater-number span').text("Number of Raters: " + raternumber);
                     $('#rating-value span').text("Rating: " + ratingvalue);
@@ -623,7 +753,7 @@
                         '<div class="align-self-start unselectable" id="anime-tags">' + wordStr + '</div>'
                         );
                     $('#media-genres').replaceWith(
-                        '<div class="unselectable" id="media-genres">' + str + '</div>'
+                        '<div class="media-genres unselectable" id="media-genres">' + str + '</div>'
                         );
                     var anime_video_url = $(this).data("video");
                     if (anime_video_url.includes('crunchyroll')) {
@@ -658,8 +788,8 @@
 
                     anime_scores.destroy(); //delete charts
                     var thelabels2 = thelabels.split("|");
-                    createChart(title, thelabels2, original_value, thevalues);
-                    createLegend();
+                    anime_scores = createChart("vis", "anime_scores", title, thelabels2, original_value, thevalues);
+                    createLegend('chart-legends', anime_scores);
 
                 });
                   </script>
@@ -694,32 +824,32 @@
 		    };
 		};
 
-                function rescaleSuggestionChart() {
-                    if ((anime_scores.data.datasets[0].hidden) && (anime_scores.data.datasets[1].hidden)) {
+                function rescaleSuggestionChart(chartName) {
+                    if ((chartName.data.datasets[0].hidden) && (chartName.data.datasets[1].hidden)) {
                         return;
-                    } else if (!(anime_scores.data.datasets[0].hidden) && (anime_scores.data.datasets[1].hidden)) {
-                        var maxVal = Math.max.apply(Math, anime_scores.data.datasets[0].data);
-                    } else if ((anime_scores.data.datasets[0].hidden) && (!(anime_scores.data.datasets[1].hidden))) {
-                        var maxVal = Math.max.apply(Math, anime_scores.data.datasets[1].data);
+                    } else if (!(chartName.data.datasets[0].hidden) && (chartName.data.datasets[1].hidden)) {
+                        var maxVal = Math.max.apply(Math, chartName.data.datasets[0].data);
+                    } else if ((chartName.data.datasets[0].hidden) && (!(chartName.data.datasets[1].hidden))) {
+                        var maxVal = Math.max.apply(Math, chartName.data.datasets[1].data);
                     } else {
-                        var maxVal = Math.max.apply(Math, anime_scores.data.datasets[0].data.concat(anime_scores.data.datasets[1].data));
+                        var maxVal = Math.max.apply(Math, chartName.data.datasets[0].data.concat(chartName.data.datasets[1].data));
                     }
                     maxVal = maxVal + 0.1;
-                    anime_scores.options.scale.ticks.max = Math.min(1.0, (Math.floor(maxVal * 10))/10);
+                    chartName.options.scale.ticks.max = Math.min(1.0, (Math.floor(maxVal * 10))/10);
                 };
-		function toggleLegendQuery(source) {
-		    anime_scores.data.datasets[0].hidden = !(source.checked);
-                    rescaleSuggestionChart();
-		    anime_scores.update();
+		function toggleLegendQuery(source, chartName) {
+		    chartName.data.datasets[0].hidden = !(source.checked);
+                    rescaleSuggestionChart(chartName);
+		    chartName.update();
 		};
-		function toggleLegendSuggestion(source) {
-		    anime_scores.data.datasets[1].hidden = !(source.checked);
-                    rescaleSuggestionChart();
-		    anime_scores.update();
+		function toggleLegendSuggestion(source, chartName) {
+		    chartName.data.datasets[1].hidden = !(source.checked);
+                    rescaleSuggestionChart(chartName);
+		    chartName.update();
 		};
 		$(window).resize(function() {
                     {% if data %}
-                      createLegend();
+                      createLegend('chart-legends', anime_scores);
                       //  resizeInfo();
                       //  resizeTags();
                       //  resizeStatistics();
@@ -730,13 +860,33 @@
             if($($(this).data('target')).hasClass('collapsing'))
             return false;
     });
+    function createSimilarityLegends() {
+        {% for d in similarityData %}
+            var chart_legend_id = "{{d['chart_legend_id']}}"
+            createLegend(chart_legend_id);
+        {% endfor %}
+    }
+
+    function drawSimilarityCharts(length) {
+        {% for d in similarityData %}
+            var labels = "{{d['graph_words']}}";
+            var labels_words = labels.split("|");
+            var title = "{{d['anime_english_title']}}";
+            var original_value = {{d['original_value']}};
+            var graph_value = {{d['graph_value']}};
+            var chartId = "{{d['chart_id']}}";
+            {{d['chart_name']}} = createChart(chartId, "{{d['chart_name']}}", title, labels_words, original_value, graph_value);
+            var chart_legend_id="{{d['chart_legend_id']}}"
+            createLegend(chart_legend_id, {{d['chart_name']}});
+        {% endfor %} 
+    };
     function drawInitialChart() {
         var labels = '{{data[0]["graph_words"]}}';
         var labels_words = labels.split("|");
         var title = "{{data[0]['anime_english_title']}}";
         var original_value = {{data[0]['original_value']}};
         var graph_value = {{data[0]['graph_value']}};
-        createChart(title, labels_words, original_value, graph_value);
+        anime_scores = createChart("vis", "anime_scores", title, labels_words, original_value, graph_value);
     };
     </script>
     <script src="/static/owlcarousel/owl.carousel.min.js"></script>

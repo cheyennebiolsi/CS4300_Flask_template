@@ -55,9 +55,11 @@ function setWordExplanation() {
     $(document.querySelector(".wordinput .tt-hint")).attr("data-original-title", "Search limited to 5 keywords");
 }
 
-function createLegend() { 
-    document.getElementById('chart-legends').innerHTML = anime_scores.generateLegend();
-    var width = document.querySelector("#chart-legends").getBoundingClientRect().width;
+function createLegend(chart_legends_id, chartName) { 
+    document.getElementById(chart_legends_id).innerHTML = chartName.generateLegend();
+    console.log(chartName.generateLegend());
+    console.log(document.getElementById(chart_legends_id));
+    var width = document.querySelector("#" + chart_legends_id).getBoundingClientRect().width;
     $('.legend-tag').css('width', width+ "px");
     
 };
@@ -337,7 +339,7 @@ function initializeAnimeSearch(animeList) {
     ;}
 };
 
-function createChart(title, thelabels2, original_value, thevalues) {
+function createChart(chartId, chartName, title, thelabels2, original_value, thevalues) {
     Chart.defaults.global.defaultFontColor = "white";
     var data_chart = {
     labels: thelabels2,
@@ -364,7 +366,7 @@ function createChart(title, thelabels2, original_value, thevalues) {
                         }
                     ]
                     };
-			    anime_scores = new Chart(document.getElementById("vis"), {
+			    return new Chart(document.getElementById(chartId), {
 				type: 'radar',
 				data: data_chart,
 				draggable: true,
@@ -378,7 +380,7 @@ function createChart(title, thelabels2, original_value, thevalues) {
                                                 var suggestionBorder = chart.data.datasets[1].borderColor;
                                                 var text = 
                                                 '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendQuery(this)" checked/>' +
+                                                     '<input type="checkbox" onclick="toggleLegendQuery(this, ' + chartName + ')" checked/>' +
                                                      '<div class="legend-tag checked" id="query-unchecked">' + 
                                                      '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' + 
                                                      '</div>' + queryLabel + '</div>' + 
@@ -386,7 +388,7 @@ function createChart(title, thelabels2, original_value, thevalues) {
                                                      '<div class="legend-button" style="background-color:' + queryColor + '; border-color: ' + queryBorder + '">' +
                                                      '</div>' + queryLabel + '</div></label>' + 
                                                 '<label class="fancy-checkbox">' +
-                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this)" checked/>' +
+                                                     '<input type="checkbox" onclick="toggleLegendSuggestion(this, ' + chartName + ')" checked/>' +
                                                      '<div class="legend-tag checked" id="suggestion-checked">' + 
                                                      '<div class="legend-button" style="background-color:' + suggestionColor + '; border-color: ' + suggestionBorder + '">' +
                                                      '</div>' + suggestionLabel + '</div>' + 

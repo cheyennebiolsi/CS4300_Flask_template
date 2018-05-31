@@ -203,8 +203,7 @@ class AnimeRequestManager:
     def getAnimeEncodings(self, animeTitles, sign=True):
         return np.asarray([title.index for title in animeTitles if title.sign == sign])
 
-    def getAnimeQueryVectorizedRepresentation(self, request):
-        animeTitles = self.animeTitleFactory.buildAnimeTitles(request)
+    def getAnimeQueryVectorizedRepresentation(self, animeTitles):
         positiveAnimeIndices = self.getAnimeEncodings(animeTitles, sign=True)
         negativeAnimeIndices = self.getAnimeEncodings(animeTitles, sign=False)
         vectorizedRepresentation = np.zeros((self.dataManager.animeReviewVectors.shape[1]))
@@ -253,8 +252,7 @@ class WordRequestManager:
     def getWordEncodings(self, words, sign=True):
         return np.asarray([word.index for word in words if word.sign == sign])
 
-    def getWordQueryVectorizedRepresentation(self, request):
-        words = self.wordFactory.buildWords(request)
+    def getWordQueryVectorizedRepresentation(self, words):
         positiveWordIndices = self.getWordEncodings(words, sign=True)
         negativeWordIndices = self.getWordEncodings(words, sign=False)
         vectorizedRepresentation = np.zeros((self.dataManager.wordVectors.shape[1]))
@@ -336,9 +334,41 @@ class SuggestionFactory:
     
 suggestionFactory = SuggestionFactory(dataManager, animeRequestManager, wordRequestManager, "data/ratArray.npy")
 
+class QuerySimilarityFactory:
+    def __init__(self, dataManager, animeRequestManager, wordRequestManager, suggestionFactory):
+        self.dataManager = dataManager
+        self.animeRequestManager = animeRequestManager
+        self.wordRequestManager = wordRequestManager
+        self.suggestionFactory = suggestionFactory
+
+    def buildQuerySimilarityIndex(self, animeTitles, words, wordQueryRepresentation):
+        jsonList = []
+        if len(animeTitles) == 0:
+            return jsonList
+        if len(animeTitles) <=1 and len(words) == 0:
+            return jsonList
+        for index in range(len(animeTitles)):
+            print("Anime titles length: {}".format(len(animeTitles)))
+            lastVal = animeTitles.pop(0)
+            animeQueryRepresentation = self.animeRequestManager.getAnimeQueryVectorizedRepresentation(animeTitles)
+            query = animeQueryRepresentation + wordQueryRepresentation
+            animeVectorRepresentation = self.dataManager.getAnimeVectors(lastVal.index)
+            score = self.suggestionFactory.cossim(query, animeVectorRepresentation)
+            similarityJson = self.suggestionFactory.buildSuggestion(lastVal.index, query, score)
+            similarityJson["chart_legend_id"] = "chart-legend-sim" + str(index)
+            similarityJson["chart_id"] = "sim" + str(index)
+            similarityJson["chart_name"] = "chartnamesim" + str(index)
+            animeTitles.append(lastVal)
+            similarityJson["inverted"] = (len(animeTitles) - index) % 2 == 1
+            jsonList.append(similarityJson)
+        return jsonList
+
+querySimilarityFactory = QuerySimilarityFactory(dataManager, animeRequestManager, wordRequestManager, suggestionFactory)
+
 @irsystem.route('/search', methods=['GET'])
 def search():
         animeTitles = animeTitleFactory.buildAnimeTitles(request)
+        words = wordFactory.buildWords(request)
         filterDictionary = filterManager.getFilterDictionaryFromRequest(request)
         animesearch = request.args.get('animesearch')
         wordsearch = request.args.get('wordsearch')
@@ -347,15 +377,16 @@ def search():
                    prevsearch=None, prevwords = None, prevfilters2=filterDictionary)
         filteredShowIndices = filterManager.getFilteredShowIndices(request, animeTitles)
         filterDictionary = filterManager.getFilterDictionaryFromRequest(request)
-        animeQueryRepresentation = animeRequestManager.getAnimeQueryVectorizedRepresentation(request)
-        wordQueryRepresentation = wordRequestManager.getWordQueryVectorizedRepresentation(request)
+        animeQueryRepresentation = animeRequestManager.getAnimeQueryVectorizedRepresentation(animeTitles)
+        wordQueryRepresentation = wordRequestManager.getWordQueryVectorizedRepresentation(words)
         data = suggestionFactory.buildSuggestions(animeQueryRepresentation, wordQueryRepresentation, filteredShowIndices)
+        similarityData = querySimilarityFactory.buildQuerySimilarityIndex(animeTitles, words, wordQueryRepresentation)
         if len(data) == 0:
             output_message = "Filters are too strict.  Please change filters."
-            return render_template('index.html', output_message=output_message, data=data, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
+            return render_template('index.html', output_message=output_message, data=data, similarityData=similarityData, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
         else:
             output_message = ""
-            return render_template('search.html', output_message=output_message, data=data, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
+            return render_template('search.html', output_message=output_message, data=data, similarityData=similarityData, prevsearch = animesearch, prevwords = wordsearch, prevfilters2=filterDictionary)
 #        return render_template('search.html', name=project_name, netid=net_id, output_message='', data=[], \
 #                           prevsearch=keep(None), prevwords=keep(None), prevhide_ss=None, prevtv=None, prevfilters2=None, filtertrue = False, sfw_on = True, original_value=[])
 	query = request.args.get('animesearch')

@@ -301,7 +301,7 @@ hr {
     color: lightslategray;
 }
 
-#chart-legends {
+.chart-legends {
     padding: 4px 0px;
     width: 70%;
     margin-right: 15%;
@@ -311,7 +311,7 @@ hr {
     text-overflow: ellipsis;
 }
 
-#chart-legends label {
+.chart-legends label {
     padding: 0;
     margin: 0;
     display: table;

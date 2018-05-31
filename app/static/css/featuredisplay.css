@@ -218,10 +218,6 @@
     background-color: black;
 }
 
-#similarity-score {
-    border-bottom: 2px solid white;
-}
-
 .feature-header {
     height: 28px;
     width: 100%;
@@ -326,14 +322,6 @@
     border-top-left-radius: 7px;
     padding-bottom: 2px;
     padding-top: 2px;
-}
-
-#media-title {
-    text-align: left;
-    font-size: 35;
-    font-family: "Futura";
-    margin-top: 8px;
-    margin-left: 30px;
 }
 
 #episodeinfo {
