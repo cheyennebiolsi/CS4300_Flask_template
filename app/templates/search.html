@@ -101,7 +101,6 @@
              //   resizeInfo();
               //  resizeStatistics();
                 //izeesizeTags();
-                anime_scores.update();
             {% else %}
                 initializeWordSearch([]);
                 initializeAnimeSearch([]);
@@ -153,7 +152,8 @@
                 <div class="col-12 col-sm-12 col-md col-lg searchbars">
                 <div class="form-group animeinput">
                 <!-- style:"height:30px vertical-align:bottom"> -->
-                    <div class="input-group-prepend"><span>anime<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" data-html="true" title=""></i></span>
+                    <div class="input-group-prepend">
+                        <button type="button" disabled>anime<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" data-html="true" title=""></i></button>
                     </div>
                     <input id="animeinput" class="tagsinput-typeahead" type="text" name="animesearch"/>
                     <div class="input-group-append">
@@ -161,7 +161,8 @@
                     </div>
                 </div> <!--class = "form-inline global-search" id="myform"> -->
                 <div class="form-group wordinput"> 
-                    <div class="input-group-prepend"><span>keywords<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" data-html="true" title=""></i></span>
+                    <div class="input-group-prepend">
+                        <button type="button" disabled>keywords<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" data-html="true" title=""></i></button>
                     </div>
                     <input id="wordinput" class="tagsinput-typeahead" type="text" name="wordsearch"/>
                     <div class="input-group-append">
@@ -439,17 +440,18 @@
         </form>
 </div>
         {% if similarityData %}
-        <p>
+        <div class="d-flex similarity-index">
+            <div class="align-self-center">Display query anime information:</div>
         {% for d in similarityData %}
-       <a class="btn btn-primary" data-toggle="collapse" href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}">{{d['anime_english_title']}}</a>
+       <a class="align-self-center tag label label-display collapsed" data-toggle="collapse" href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}">{{d['anime_english_title']}}</a>
         {% endfor %}
-        </p>
+        </div>
         {% for d in similarityData %}
          <div id="{{d['collapse_id']}}" class="collapse multi-collapse"}>
              {% for index in [0, 1] %}
              {% set title = d['anime_english_title']%}
              <div class={% if loop.index == 1 %} "container-fluid feature-display inverted" {% else %} "container-fluid feature-display" {% endif %} hidden>
-                <div class="row">
+                <div class="row feature-row">
                 <div class={% if loop.index==1 %} "col-md-12 col-lg-6 order-lg-3" {% else %} "col-md-12 col-lg-6" {% endif %} style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
@@ -521,7 +523,7 @@
                     </div>
                 </div>
                 <div class={% if loop.index == 1 %} "col-md-6 col-lg-3 order-lg-2 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
-                    <div class="container feature-segment-padded">
+                    <div class="container feature-segment-padded statistics-segment">
                     <div class="adjustable">
                         <div class="container" style="width: 100%">
                             <canvas class="data-visualization"
@@ -564,7 +566,7 @@
             <br>
             <br> -->
             {% set title = data[0]['anime_english_title'] %}
-            <div class="container-fluid feature-display">
+            <div class="container-fluid feature-display" id="recommended-display">
                 <div class="row">
                 <div class="col-md-12 col-lg-6" style="height: 400px">
                     <div class="feature-anime-info">
@@ -716,10 +718,13 @@
  
             <script>
                 $("#suggestion-carousel").on('click', '.view', function() {
-	            var active = (document.querySelectorAll('.well.suggestion.active'));
-                    active.forEach(function(well) {
-                        well.classList.remove('active');
-                    });
+                    $('#recommended-display').css('opacity', 0);
+                    setTimeout(function() {
+                            $('#recommended-display').css('opacity', 1);
+        	            var active = (document.querySelectorAll('.well.suggestion.active'));
+                            active.forEach(function(well) {
+                            well.classList.remove('active');
+                        });
                     var children = $(this).find('.well.suggestion');
                     children.each(function(index) {
                         this.classList.add('active');
@@ -812,6 +817,7 @@
                     var thelabels2 = thelabels.split("|");
                     anime_scores = createChart("vis", "anime_scores", title, thelabels2, original_value, thevalues);
                     createLegend('chart-legends', anime_scores);
+                    }.bind(this), 750);
 
                 });
                   </script>
@@ -882,7 +888,6 @@
             if($($(this).data('target')).hasClass('collapsing'))
             return false;
     });
-
     function drawSimilarityCharts() {
         {% for d in similarityData %}
             var labels = "{{d['graph_words']}}";
@@ -931,21 +936,37 @@
     function styleCollapsable(collapsable, invert) {
         console.log(collapsable);
         var rightInversion = $($(collapsable.find('.container-fluid.feature-display')).get(invert));
-        if (!(rightInversion.prop('hidden'))) { return };
+        if (!(rightInversion.prop('hidden'))) {
+            $(rightInversion.find('.chart-legends').get(0)).css('opacity', 1);
+            $(rightInversion.find('.statistics-segment .adjustable').get(0)).css('opacity', 1);
+            $(rightInversion.find('canvas').get(0)).css('opacity', 1);
+            return false;
+        };
         collapsable.css('opacity', 0);
+        $('label-display').css('pointer-events', 'none');
         setTimeout(function() {
             $(collapsable.find('.container-fluid.feature-display').get(1 - invert)).prop('hidden', true);
             rightInversion.prop('hidden', false);
             collapsable.css('opacity', 1); 
+            $(rightInversion.find('.chart-legends').get(0)).css('opacity', 1);
+            $(rightInversion.find('.statistics-segment .adjustable').get(0)).css('opacity', 1);
+            $(rightInversion.find('canvas').get(0)).css('opacity', 1);
             drawSimilarityCharts2();
         }, 1000);
+        return true;
     };
 
     function fixInversions() {
         var shownDivs = document.querySelectorAll('.multi-collapse.collapse.show');
+        var redraw = false;
         shownDivs.forEach(function(collapsable, index) {
-            styleCollapsable($(collapsable), 1 - ((shownDivs.length - index) % 2));
+            redraw = redraw || styleCollapsable($(collapsable), 1 - ((shownDivs.length - index) % 2));
         });
+
+        setTimeout(function() {
+            if (redraw) { drawSimilarityCharts2() };
+            $('label-display').css('pointer-events', 'painted');
+        }, 1100);
  
     };
     {% for d in similarityData %}
@@ -957,10 +978,15 @@
             };
         });
         $("{{collapse_id}}").on('shown.bs.collapse', function() {
+            var featureDisplay = $("{{collapse_id + ' .feature-display'}}");
+            console.log(featureDisplay);
+            $("{{collapse_id + ' .feature-row'}}").css('opacity', 1);
             fixInversions();
             drawSimilarityCharts2();
         });
         $("{{collapse_id}}").on('hidden.bs.collapse', function() {
+            $("{{collapse_id + ' .chart-legends'}}").css('opacity', 0);
+            $("{{collapse_id + ' .feature-row'}}").css('opacity', 0);
             fixInversions();
             drawSimilarityCharts2();
         });

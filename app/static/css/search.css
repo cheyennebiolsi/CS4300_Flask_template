@@ -311,8 +311,8 @@ hr {
     text-overflow: ellipsis;
 }
 
-.collapsing .chart-legends {
-    visibility: hidden;
+.collapsing .chart-legends, .collapsing .adjustable, .collapsing canvas {
+    opacity: 0;
 }
 
 .chart-legends label {
@@ -517,7 +517,7 @@ hr {
     border-radius: 0px;
     border-right: 0.5px solid grey;
     border-left: 0.5px solid grey;
-    padding: 6.5;
+    display: flex;
     flex-wrap: wrap!important;
 }
 
@@ -543,27 +543,41 @@ hr {
     margin-left: 4px;
     color: royalblue;
     cursor: pointer;
+    pointer-events: painted;
 }
 
 .input-group-prepend {
     background-color: gainsboro;
     border: 1px solid grey;
-    width: 88px;
+    width: 92px;
     border-right: 0.5px solid grey;
     font-size: 14px;
-    line-height: 34px;
     vertical-align: middle;
+    margin: 0;
+    color: white;
+    font-weight: 700;
 }
 
-.input-group-prepend span {
+.input-group-prepend button {
     text-align: right;
-    margin-right: 6px;
+    padding-right: 6px;
     width: 100%;
+    border: 0;
+    background: radial-gradient(darkgrey, grey);
+}
+
+.wordinput .input-group-prepend {
+    border-top: 0.5px solid grey;
+}
+
+.animeinput .input-group-prepend {
+    border-bottom: 0.5px solid grey;
 }
 
 .input-group-append {
-    width: 88px;
+    width: 92px;
     font-size: 14px;
+    margin: 0;
 }
 
 .tag.label {
@@ -572,7 +586,7 @@ hr {
     font-weight: 300;
     padding: 6px; 
     display: inline-block;
-    margin-bottom: 6px;
+    margin: 2px;
 }
 
 .tag.label.label-primary {
@@ -705,6 +719,8 @@ hr {
 .twitter-typeahead {
     display: inline;
     position: relative;
+    align-self: center !important;
+    margin: 2px;
 }
 
 .twitter-typeahead .tt-hint {

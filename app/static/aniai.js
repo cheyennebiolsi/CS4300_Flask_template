@@ -39,7 +39,7 @@ function setAnimeExplanation() {
                "<b>Note:</b> clicking on tags changes their functionality<br>" +
                "A <span class='tag label label-primary'>green</span> background returns results that are similar to that anime<br>" +
                "A <span class='tag label label-danger'>red</span> background returns results that are dissimilar to that anime<br>"
-    $(document.querySelector(".animeinput i")).attr("data-original-title", text);
+    $(document.querySelector(".animeinput .input-group-prepend i")).attr("data-original-title", text);
     $(document.querySelector(".animeinput .tt-hint")).attr("data-original-title", "Search limited to 3 anime");
 }
 

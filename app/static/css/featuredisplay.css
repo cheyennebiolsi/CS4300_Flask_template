@@ -169,6 +169,21 @@
     transition: opacity 1s ease-in-out;
 }
 
+.feature-display .feature-row {
+    transition: opacity 0.75s ease-in-out;
+    opacity: 0;
+}
+
+#recommended-display {
+    opacity: 1;
+    transition: opacity 0.75s ease-in-out;
+}
+
+.statistics-segment .adjustable, .statistics-segment .chart-legends, .statistics-segment canvas {
+    transition: opacity 2s ease-in-out;
+    opacity: 0;
+}
+
 .media-self-center.media-left.anime-synopsis {
     width: 30%;
     height: 50%;
