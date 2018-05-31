@@ -362,6 +362,8 @@ class QuerySimilarityFactory:
             similarityJson["chart_legend_id_b"] = "chart-legend-sim-b" + str(index)
             similarityJson["chart_id_b"] = "simb" + str(index)
             similarityJson["chart_name_b"] = "chartnamesimb" + str(index)
+            similarityJson["function_name_a"] = "chartrendera" + str(index)
+            similarityJson["function_name_b"] = "chartrenderb" + str(index)
             animeTitles.append(lastVal)
             similarityJson["inverted"] = (len(animeTitles) - index) % 2 == 1
             jsonList.append(similarityJson)

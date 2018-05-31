@@ -822,6 +822,42 @@
                 });
                   </script>
     <script>
+        var functions = {
+            showAllElements: function() {
+                alert('show all called');
+            },
+            {% for d in similarityData %}
+                {% for index in [0, 1] %}
+                     {% if loop.index == 1 %}
+                         {{d['function_name_a']}}: function() {
+                              var labels = "{{d['graph_words']}}";
+                              var labels_words = labels.split("|");
+                              var title = "{{d['anime_english_title']}}";
+                              var original_value = {{d['original_value']}};
+                              var graph_value = {{d['graph_value']}};
+                              var chartId = "{{d['chart_id_a']}}";
+                              {{d['chart_name_a']}}.destroy()
+                              {{d['chart_name_a']}} = createChart(chartId, "{{d['chart_name_a']}}", title, labels_words, original_value, graph_value);
+                              var chart_legend_id="{{d['chart_legend_id_a']}}"
+                              createLegend(chart_legend_id, {{d['chart_name_a']}});
+                          },
+                      {% else %}
+                         {{d['function_name_b']}}: function() {
+                              var labels = "{{d['graph_words']}}";
+                              var labels_words = labels.split("|");
+                              var title = "{{d['anime_english_title']}}";
+                              var original_value = {{d['original_value']}};
+                              var graph_value = {{d['graph_value']}};
+                              var chartId = "{{d['chart_id_b']}}";
+                              {{d['chart_name_b']}}.destroy()
+                              {{d['chart_name_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
+                              var chart_legend_id="{{d['chart_legend_id_b']}}"
+                              createLegend(chart_legend_id, {{d['chart_name_b']}});
+                          },
+                      {% endif %}
+                {% endfor %}
+            {% endfor %}
+        };
 		function toggle(source) {
 		    var checkboxes = document.querySelectorAll('#sfwgenre');
 		    for (var i = 0; i < checkboxes.length; i++) {
@@ -896,17 +932,36 @@
             var original_value = {{d['original_value']}};
             var graph_value = {{d['graph_value']}};
             var chartId = "{{d['chart_id_a']}}";
+            var canvas = ($(document.getElementById(chartId)));
             {{d['chart_name_a']}} = createChart(chartId, "{{d['chart_name_a']}}", title, labels_words, original_value, graph_value);
+            canvas.data('function-name', "{{d['function_name_a']}}");
+            canvas.data('chart', {{d['chart_name_a']}}); 
+            canvas.data('title', title);
+            canvas.data('label_words', labels_words);
+            canvas.data('original_value', original_value);
+            canvas.data('graph_value', graph_value);
+            canvas.data('chartId', chartId);
+            canvas.data('chart_name', "{{d['chart_name_a']}}");
             var chart_legend_id="{{d['chart_legend_id_a']}}"
             createLegend(chart_legend_id, {{d['chart_name_a']}});
             var chartId = "{{d['chart_id_b']}}";
+            var canvas = ($(document.getElementById(chartId)));
             {{d['chart_name_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
+            canvas.data('chart', {{d['chart_name_b']}}); 
+            canvas.data('label_words', labels_words);
+            canvas.data('original_value', original_value);
+            canvas.data('graph_value', graph_value);
+            canvas.data('chartId', chartId);
+            canvas.data('title', title);
+            canvas.data('chart_name', "{{d['chart_name_b']}}");
+            canvas.data('function-name', "{{d['function_name_b']}}");
             var chart_legend_id="{{d['chart_legend_id_b']}}"
             createLegend(chart_legend_id, {{d['chart_name_b']}});
         {% endfor %} 
     };
 
     function drawSimilarityCharts2() {
+        return;
         {% for d in similarityData %}
             var labels = "{{d['graph_words']}}";
             var labels_words = labels.split("|");
@@ -920,7 +975,7 @@
             createLegend(chart_legend_id, {{d['chart_name_a']}});
             var chartId = "{{d['chart_id_b']}}";
             {{d['chart_name_b']}}.destroy()
-            {{d['chart_name_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
+            {{d['chart_namass="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Toggle first element</a>_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
             var chart_legend_id="{{d['chart_legend_id_b']}}"
             createLegend(chart_legend_id, {{d['chart_name_b']}});
         {% endfor %} 
@@ -934,13 +989,15 @@
         anime_scores = createChart("vis", "anime_scores", title, labels_words, original_value, graph_value);
     };
     function styleCollapsable(collapsable, invert) {
-        console.log(collapsable);
         var rightInversion = $($(collapsable.find('.container-fluid.feature-display')).get(invert));
+        var canvas = $(rightInversion).find('canvas');
+        var fn = canvas.data('function-name');
         if (!(rightInversion.prop('hidden'))) {
             $(rightInversion.find('.chart-legends').get(0)).css('opacity', 1);
             $(rightInversion.find('.statistics-segment .adjustable').get(0)).css('opacity', 1);
             $(rightInversion.find('canvas').get(0)).css('opacity', 1);
-            return false;
+            functions[fn]();
+            return;
         };
         collapsable.css('opacity', 0);
         $('label-display').css('pointer-events', 'none');
@@ -951,22 +1008,15 @@
             $(rightInversion.find('.chart-legends').get(0)).css('opacity', 1);
             $(rightInversion.find('.statistics-segment .adjustable').get(0)).css('opacity', 1);
             $(rightInversion.find('canvas').get(0)).css('opacity', 1);
-            drawSimilarityCharts2();
+            functions[fn]();
         }, 1000);
-        return true;
     };
 
     function fixInversions() {
         var shownDivs = document.querySelectorAll('.multi-collapse.collapse.show');
-        var redraw = false;
         shownDivs.forEach(function(collapsable, index) {
-            redraw = redraw || styleCollapsable($(collapsable), 1 - ((shownDivs.length - index) % 2));
+            styleCollapsable($(collapsable), 1 - ((shownDivs.length - index) % 2));
         });
-
-        setTimeout(function() {
-            if (redraw) { drawSimilarityCharts2() };
-            $('label-display').css('pointer-events', 'painted');
-        }, 1100);
  
     };
     {% for d in similarityData %}
@@ -978,17 +1028,13 @@
             };
         });
         $("{{collapse_id}}").on('shown.bs.collapse', function() {
-            var featureDisplay = $("{{collapse_id + ' .feature-display'}}");
-            console.log(featureDisplay);
             $("{{collapse_id + ' .feature-row'}}").css('opacity', 1);
             fixInversions();
-            drawSimilarityCharts2();
         });
         $("{{collapse_id}}").on('hidden.bs.collapse', function() {
             $("{{collapse_id + ' .chart-legends'}}").css('opacity', 0);
             $("{{collapse_id + ' .feature-row'}}").css('opacity', 0);
             fixInversions();
-            drawSimilarityCharts2();
         });
     {% endfor %}
     </script>
