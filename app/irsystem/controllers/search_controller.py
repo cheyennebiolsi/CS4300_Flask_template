@@ -329,8 +329,8 @@ class SuggestionFactory:
         topWordsInCommon, queryScoresInCommon, animeScoresInCommon = zip(*self.getTopWordsInCommon(query, animeVectorRepresentation, 10))
         animeJson['words'] = "|".join(topWordTagsForAnime)
         animeJson['graph_words'] = "|".join(topWordsInCommon)
-        animeJson['graph_value'] = list(np.round(queryScoresInCommon, 3))
-        animeJson['original_value'] = list(np.round(animeScoresInCommon, 3))
+        animeJson['original_value'] = list(np.round(queryScoresInCommon, 3))
+        animeJson['graph_value'] = list(np.round(animeScoresInCommon, 3))
         animeJson['score'] = str(round(score*100, 2))
         return animeJson
     
