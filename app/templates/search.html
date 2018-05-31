@@ -38,10 +38,10 @@
                            {% set name = d['chart_name_b'] %}
                        {% endif %}
        	            document.querySelector("{{id}}").onclick = function(evt){
-	                var activePoints = name.getElementsAtEvent(evt);
+	                var activePoints = {{name}}.getElementsAtEvent(evt);
 			var firstPoint = activePoints[0];
 			if (firstPoint !== undefined) {
-			        var label = name.data.labels[firstPoint._index];
+			        var label = {{name}}.data.labels[firstPoint._index];
                                 $('#wordinput').tagsinput('add', {word: label, sign: 'positive'});
                         };
 		     };
