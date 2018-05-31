@@ -70,6 +70,7 @@ function toggleClass(selector, tag) {
 }
 
 function resizeAnimeSearchBar() {
+        return;
         tags = $('.animeinput .tag');
         if (tags.length == 0) {return};
         var firstPosition = $(tags.get(0)).position().top;
@@ -86,6 +87,7 @@ function resizeAnimeSearchBar() {
 }
 
 function resizeWordSearchBar() {
+        return;
         tags = $('.wordinput .tag');
         if (tags.length == 0) {return};
         var firstPosition = $(tags.get(0)).position().top;
