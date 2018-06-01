@@ -519,6 +519,13 @@
                                      <span onclick="addWord(this)" class="tag label label-info">{{word}}</span>
                                  {% endfor %}
                              </div>
+                        </div>
+                        <div class={% if loop.index==1 %} "d-flex anime-info-footer justify-content-end" {% else %}
+                                                          "d-flex anime-info-footer justify-content-start" {% endif %}>
+                            <div>
+                                <i onclick="addAnime('{{title}}')" class="fa fa-minus" data-toggle="collapse"
+                                href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}"></i>
+                            </div>
                         </div>                      
                     </div>
                 </div>
@@ -566,8 +573,8 @@
             <br>
             <br> -->
             {% set title = data[0]['anime_english_title'] %}
-            <div class="container-fluid feature-display" id="recommended-display">
-                <div class="row">
+            <div class="container-fluid feature-display">
+                <div class="row" id=recommended-display>
                 <div class="col-md-12 col-lg-6" style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
@@ -674,6 +681,7 @@
                         {% for d in data%}
                         {% set image_url = d['anime_image_url'] %}
                         <div class="owl-item" style="height:100%">
+                            <div class="suggestion-buffer">
                             <div class="view overlay" id="suggestionCard"
                                  data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
@@ -696,7 +704,7 @@
                                     <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
                                  </div>
                             </div>
-                         </div>
+                         </div></div>
                          {% endfor %}
                     </div>
                  </div>
@@ -935,47 +943,12 @@
             var canvas = ($(document.getElementById(chartId)));
             {{d['chart_name_a']}} = createChart(chartId, "{{d['chart_name_a']}}", title, labels_words, original_value, graph_value);
             canvas.data('function-name', "{{d['function_name_a']}}");
-            canvas.data('chart', {{d['chart_name_a']}}); 
-            canvas.data('title', title);
-            canvas.data('label_words', labels_words);
-            canvas.data('original_value', original_value);
-            canvas.data('graph_value', graph_value);
-            canvas.data('chartId', chartId);
-            canvas.data('chart_name', "{{d['chart_name_a']}}");
             var chart_legend_id="{{d['chart_legend_id_a']}}"
             createLegend(chart_legend_id, {{d['chart_name_a']}});
             var chartId = "{{d['chart_id_b']}}";
             var canvas = ($(document.getElementById(chartId)));
             {{d['chart_name_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
-            canvas.data('chart', {{d['chart_name_b']}}); 
-            canvas.data('label_words', labels_words);
-            canvas.data('original_value', original_value);
-            canvas.data('graph_value', graph_value);
-            canvas.data('chartId', chartId);
-            canvas.data('title', title);
-            canvas.data('chart_name', "{{d['chart_name_b']}}");
             canvas.data('function-name', "{{d['function_name_b']}}");
-            var chart_legend_id="{{d['chart_legend_id_b']}}"
-            createLegend(chart_legend_id, {{d['chart_name_b']}});
-        {% endfor %} 
-    };
-
-    function drawSimilarityCharts2() {
-        return;
-        {% for d in similarityData %}
-            var labels = "{{d['graph_words']}}";
-            var labels_words = labels.split("|");
-            var title = "{{d['anime_english_title']}}";
-            var original_value = {{d['original_value']}};
-            var graph_value = {{d['graph_value']}};
-            var chartId = "{{d['chart_id_a']}}";
-            {{d['chart_name_a']}}.destroy()
-            {{d['chart_name_a']}} = createChart(chartId, "{{d['chart_name_a']}}", title, labels_words, original_value, graph_value);
-            var chart_legend_id="{{d['chart_legend_id_a']}}"
-            createLegend(chart_legend_id, {{d['chart_name_a']}});
-            var chartId = "{{d['chart_id_b']}}";
-            {{d['chart_name_b']}}.destroy()
-            {{d['chart_namass="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Toggle first element</a>_b']}} = createChart(chartId, "{{d['chart_name_b']}}", title, labels_words, original_value, graph_value);
             var chart_legend_id="{{d['chart_legend_id_b']}}"
             createLegend(chart_legend_id, {{d['chart_name_b']}});
         {% endfor %} 
@@ -987,6 +960,8 @@
         var original_value = {{data[0]['original_value']}};
         var graph_value = {{data[0]['graph_value']}};
         anime_scores = createChart("vis", "anime_scores", title, labels_words, original_value, graph_value);
+        $('#recommended-display .feature-segment-padded .adjustable').css('opacity', 1);
+        $('#chart-legends').css('opacity', 1);
     };
     function styleCollapsable(collapsable, invert) {
         var rightInversion = $($(collapsable.find('.container-fluid.feature-display')).get(invert));
