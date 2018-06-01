@@ -475,7 +475,7 @@
                             <div class="media-title" style="display: inline-block">
                                 <span>{{d["anime_english_title"]}}</span>
                             </div>
-                            <div id="media-genres" class="media-genres unselectable">
+                            <div class="media-genres unselectable">
                                  {% set genrelist = d["anime_tags"].split('|') %} 
                                  {% for tag in genrelist %}
                                  <span class="genre">{{tag}}</span>
@@ -599,7 +599,7 @@
                             <div class="media-title" id="media-title">
                                 <span>{{data[0]["anime_english_title"]}}</span>
                             </div>
-                            <div class="media-genres unselectable">
+                            <div class="media-genres unselectable" id="media-genres">
                                  {% set genrelist = data[0]["anime_tags"].split('|') %} 
                                  {% for tag in genrelist %}
                                  <span class="genre">{{tag}}</span>
