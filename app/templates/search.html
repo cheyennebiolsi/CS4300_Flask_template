@@ -20,13 +20,13 @@
     <script src="/static/bloodhound.js"></script>
     <script src="/static/js/Chart.bundle.min.js"></script>
     <script src="/static/aniai.js"></script>
+    <script src="/static/chartFunctionality.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Maven+pro"> -->
     <script>
         $(window).on("load", function()  { 
-                drawInitialChart();
-                createLegend('chart-legends', anime_scores);
-                    drawSimilarityCharts();
+            drawInitialChart();
+            drawSimilarityCharts();
             {% if similarityData %}
                 {% for d in similarityData %}
                     {% for index in [0, 1] %}
@@ -109,7 +109,7 @@
                $('#collapsensfwrating').collapse('toggle');
                $('#collapsensfw').collapse('toggle');
             {% endif %}
-            $('.fa[data-toggle="tooltip"]').tooltip();
+            $('.fa[data-toggle="tooltip"]').not('.show-info .fa').tooltip();
 //            $('.tt_input[data-toggle="tooltip"]').tooltip({trigger: "manual"});
         }
         );
@@ -440,11 +440,13 @@
         </form>
 </div>
         {% if similarityData %}
-        <div class="d-flex similarity-index">
-            <div class="align-self-center">Display query anime information:</div>
-        {% for d in similarityData %}
-       <a class="align-self-center tag label label-display collapsed" data-toggle="collapse" href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}">{{d['anime_english_title']}}</a>
-        {% endfor %}
+        <div class="d-flex similarity-index row">
+            <div class="col-12 col-sm-12 col-md-auto col-lg-auto align-self-center">Compare queried anime to the rest of query:</div>
+            <div class="col-12 col-sm-12 col-md col-lg align-self-center d-flex flex-wrap justify-content-around">
+            {% for d in similarityData %}
+               <div class="align-self-center tag label label-display collapsed" data-toggle="collapse" href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}">{{d['anime_english_title']}}</div>
+            {% endfor %}
+            </div>
         </div>
         {% for d in similarityData %}
          <div id="{{d['collapse_id']}}" class="collapse multi-collapse"}>
@@ -486,7 +488,8 @@
                         <div class="row adjustable">
                             <div class="col-3 col-sm-3 col-md-3 col-lg-3 show-info">
                                 <div class="container text-container">
-                                <div class="row info-header">Query similarity:</div>
+                                <div class="row info-header"><span>Query similarity:<i class="fa fa-info-circle"
+                                     data-original-title="<div style='max-width: 175px'>This score represents our estimation of how similar this anime is to the other terms in the query.  Queries that contain many dissimilar terms may return unpredictable suggestions.</div>" data-toggle="tooltip" data-placement="auto" data-html="true"></i></span></div>
                                 <div class="row"> 
                                     <span>{{d["score"]}} %</span>                                 
                                 </div>
@@ -866,72 +869,11 @@
                 {% endfor %}
             {% endfor %}
         };
-		function toggle(source) {
-		    var checkboxes = document.querySelectorAll('#sfwgenre');
-		    for (var i = 0; i < checkboxes.length; i++) {
-			if (checkboxes[i] != source) {
-			    checkboxes[i].checked = source.checked;
-			};
-		    };
-		    if ((document.querySelector('#sfw-button').checked)) {
-			var checkboxes = document.querySelectorAll('#nsfwgenre');
-			for (var i = 0; i < checkboxes.length; i++) {
-			    checkboxes[i].checked = source.checked;
-			}
-		    };
-		};
-                function redirectHomepage() {
-                    window.location.href = "/";
-                };
-		function clearnsfw(source) {
-		    if (source.checked) {
-			var genres = document.querySelectorAll('#nsfwgenre');
-			for (var i = 0; i < genres.length; i++) {
-			    genres[i].checked = true;
-			};
-			var ratings = document.querySelectorAll('#nsfwrating');
-			for (var i = 0; i < ratings.length; i++) {
-			    ratings[i].checked = true;
-			};
-		    };
-		};
-
-                function rescaleSuggestionChart(chartName) {
-                    if ((chartName.data.datasets[0].hidden) && (chartName.data.datasets[1].hidden)) {
-                        return;
-                    } else if (!(chartName.data.datasets[0].hidden) && (chartName.data.datasets[1].hidden)) {
-                        var maxVal = Math.max.apply(Math, chartName.data.datasets[0].data);
-                    } else if ((chartName.data.datasets[0].hidden) && (!(chartName.data.datasets[1].hidden))) {
-                        var maxVal = Math.max.apply(Math, chartName.data.datasets[1].data);
-                    } else {
-                        var maxVal = Math.max.apply(Math, chartName.data.datasets[0].data.concat(chartName.data.datasets[1].data));
-                    }
-                    maxVal = maxVal + 0.1;
-                    chartName.options.scale.ticks.max = Math.min(1.0, (Math.floor(maxVal * 10))/10);
-                };
-		function toggleLegendQuery(source, chartName) {
-		    chartName.data.datasets[0].hidden = !(source.checked);
-                    rescaleSuggestionChart(chartName);
-		    chartName.update();
-		};
-		function toggleLegendSuggestion(source, chartName) {
-		    chartName.data.datasets[1].hidden = !(source.checked);
-                    rescaleSuggestionChart(chartName);
-		    chartName.update();
-		};
-		$(window).resize(function() {
-                    {% if data %}
-                      createLegend('chart-legends', anime_scores);
-                      //  resizeInfo();
-                      //  resizeTags();
-                      //  resizeStatistics();
-                        anime_scores.update();
-                    {% endif %}
-        });
-       $('[data-toggle="collapse"]').click(function(e) {
-            if($($(this).data('target')).hasClass('collapsing'))
-            return false;
+    $(window).resize(function() {
+        createLegend('chart-legends', anime_scores);
+        anime_scores.update();
     });
+    
     function drawSimilarityCharts() {
         {% for d in similarityData %}
             var labels = "{{d['graph_words']}}";
@@ -960,6 +902,7 @@
         var original_value = {{data[0]['original_value']}};
         var graph_value = {{data[0]['graph_value']}};
         anime_scores = createChart("vis", "anime_scores", title, labels_words, original_value, graph_value);
+        createLegend('chart-legends', anime_scores);
         $('#recommended-display .feature-segment-padded .adjustable').css('opacity', 1);
         $('#chart-legends').css('opacity', 1);
     };

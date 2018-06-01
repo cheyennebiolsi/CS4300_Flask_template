@@ -1,37 +1,50 @@
 $(document).ready(function() {
    setAnimeExplanation(); 
-   setWordExplanation();
-    // Stop Format on 
-//    $("#submit").click(function() {
-//        $('#myform').submit();
-//    });
+   setWordExplanation();   
+   $('[data-toggle="collapse"]').click(function(e) {
+            if($($(this).data('target')).hasClass('collapsing'))
+            return false;
+   });
+});
 
-    // Anime Search
-    // var genre = new Bloodhound({
-    //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('anime_english_title'),
-    //     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    //     prefetch: {
-    //         url: '/static/data/anime_info.json'
-    //     }
-    // });
-    // anime.initialize();
-    // $('input').tagsinput({
-    //     typeaheadjs: {
-    //         name: 'anime_info',
-    //         displayKey: 'anime_english_title',
-    //         valueKey: 'anime_english_title',
-    //         source: anime.ttAdapter(),
-    //         hint: true,
-    //         // highlight: true
-    //         minLength: 3
-    //     },
-    //     confirmKeys: [13, 44, 188],
-    //     maxTags: 5,
-    //     freeInput: false,
-    //     delimiter: ','
-    // });
-//    var width = document.querySelector(".feature-segment-padded").getBoundingClientRect().width - 80;
-//    $('.legend-tag').css('width', width+ "px");
+function redirectHomepage() {
+    window.location.href="/";
+};
+
+function toggle(source) {
+    var checkboxes = document.querySelectorAll('#sfwgenre');
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i] != source) {
+            checkboxes[i].checked = source.checked;
+        };
+    };
+    if ((document.querySelector('#sfw-button').checked)) {
+        var checkboxes = document.querySelectorAll('#nsfwgenre');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    };
+};
+
+function clearnsfw(source) {
+    if (source.checked) {
+    var genres = document.querySelectorAll('#nsfwgenre');
+    for (var i = 0; i < genres.length; i++) {
+        genres[i].checked = true;
+    };
+    var ratings = document.querySelectorAll('#nsfwrating');
+    for (var i = 0; i < ratings.length; i++) {
+        ratings[i].checked = true;
+        };
+    };
+};
+
+$(document).on("click", ".collapse.show .show-info .fa", function() {
+   $(this).tooltip({trigger: "manual", placement: "top"});
+   $(this).tooltip('show');
+   setTimeout(function() {
+       $(this).tooltip('hide');
+   }.bind(this), 8000);
 });
 
 function setAnimeExplanation() {
@@ -69,39 +82,6 @@ function toggleClass(selector, tag) {
     };
 }
 
-function resizeAnimeSearchBar() {
-        return;
-        tags = $('.animeinput .tag');
-        if (tags.length == 0) {return};
-        var firstPosition = $(tags.get(0)).position().top;
-        var lastPosition = $(tags.get(-1)).position().top;
-        var mod = Math.floor((lastPosition - firstPosition)/28);
-        $('.animeinput .bootstrap-tagsinput').css("height", 36 + 28*mod + "px");
-        var input = document.querySelector(".animeinput .bootstrap-tagsinput").getBoundingClientRect();
-        var lastTag = tags.get(-1).getBoundingClientRect();
-        if (input.right - lastTag.right < 150) {
-            $('.animeinput .bootstrap-tagsinput').css("height", 36 + 28*(mod+1) + "px");
-        };
-        var searchBar = document.querySelector(".animeinput .bootstrap-tagsinput").getBoundingClientRect();
-        $('.animeinput .input-group-prepend span').css("line-height", searchBar.height -2 + "px");
-}
-
-function resizeWordSearchBar() {
-        return;
-        tags = $('.wordinput .tag');
-        if (tags.length == 0) {return};
-        var firstPosition = $(tags.get(0)).position().top;
-        var lastPosition = $(tags.get(-1)).position().top;
-        var mod = Math.floor((lastPosition - firstPosition)/28);
-        $('.wordinput .bootstrap-tagsinput').css("height", 36 + 30*mod + "px");
-        var input = document.querySelector(".wordinput .bootstrap-tagsinput").getBoundingClientRect();
-        var lastTag = tags.get(-1).getBoundingClientRect();
-        if (input.right - lastTag.right < 100) {
-            $('.wordinput .bootstrap-tagsinput').css("height", 36 + 30*(mod+1) + "px");
-        };
-        var searchBar = document.querySelector(".wordinput .bootstrap-tagsinput").getBoundingClientRect();
-        $('.wordinput .input-group-prepend span').css("line-height", searchBar.height -2 + "px");
-}
 function initializeSearchBars() {
     var animeTags = [];
     var wordTags = [];
@@ -162,7 +142,6 @@ function initializeSearchBars() {
     $('.wordinput .tt-hint').attr('data-toggle', 'tooltip');
     $('.wordinput .tt-hint').attr('data-placement', 'right');
     $('#wordinput').on('itemAdded', function(event) {
-        resizeWordSearchBar();
         wordTags.push(event.item);
     });
     $('.wordinput').on('beforeItemAdd', function(event) {
@@ -176,7 +155,6 @@ function initializeSearchBars() {
         };
     });
     $('#wordinput').on('itemRemoved', function(event) {
-        resizeWordSearchBar();
         wordTags = $.grep(wordTags, function(query) { return query.word !== event.item.word; });
     });
 
@@ -229,7 +207,6 @@ function initializeSearchBars() {
 //    $('.animeinput .tt-input').attr('data-delay', 5000);
 //    $('.animeinput .tt_input').attr('data-original-title', 'meow');
     $('.animeinput').on('itemAdded', function(event) {
-        resizeAnimeSearchBar();
         animeTags.push(event.item);
     });
     $('.animeinput').on('beforeItemAdd', function(event) {
@@ -248,7 +225,6 @@ function initializeSearchBars() {
         };
     });
     $('#animeinput').on('itemRemoved', function(event) {
-        resizeAnimeSearchBar();
         animeTags = $.grep(animeTags, function(query) { return query.anime_english_title !== event.item.anime_english_title; });
     });
 

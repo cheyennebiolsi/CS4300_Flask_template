@@ -182,7 +182,7 @@ class AnimeTitleFactory:
         self.dataManager = dataManager
 
     def buildAnimeTitles(self, request):
-        animeStringTitles = set(request.args.get('animesearch').split('|'))
+        animeStringTitles = request.args.get('animesearch').split('|')
         animeTitles = []
         for title in animeStringTitles:
             if len(title) <= 0:
