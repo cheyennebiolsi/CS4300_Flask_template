@@ -1,0 +1,263 @@
+.similarity-index {
+    padding: 5px 20px;
+    margin: 0;
+    background-color: dimgray;
+    background: radial-gradient(darkgrey, dimgray);
+    font-size: 20px;
+    color: white;
+    font-family: Raleway, Futura, sans-serif;
+    text-align: center;
+}
+
+.similarity-index .align-self-center {
+    padding: 10px 0px;
+    margin: 0;
+}
+
+.tag.label.label-display.collapsed {
+}
+
+.tag.label.label-display:not(.collapsed) {
+    box-shadow: 0 0 4px 3px gold;
+}
+
+.feature-display.container-fluid {
+    background-color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+.feature-display.container-fluid.inverted {
+    background-color: whitesmoke;
+}
+
+.feature-display .row, .feature-display .col-md-12, .feature-display .col-lg-6, .feature-display .col-md-6, .feature-display .col-lg-3 {
+    margin: 0;
+    padding: 0;
+}
+
+.feature-anime-info {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.anime-info-bar {
+    height: 30px;
+    font-size: 30px;
+    margin-top: -5px;
+    margin-bottom: 5px;
+}
+
+.anime-info-footer {
+    height: 30px;
+    font-size: 30px;
+    margin-bottom: -18px;
+    line-height: 30px;
+}
+
+.anime-info-bar .fa, .anime-info-footer .fa {
+    color: #007bff;
+    cursor: pointer; 
+}
+
+.anime-info-bar .fa:hover, .anime-info-footer .fa:hover {
+    color: #004C99;
+}
+
+.feature-display .feature-segment {
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+    height: 400px;
+    padding: 20px;
+}
+
+.feature-display .feature-segment-padded {
+    height: 100%;
+    width: 100%;
+    padding: 8px 2px;
+    background-color: red;
+    background-color: whitesmoke;
+    background-image: linear-gradient(black, grey);
+    border-radius: 20%;
+    overflow: hidden;
+}
+
+.feature-display.inverted .feature-segment-padded {
+    background-image: linear-gradient(grey, lightgrey);
+}
+
+.feature-display .synopsis {
+    overflow: hidden;
+    padding-right: 20px;
+    padding-left: 10px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-display .synopsis:hover {
+    overflow-y: scroll;
+    padding-right: 4px;
+}
+
+.feature-display .adjustable {
+    flex: 2;
+    overflow: hidden;
+}
+
+.feature-display .feature-icon {
+    max-width: 200px;
+    display: flex;
+    flex-direction: row;
+}
+
+.feature-icon .fa {
+    font-size: 30px;
+    margin-left: 10px;
+    line-height: 30px;
+}
+
+.feature-icon img {
+    flex: 1;
+    object-fit: contain;
+    max-width: 150px;
+    height: 30px;
+}
+
+.feature-display .media-title {
+    margin: 0;
+    margin-top: -14px;
+    text-align: center;
+    font-size: 34px;
+    line-height: 36px;
+    padding: 6px;
+    font-weight: 600;
+    font-family: Raleway; sans-serif;
+    display: inline-block;
+}
+
+.feature-display .media-synopsis {
+    font-size: 12px;
+    font-family: Raleway; sans-serif;
+    text-align: justify;
+    padding: 6px 8px;
+    background-color: whitesmoke;
+    flex:2;
+    width: 100%;
+}
+
+.feature-display.inverted .media-synopsis {
+    background-color: dimgrey;
+    color: white;
+}
+
+.feature-display .show-info {
+    font-size: 12px;
+    font-family: Raleway; sans-seric;
+/*    padding: 6px 8px; */
+/*    background-color: whitesmoke; */
+    padding-left: 20px;
+    padding-right: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.text-container {
+    background-color: whitesmoke;
+    padding: 6px 8px;
+    flex: 2;
+    width: 100%;
+    margin: 0;
+}
+
+.feature-display.inverted .text-container {
+    background-color: dimgrey;
+    color: white;
+}
+
+.feature-display .show-info:hover {
+    overflow-y: auto;
+}
+
+.feature-display .show-info .info-header {
+    font-weight: 600;
+}
+
+.feature-display .show-info span {
+    text-align: left;
+}
+
+.show-info .fa {
+     color: royalblue;
+     margin-left: 4px;
+     cursor: pointer;
+     font-size: 14px;
+}
+
+.inverted .show-info .fa {
+     color: gold;
+}
+
+.show-info .tooltip {
+    pointer-events: none;
+}
+
+.feature-display .tag-info {
+   padding: 8px 20px;
+}
+
+.tag-info .align-self-center span {
+    font-family: Raleway; sans-serif;
+    font-weight: 600;
+    padding-right: 4px;
+}
+
+.feature-display .tag-info .label-info {
+    cursor: pointer;
+    margin: 2px 2px !important;
+    background-color: grey;
+    display: inline-block;
+}
+
+.tag.label.label-display {
+    margin: 4px 2px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    background-color: rgb(32, 32, 32);
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.media-genres {
+    font-family: Raleway; sans-serif;
+    text-align: center;
+    padding: 0px 20px;
+}
+
+.media-genres span.genre {
+    background-color: transparent;
+    width: 90px;
+    text-transform: uppercase;
+    padding: 2px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 2px;
+    margin-left: 2px;
+    border-radius: 2.5px;
+    border: 1px solid grey;
+    color: grey;
+}
+
+span#hulu-provider {
+    margin-top -4px;
+    font-family: FuturaMedium;
+    font-weight: bold;
+    font-size: 25;
+    color: lawngreen;
+}
