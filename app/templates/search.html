@@ -523,13 +523,6 @@
                                  {% endfor %}
                              </div>
                         </div>
-                        <div class={% if loop.index==1 %} "d-flex anime-info-footer justify-content-end" {% else %}
-                                                          "d-flex anime-info-footer justify-content-start" {% endif %}>
-                            <div>
-                                <i onclick="addAnime('{{title}}')" class="fa fa-minus" data-toggle="collapse"
-                                href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}"></i>
-                            </div>
-                        </div>                      
                     </div>
                 </div>
                 <div class={% if loop.index == 1 %} "col-md-6 col-lg-3 order-lg-2 feature-segment" {% else %} "col-md-6 col-lg-3 feature-segment" {% endif %}>
@@ -563,6 +556,13 @@
                     </div>
                 </div>
                 </div>
+                <div class={% if loop.index==1 %} "d-flex anime-info-footer justify-content-end" {% else %}
+                                                          "d-flex anime-info-footer justify-content-start" {% endif %}>
+                    <div>
+                        <i onclick="addAnime('{{title}}')" class="fa fa-minus" data-toggle="collapse"
+                         href="{{'#' + d['collapse_id']}}" role="button" aria-expanded="false" aria-controls="{{d['collapse_id']}}"></i>
+                    </div>
+                </div>                      
             </div>
             {% endfor %}
         </div>
@@ -647,7 +647,6 @@
                                  {% endfor %}
                              </div>
                         </div>
-                        <div class="d-flex justify-content-between anime-footer-bar"></div>  
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 feature-segment">
@@ -668,24 +667,33 @@
                                     <div class="legend-tag checked"><div class="legend-button"></div></div>
                                     <div class="legend-tag unchecked"><div class="legend-button"></div></div>
                                 </label>
+                            </div>
                         </div>
-                </div></div>
-                <div class="col-md-6 col-lg-3 feature-segment">
-                    <div class="container feature-segment-padded">
-                    <div class="container" style="width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row">
-                        <img id="media-image" src={{data[0]["anime_image_url"]}} style="object-fit: contain; flex: 1">
                     </div>
-                </div></div>
+                    <div class="col-md-6 col-lg-3 feature-segment">
+                        <div class="container feature-segment-padded">
+                            <div class="container" style="width: 100%; height: 100%; padding:8px; display: flex; flex-direction: row">
+                                <img id="media-image" src={{data[0]["anime_image_url"]}} style="object-fit: contain; flex: 1">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="d-flex justify-content-between anime-info-footer">
+                    <div><i class="fa fa-arrow-left" id="prevSuggested" onclick="getNext({{(data | length) - 1}})"></i></div>
+                    <div><i class="fa fa-arrow-right" id="nextSuggested" onclick="getNext(1)"></i></div>
+                </div>  
             </div>
             <div class="owl-carousel owl-theme owl-loaded" id="suggestion-carousel">
                 <div class="owl-stage-outer">
                     <div class="owl-stage">
+                        {% set data_num = (data | length)%}
                         {% for d in data%}
                         {% set image_url = d['anime_image_url'] %}
-                        <div class="owl-item" style="height:100%">
+                        <div class="owl-item" style="height:100%" data-suggestionindex = "{{loop.index - 1}}">
                             <div class="suggestion-buffer">
-                            <div class="view overlay" id="suggestionCard"
+                            <div class="view overlay" id="suggestionCard" onclick="changeRecommendedDisplay(this)" 
+                                 data-num = "{{data_num}}" 
+                                 data-suggestionindex = "{{loop.index - 1}}"
                                  data-index = "{{d['anime_index']}}" data-title = "{{d['anime_english_title']}}"
                                  data-type="{{d['anime_type']}}" data-duration="{{d['anime_duration']}}" data-image="{{d['anime_image_url']}}" 
                                  data-labels='{{ d["graph_words"]}}'
@@ -702,7 +710,9 @@
                                  data-rating="{{d['anime_rating']}}" data-video="{{d['anime_video_url']}}" data-reviewernumber="{{d['anime_review_number']}}" 
                                  data-similarity="{{d['score']}}" data-ratingvalue="{{d['anime_rating_value']}}" data-raternumber="{{d['anime_rating_count']}}" 
                                  data-words="{{d['words']}}" style="height:100%">
-                                <div {%if loop.index == 1%} class="well suggestion active" {% else %} class="well suggestion" {% endif %} style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")'></div>
+                                <div {%if loop.index == 1%} class="well suggestion active" {% else %} class="well suggestion" {% endif %}
+                                    style='height: 100%; background-position: center; background-size: cover; background-image: url("{{image_url}}")' 
+                                    data-index="{{d['anime_index']}}"></div>
                                 <div class="mask flex-center rgba-stylish-strong">
                                     <div class="suggestion-text"> {{d["anime_english_title"]}} </div>
                                  </div>
@@ -727,112 +737,7 @@
 
     <!--<script type="text/javascript" src="/static/mdb/js/popper.min.js"></script> -->
  
-            <script>
-                $("#suggestion-carousel").on('click', '.view', function() {
-                    $('#recommended-display').css('opacity', 0);
-                    setTimeout(function() {
-                            $('#recommended-display').css('opacity', 1);
-        	            var active = (document.querySelectorAll('.well.suggestion.active'));
-                            active.forEach(function(well) {
-                            well.classList.remove('active');
-                        });
-                    var children = $(this).find('.well.suggestion');
-                    children.each(function(index) {
-                        this.classList.add('active');
-                    });
-                    var anime_index = $(this).attr('data-index');
-                    var anime_image_url = $(this).data("image");
-                    var title = $(this).data("title");
-                    var type = $(this).data("type");
-                    var synopsis = $(this).data("synopsis");
-                    var tags = $(this).data("tags");
-                    var words = $(this).data("words");
-                    var episode_count = $(this).data("episodes");
-                    var duration = $(this).data("duration");
-                    var rating = $(this).data("rating");
-                    var overall = $(this).data("overallreview");  
-                    var story = $(this).data("storyreview");  
-                    var enjoyment = $(this).data("enjoyment");  
-                    var character = $(this).data("character");  
-                    var sound = $(this).data("sound");  
-                    var animation = $(this).data("animation");
-                    var similarity = $(this).data("similarity");
-                    var reviewernumber = $(this).data("reviewernumber");
-                    var raternumber = $(this).data("raternumber");
-                    var ratingvalue = $(this).data("ratingvalue");
-                    var thelabels = $(this).data("labels");
-                    var thevalues = $(this).data("values");
-                    var posiitive_words = $(this).data("positive_words");
-                    var original_value = $(this).data("original_value");
-                    $('#media-image').attr('src', anime_image_url);
-                    $('#media-title span').text(title);
-                    document.getElementById('plus-icon').innerHTML = "<i onclick='addAnime(" + '"' + title + '"' + ")' class='fa fa-plus'></i>";
-                    $('#media-type span').text(type);
-                    $('#media-rating span').text(rating);
-                    $('#media-count span').text(episode_count);
-                    $('#media-duration span').text(duration);
-                    $('#media-synopsis span').text(synopsis);
-                    $('#episode-count span').text(episode_count);
-                    $('#similarity-score span').text(similarity);
-                    $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
-                    $('#rater-number span').text("Number of Raters: " + raternumber);
-                    $('#rating-value span').text("Rating: " + ratingvalue);
-                    var tags = tags.split("|");
-                    var str = "";
-                    for (var tag in tags) {
-                        str += '<span class="genre">' + tags[tag] + "</span>";
-                    };
-                    var words = words.split("|");
-                    var wordStr = "";
-                    for (var word in words) {
-                        wordStr += '<span class="tag label label-info" onclick="addWord(this)">' + words[word] + "</span>";
-                    };
-                    $('#anime-tags').replaceWith(
-                        '<div class="align-self-start unselectable" id="anime-tags">' + wordStr + '</div>'
-                        );
-                    $('#media-genres').replaceWith(
-                        '<div class="media-genres unselectable" id="media-genres">' + str + '</div>'
-                        );
-                    var anime_video_url = $(this).data("video");
-                    if (anime_video_url.includes('crunchyroll')) {
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", false);
-                        $('#crunchyroll-provider-image').attr("hidden", false);
-                        $('#crunchyroll-provider').attr("hidden", false);
-                        $('#hulu-provider').attr("hidden", true);
-                        $('#yahoo-provider').attr("hidden", true);
-                    } else if (anime_video_url.includes('yahoo')) {
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", false);
-                        $('#yahoo-provider').attr("hidden", false);
-                        $('#hulu-provider').attr("hidden", true);
-                        $('#crunchyroll-provider-image').attr("hidden", true);
-                        $('#crunchyroll-provider').attr("hidden", true);
-                    } else if (anime_video_url.includes('hulu')) {
-                        $('#hulu-provider').attr("hidden", false);
-                        $('#yahoo-provider').attr("hidden", true);
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", false);
-                        $('#crunchyroll-provider-image').attr("hidden", true);
-                        $('#crunchyroll-provider').attr("hidden", true);
-                    } else {
-                        $('#video-link').attr("href", anime_video_url);
-                        $('#video-link').attr("hidden", true);
-                        $('#crunchyroll-provider-image').attr("hidden", true);
-                        $('#crunchyroll-provider').attr("hidden", true);
-                        $('#hulu-provider').attr("hidden", true);
-                        $('#yahoo-provider').attr("hidden", true);
-                    };
-
-                    anime_scores.destroy(); //delete charts
-                    var thelabels2 = thelabels.split("|");
-                    anime_scores = createChart("vis", "anime_scores", title, thelabels2, original_value, thevalues);
-                    createLegend('chart-legends', anime_scores);
-                    }.bind(this), 750);
-
-                });
-                  </script>
-    <script>
+<script>
         var functions = {
             showAllElements: function() {
                 alert('show all called');

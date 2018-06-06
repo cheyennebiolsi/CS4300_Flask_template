@@ -24,7 +24,7 @@
 .feature-display.container-fluid {
     background-color: white;
     margin: 0;
-    padding: 20px;
+    padding: 30px 20px 0px 20px;
 }
 
 .feature-display.container-fluid.inverted {
@@ -47,15 +47,15 @@
 .anime-info-bar {
     height: 30px;
     font-size: 30px;
-    margin-top: -5px;
-    margin-bottom: 5px;
+    margin-top: -20px;
+    margin-bottom: 2px;
 }
 
 .anime-info-footer {
     height: 30px;
     font-size: 30px;
-    margin-bottom: -18px;
     line-height: 30px;
+    margin-bottom: 4px;
 }
 
 .anime-info-bar .fa, .anime-info-footer .fa {

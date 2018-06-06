@@ -39,6 +39,122 @@ function clearnsfw(source) {
     };
 };
 
+function getNext(index) {
+    var nextDisplay = $($('.owl-item').not('.cloned')[index]).find('.view')[0];
+    console.log(nextDisplay);
+    changeRecommendedDisplay(nextDisplay);
+}
+
+function changeRecommendedDisplay(source) {
+                    $('#recommended-display').css('opacity', 0);
+                    setTimeout(function() {
+                            $('#recommended-display').css('opacity', 1);
+        	            var active = (document.querySelectorAll('.well.suggestion.active'));
+                            active.forEach(function(well) {
+                            well.classList.remove('active');
+                        });
+                    var children = $('.owl-item').find('.well.suggestion');
+                    var anime_index = $(source).attr('data-index');
+                    children.each(function(index) {
+                        console.log($(this).data('index'));
+                        console.log(anime_index);
+                        if ($(this).data('index') == anime_index) {
+                            this.classList.add('active');
+                        };
+                    }).bind(anime_index);
+                    var anime_image_url = $(source).data("image");
+                    var title = $(source).data("title");
+                    var type = $(source).data("type");
+                    var synopsis = $(source).data("synopsis");
+                    var tags = $(source).data("tags");
+                    var words = $(source).data("words");
+                    var episode_count = $(source).data("episodes");
+                    var duration = $(source).data("duration");
+                    var rating = $(source).data("rating");
+                    var overall = $(source).data("overallreview");  
+                    var story = $(source).data("storyreview");  
+                    var enjoyment = $(source).data("enjoyment");  
+                    var character = $(source).data("character");  
+                    var sound = $(source).data("sound");  
+                    var animation = $(source).data("animation");
+                    var similarity = $(source).data("similarity");
+                    var reviewernumber = $(source).data("reviewernumber");
+                    var raternumber = $(source).data("raternumber");
+                    var ratingvalue = $(source).data("ratingvalue");
+                    var thelabels = $(source).data("labels");
+                    var thevalues = $(source).data("values");
+                    var posiitive_words = $(source).data("positive_words");
+                    var original_value = $(source).data("original_value");
+                    $('#media-image').attr('src', anime_image_url);
+                    $('#media-title span').text(title);
+                    document.getElementById('plus-icon').innerHTML = "<i onclick='addAnime(" + '"' + title + '"' + ")' class='fa fa-plus'></i>";
+                    $('#media-type span').text(type);
+                    $('#media-rating span').text(rating);
+                    $('#media-count span').text(episode_count);
+                    $('#media-duration span').text(duration);
+                    $('#media-synopsis span').text(synopsis);
+                    $('#episode-count span').text(episode_count);
+                    $('#similarity-score span').text(similarity);
+                    $('#reviewer-number span').text("Number of Reviewers: " + reviewernumber);
+                    $('#rater-number span').text("Number of Raters: " + raternumber);
+                    $('#rating-value span').text("Rating: " + ratingvalue);
+                    var tags = tags.split("|");
+                    var str = "";
+                    for (var tag in tags) {
+                        str += '<span class="genre">' + tags[tag] + "</span>";
+                    };
+                    var words = words.split("|");
+                    var wordStr = "";
+                    for (var word in words) {
+                        wordStr += '<span class="tag label label-info" onclick="addWord(source)">' + words[word] + "</span>";
+                    };
+                    $('#anime-tags').replaceWith(
+                        '<div class="align-self-start unselectable" id="anime-tags">' + wordStr + '</div>'
+                        );
+                    $('#media-genres').replaceWith(
+                        '<div class="media-genres unselectable" id="media-genres">' + str + '</div>'
+                        );
+                    var anime_video_url = $(source).data("video");
+                    if (anime_video_url.includes('crunchyroll')) {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#crunchyroll-provider-image').attr("hidden", false);
+                        $('#crunchyroll-provider').attr("hidden", false);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#yahoo-provider').attr("hidden", true);
+                    } else if (anime_video_url.includes('yahoo')) {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#yahoo-provider').attr("hidden", false);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                    } else if (anime_video_url.includes('hulu')) {
+                        $('#hulu-provider').attr("hidden", false);
+                        $('#yahoo-provider').attr("hidden", true);
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", false);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                    } else {
+                        $('#video-link').attr("href", anime_video_url);
+                        $('#video-link').attr("hidden", true);
+                        $('#crunchyroll-provider-image').attr("hidden", true);
+                        $('#crunchyroll-provider').attr("hidden", true);
+                        $('#hulu-provider').attr("hidden", true);
+                        $('#yahoo-provider').attr("hidden", true);
+                    };
+                    var suggestionIndex = $(source).data('suggestionindex');
+                    var numSuggestions = $(source).data('num');
+                    document.getElementById('nextSuggested').setAttribute("onClick", "getNext(" + (suggestionIndex + 1) % numSuggestions + ")");
+                    document.getElementById('prevSuggested').setAttribute("onClick", "getNext(" + (suggestionIndex - 1) % numSuggestions + ")");
+                    anime_scores.destroy(); //delete charts
+                    var thelabels2 = thelabels.split("|");
+                    anime_scores = createChart("vis", "anime_scores", title, thelabels2, original_value, thevalues);
+                    createLegend('chart-legends', anime_scores);
+                    }.bind(source), 750);
+                };
+
 $(document).on("click", ".collapse.show .show-info .fa", function() {
    $(this).tooltip({trigger: "manual", placement: "top"});
    $(this).tooltip('show');
