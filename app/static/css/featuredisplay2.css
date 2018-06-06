@@ -55,7 +55,12 @@
     height: 30px;
     font-size: 30px;
     line-height: 30px;
+    margin-top: -4px;
     margin-bottom: 4px;
+}
+
+#recommended-display .anime-info-footer {
+    margin-bottom: 8px;
 }
 
 .anime-info-bar .fa, .anime-info-footer .fa {

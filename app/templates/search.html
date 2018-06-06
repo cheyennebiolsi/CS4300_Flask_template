@@ -576,8 +576,9 @@
             <br>
             <br> -->
             {% set title = data[0]['anime_english_title'] %}
+            <div style="background-color: white" id="recommended-display">
             <div class="container-fluid feature-display">
-                <div class="row" id=recommended-display>
+                <div class="row">
                 <div class="col-md-12 col-lg-6" style="height: 400px">
                     <div class="feature-anime-info">
                         <div class ="d-flex flex-column">
@@ -681,7 +682,8 @@
                 <div class="d-flex justify-content-between anime-info-footer">
                     <div><i class="fa fa-arrow-left" id="prevSuggested" onclick="getNext({{(data | length) - 1}})"></i></div>
                     <div><i class="fa fa-arrow-right" id="nextSuggested" onclick="getNext(1)"></i></div>
-                </div>  
+                </div>
+            </div>
             </div>
             <div class="owl-carousel owl-theme owl-loaded" id="suggestion-carousel">
                 <div class="owl-stage-outer">
